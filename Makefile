@@ -11,7 +11,10 @@ CFLAGS = -Wall -Wextra -Werror -lreadline -lncurses
 
 # re:
 
-TST= test.c split_cmd.c exec.c
+TST=	test.c \
+		split_cmd.c \
+		exec.c \
+		set_defaults.c 
 # OTST=$(TST:.c=.o)
 
 all: test

@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 09:41:34 by Achakkaf          #+#    #+#             */
-/*   Updated: 2024/05/30 15:41:51 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/05/30 18:48:52 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ char **split_cmd(char *command)
 	n_words = new_cwords(command);
 	if (n_words == ERROR || n_words == 0)
 		return (NULL);
-	cmd = malloc((n_words + 1) * sizeof(char *));
+	cmd = malloc((n_words + 2) * sizeof(char *));
 	while (cmd && command[end])
 	{
 		split_cmd2(command, &start, &end);
@@ -131,6 +131,9 @@ char **split_cmd(char *command)
 		i++;
 	}
 	if (cmd)
+	{
+		cmd[i++] = "\n";
 		cmd[i] = NULL;
+	}
 	return (cmd);
 }
