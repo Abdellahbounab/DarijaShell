@@ -6,30 +6,39 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 09:41:34 by Achakkaf          #+#    #+#             */
-/*   Updated: 2024/05/28 11:37:37 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/05/30 15:41:51 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-# define TAB 9
-# define SPACE 32
+#define TAB 9
+#define SPACE 32
 
-void	skip_q(char *s, int *i)
+static int skip_q(char *s, int *i)
 {
-	if (s[*i] == '\'' || s[*i] == '"')
+	if (s[*i] == '\'')
 	{
 		(*i)++;
-		while ((s[*i] != '\'' && s[*i] != '"') && s[*i])
+		while (s[*i] != '\'' && s[*i])
 			(*i)++;
 	}
+	else if (s[*i] == '"')
+	{
+		(*i)++;
+		while (s[*i] != '"' && s[*i])
+			(*i)++;
+	}
+	if (s[*i] == '\0')
+		return (write(STDERR_FILENO, "close the Quotation\n", 21), ERROR);
+	return (GOOD);
 }
 
-int	new_cwords(char *s)
+static int new_cwords(char *s)
 {
-	int	i;
-	int	count;
-	int	inword;
+	int i;
+	int count;
+	int inword;
 
 	i = 0;
 	inword = 1;
@@ -45,7 +54,8 @@ int	new_cwords(char *s)
 				count++;
 				inword = 0;
 			}
-			skip_q(s, &i);
+			if (skip_q(s, &i) != GOOD)
+				return (ERROR);
 			i++;
 		}
 		inword = 1;
@@ -53,10 +63,10 @@ int	new_cwords(char *s)
 	return (count);
 }
 
-char	*new_substr(char *str, int start, int end)
+static char *new_substr(char *str, int start, int end)
 {
-	char	*sstr;
-	int		i;
+	char *sstr;
+	int i;
 
 	i = 0;
 	if (str == NULL)
@@ -74,47 +84,50 @@ char	*new_substr(char *str, int start, int end)
 	return (sstr);
 }
 
-void	split_cmd2(char *cmd, int *start, int *end, int *in)
+static void split_cmd2(char *cmd, int *start, int *end)
 {
 	while ((cmd[*end] == SPACE || cmd[*end] == TAB) && cmd[*end])
 		(*end)++;
 	*start = *end;
 	while (cmd[*end] != SPACE && cmd[*end] != TAB && cmd[*end])
 	{
-		if (cmd[*end] == '\'' || cmd[*end] == '"')
+		if (cmd[*end] == '\'')
 		{
 			(*end)++;
-			*start = *end;
-			while ((cmd[*end] != '\'' && cmd[*end] != '"') && cmd[*end])
+			while (cmd[*end] != '\'' && cmd[*end])
 				(*end)++;
-			*in = 1;
+		}
+		else if (cmd[*end] == '"')
+		{
+			(*end)++;
+			while (cmd[*end] != '"' && cmd[*end])
+				(*end)++;
 		}
 		(*end)++;
 	}
 }
 
-char	**split_cmd(char *command)
+char **split_cmd(char *command)
 {
-	char	**cmd;
-	int		end;
-	int		start;
-	int		i;
-	int		in;
+	char **cmd;
+	int end;
+	int start;
+	int i;
+	int n_words;
 
-	in = 0;
 	i = 0;
 	end = 0;
-	cmd = malloc((new_cwords(command) + 1) * sizeof(char *));
-	while (cmd && command && command[end])
+	n_words = new_cwords(command);
+	if (n_words == ERROR || n_words == 0)
+		return (NULL);
+	cmd = malloc((n_words + 1) * sizeof(char *));
+	while (cmd && command[end])
 	{
-		split_cmd2(command, &start, &end, &in);
+		split_cmd2(command, &start, &end);
 		if (start != end)
-		{
-			cmd[i] = new_substr(command, start, end - in);
-			in = 0;
-		}
+			cmd[i] = new_substr(command, start, end);
 		else
-			break ;
+			break;
 		i++;
 	}
 	if (cmd)

@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 22:34:42 by Achakkaf          #+#    #+#             */
-/*   Updated: 2024/05/28 12:14:49 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/05/30 12:02:36 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,14 @@ char *find_path(char *command, char **env)
 	return (path_(p, command, 0));
 }
 
-void exec_command(char **cmd, char **env)
+void exec_command(char *command, char **env)
 {
 	char *cmd_path;
-	// char **cmd;
+	char **cmd;
 
-	// cmd = split_cmd(command);
+	cmd = split_cmd(command);
 	cmd_path = find_path(cmd[0], env);
+	cmd_path = "/bin/cat";
 	execve(cmd_path, cmd, env);
 	error("command not found\n");
 }

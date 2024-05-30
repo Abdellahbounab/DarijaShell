@@ -44,6 +44,8 @@ int main()
 	{
 		add_history(line);
 		cmd = split_cmd(line);
+		if (cmd == NULL)
+			return (1);
 		i = 0;
 		while(cmd[i] != NULL)
 			printf("|%s|\n", cmd[i++]);
@@ -55,4 +57,8 @@ int main()
 		// wait(NULL);
 		line = readline("minishell-$ ");
 	}
+	// char *str = malloc (0);
+	// if (str == NULL)
+	// {	printf("sdfds\n");
+	// 	return(1);}
 }

@@ -17,11 +17,11 @@ TST= test.c split_cmd.c exec.c
 all: test
 
 test: lib
-	cc $(CFLAGS) mylib/mylib.a $(TST)
+	cc -lreadline -lncurses -fsanitize=address libft/libft.a $(TST)
 
 fclean:
-	make fclean -C mylib
+	make fclean -C libft
 	rm -f a.out
 
 lib:
-	make -C mylib
+	make -C libft
