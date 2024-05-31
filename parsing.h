@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/05/30 19:54:07 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/05/31 16:25:33 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 
 # define ERROR -1
 # define GOOD 0
+
 typedef struct s_command
 {
 	char	**args;
@@ -34,6 +35,12 @@ typedef struct s_command
 	int 	heredoc;
 	struct s_command *next;
 }	t_command ;
+
+typedef struct s_var_info
+{
+	char *name;
+	int len;
+} t_var_info;
 
 //variables are type string
 typedef struct s_env
