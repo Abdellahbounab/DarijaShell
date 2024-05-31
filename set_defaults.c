@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 12:02:58 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/05/30 19:56:14 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/05/31 11:41:07 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,9 @@ t_command *set_command(char **split_cmd, int *i)
 		{
 			free(command->input_files);
 			command->input_files = filtre_quote(split_cmd[++(*i)]); // change it this is this is a problem "Make""file" this is valid
+			command->heredoc = 0;
 		}
-		else if (ft_strcmp(split_cmd[*i], ">") == 0)
+		else if (split_cmd[*i + 1] && ft_strcmp(split_cmd[*i], ">") == 0)
 		{
 			command->output_files = filtre_quote(split_cmd[++(*i)]);
 			command->append = 0;
@@ -65,6 +66,8 @@ t_command *set_command(char **split_cmd, int *i)
 		{
 			command->limitor = filtre_quote(split_cmd[++(*i)]);
 			command->heredoc = 1;
+			free(command->input_files);
+			command->input_files = NULL;
 		}
 		else if (ft_strcmp(split_cmd[*i], "\n"))
 			command->args = append_array(command->args, filtre_quote(split_cmd[*i]));
@@ -104,24 +107,29 @@ char *filtre_quote(char *str)
 		if (str[i] == '\'')
 		{
 			i++;
-			while (str[i] == '\'' && str[i])
-				i++;
-			start = ++i;
-			while (str[i] != '\'' && str[i])
+			// while (str[i] && str[i] == '\'')
+			// 	i++;
+			start = i;
+			while (str[i] && str[i] != '\'')
 				i++;
 			free(tmp);
-			tmp = ft_substr(str, start, i - start);
+			tmp = ft_substr(str, start, i++ - start);
+			printf("tmp1:%s\n", tmp);
 		}
 		else if (str[i] == '"')
 		{
 			i++;
-			while (str[i] == '"' && str[i])
-				i++;
+			// while (str[i] && str[i] == '"')
+			// 	i++;
 			start = i;
-			while (str[i] != '"' && str[i])
+			while (str[i] && str[i] != '"')
 				i++;
+			// while (str[i] && str[i] == '"')
+			// 	i++;
 			free(tmp);
-			tmp = ft_substr(str, start, i - start);
+			tmp = ft_substr(str, start, i++ - start);
+			
+			printf("tmp2:%s\n", tmp);
 		}
 		else
 		{

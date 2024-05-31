@@ -39,22 +39,23 @@ int main()
 	char *line;
 	char **cmd;
 	t_command *command;
+	// execv("/bin/ls",cmd);
 	while (1)
 	{
 		line = readline("minishell-$ ");
 		add_history(line);
-		// printf("%s\n",line);
-		// printf("|%s|\n", filtre_quote(line));
+	// 	// printf("%s\n",line);
+	// 	// printf("|%s|\n", filtre_quote(line));
 		cmd = split_cmd(line);
 		// i = 0;
 		// while (cmd && cmd[i] != NULL)
 		// 	printf("|%s|\n", cmd[i++]);
-		// cmd = append_array(NULL, "cat");
-		// i = 0;
-		// while (cmd && cmd[i] != NULL)
-		// 	printf("|%s|\n", cmd[i++]);
-		// if (cmd == NULL)
-		// 	continue;
+	// 	// cmd = append_array(NULL, "cat");
+	// 	// i = 0;
+	// 	// while (cmd && cmd[i] != NULL)
+	// 	// 	printf("|%s|\n", cmd[i++]);
+	// 	// if (cmd == NULL)
+	// 	// 	continue;
 		command = create_cmd_linked_list(cmd);
 		while (command)
 		{
@@ -65,11 +66,11 @@ int main()
 				printf("|%s|\n", command->args[i++]);
 			command = command->next;
 		}
-		// if (ft_strcmp("exit", line))
-		// 	exit(0);
-		// pid = fork();
-		// if (pid == 0)
-		// wait(NULL);
+	// 	// if (ft_strcmp("exit", line))
+	// 	// 	exit(0);
+	// 	// pid = fork();
+	// 	// if (pid == 0)
+	// 	// wait(NULL);
 	}
 	// char *str = malloc (0);
 	// int fd;
