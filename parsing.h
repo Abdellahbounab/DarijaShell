@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/05/30 19:54:07 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/05/31 17:08:23 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,14 @@ typedef struct s_command
 {
 	char	**args;
 	char	*path;
+
 	char	*input_files;
 	char	*output_files;
+	
 	char	*limitor;
-	int		append;
 	int 	heredoc;
+	
+	int		append;
 	struct s_command *next;
 }	t_command ;
 
@@ -58,4 +61,8 @@ char *filtre_quote(char *str);
 char **append_array(char **old_array, char *arg);
 
 // void	exec_command(char *command, char **env);
+
+
+// env nodes
+int	get_env(t_env **env, char **envp);
 #endif

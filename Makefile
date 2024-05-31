@@ -14,7 +14,8 @@ CFLAGS = -Wall -Wextra -Werror -lreadline -lncurses
 TST=	test.c \
 		split_cmd.c \
 		exec.c \
-		set_defaults.c 
+		set_defaults.c \
+		create_env.c
 # OTST=$(TST:.c=.o)
 
 all: test
