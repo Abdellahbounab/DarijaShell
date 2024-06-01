@@ -13,6 +13,7 @@ CFLAGS = -Wall -Wextra -Werror -lreadline -lncurses
 
 TST=	parsing/test.c \
 		parsing/split_cmd.c \
+		parsing/parsing_tooles.c \
 		# exec.c \
 		# set_defaults.c 
 # OTST=$(TST:.c=.o)   -fsanitize=address
