@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 12:02:58 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/05/31 17:08:38 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/01 14:41:19 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,23 +27,49 @@ void add_back(t_command *head, t_command *next_command)
 	}
 }
 
+int set_default_cmd(t_command **command)
+{
+	*command = malloc(sizeof(t_command));
+	if (*command == NULL)
+		return ERROR;
+	(*command)->append = 0;
+	(*command)->args = NULL;
+	(*command)->path = NULL;
+	(*command)->input_files = NULL;
+	(*command)->output_files = NULL;
+	(*command)->next = NULL;
+	(*command)->limitor = NULL;
+	(*command)->heredoc = 0;
+	return GOOD;
+}
+
+
+
+int search_token(char *str, int index)
+{
+	int start;
+
+	index++;
+	while (str[index])
+	{
+		if (str[index] == '<' || str[index] == '>')
+			return (1);
+		index++;
+	}
+	return (0);
+}
+
+// ""test"file"
+// <Makefile>out  cat|wc>test|grep   -v   "test">out<Make""'file'""""   >  out
+
 t_command *set_command(char **split_cmd, int *i)
 {
 	t_command *command;
 
 	if (split_cmd == NULL)
 		return (NULL);
-	command = malloc(sizeof(t_command));
-	if (command == NULL)
+	if (set_default_cmd(&command) == ERROR)
 		return (NULL);
-	command->append = 0;
-	command->args = NULL;
-	command->path = NULL;
-	command->input_files = NULL;
-	command->output_files = NULL;
-	command->next = NULL;
-	command->limitor = NULL;
-	command->heredoc = 0;
 	while (split_cmd[*i] && ft_strcmp(split_cmd[*i], "|"))
 	{
 		if (ft_strcmp(split_cmd[*i], "<") == 0)
@@ -94,18 +120,6 @@ t_command *create_cmd_linked_list(char **split_cmd)
 	return (command);
 }
 
-void quote_skip(char *str, int *index, char **tmp, char quote)
-{
-	int start;
-
-	(*index)++;
-	start = *index;
-	while (str[*index] && str[*index] != quote)
-		(*index)++;
-	free(*tmp);
-	*tmp = ft_substr(str, start, (*index)++ - start);
-}
-
 char *filtre_quote(char *str)
 {
 	int i;
@@ -137,35 +151,4 @@ char *filtre_quote(char *str)
 		free(tmp1);
 	}
 	return (str_filter);
-}
-
-char **append_array(char **old_array, char *arg)
-{
-	int size;
-	char **new_array;
-
-	size = 0;
-	if (arg == NULL)
-		return (old_array);
-	while (old_array && old_array[size])
-		size++;
-	new_array = malloc(sizeof(char *) * (size + 2));
-	if (new_array == NULL)
-		return (NULL);
-	if (old_array == NULL)
-	{
-		new_array[0] = ft_strdup(arg);
-		new_array[1] = NULL;
-		return (new_array);
-	}
-	size = 0;
-	while (old_array[size])
-	{
-		new_array[size] = ft_strdup(old_array[size]);
-		size++;
-	}
-	free(old_array);
-	new_array[size++] = ft_strdup(arg);
-	new_array[size] = NULL;
-	return (new_array);
 }
