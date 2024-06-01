@@ -11,16 +11,16 @@ CFLAGS = -Wall -Wextra -Werror -lreadline -lncurses
 
 # re:
 
-TST=	test.c \
-		split_cmd.c \
-		exec.c \
-		set_defaults.c 
-# OTST=$(TST:.c=.o)
+TST=	parsing/test.c \
+		parsing/split_cmd.c \
+		# exec.c \
+		# set_defaults.c 
+# OTST=$(TST:.c=.o)   -fsanitize=address
 
 all: test
 
 test: lib
-	cc -lreadline -lncurses -fsanitize=address libft/libft.a $(TST)
+	cc -lreadline -lncurses  libft/libft.a $(TST)
 
 fclean:
 	make fclean -C libft

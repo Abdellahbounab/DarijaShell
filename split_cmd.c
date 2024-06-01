@@ -6,14 +6,13 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 09:41:34 by Achakkaf          #+#    #+#             */
-/*   Updated: 2024/05/30 18:48:52 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/05/31 19:08:04 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-#define TAB 9
-#define SPACE 32
+
 
 static int skip_q(char *s, int *i)
 {
