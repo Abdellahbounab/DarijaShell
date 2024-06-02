@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 17:50:44 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/01 19:22:27 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/02 12:07:14 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,25 @@ char *var_name(char *token)
 	return (ft_substr(token, 0, end));
 }
 
-char *single_q_filter(char *token, int start)
+char *single_q_filter(char *token, int *end)
 {
-	int end;
+	int start;
 	
-	end = start;
-	while (token && token[end] && token[end] != '\'')
-		end++;
-	return (ft_substr(token , start, end - start));
+	start = *end;
+	while (token && token[*end] && token[*end] != '\'')
+		*(end)++;
+	return (ft_substr(token , start, *end - start));
+}
+
+char *get_value_env(t_env *env, char *key)
+{
+	if (env == NULL)
+		return (NULL);
+	while (env)
+	{
+		if (ft_strcmp(env->key, key) == 0)
+			return (env->value);
+		env = env->next;
+	}
+	return (NULL);
 }

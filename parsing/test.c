@@ -26,8 +26,10 @@ int main()
 	int i;
 	char *line;
 	char **cmd;
+	int status;
 	t_command *command;
 	char *var;
+
 	while (1)
 	{
 		line = readline("minishell-$ ");
@@ -36,13 +38,18 @@ int main()
 		i = 0;
 		while (cmd && cmd[i])
 		{
-			printf("cmd:|%s|\n", cmd[i]);
-			if (cmd[i][0] == '\'')
-			{
-				var = single_q_filter(cmd[i], 1);
-				printf("single quote: %s\n", var);
-				free(var);
-			}
+			printf("|%s|\t", cmd[i]);
+			if (check_name(cmd[i]) == GOOD)
+				printf("valid name\n");
+			else
+				printf("invalid name\n");
+
+			// if (cmd[i][0] == '\'')
+			// {
+			// 	var = single_q_filter(cmd[i], 1);
+			// 	printf("single quote: %s\n", var);
+			// 	free(var);
+			// }
 			i++;
 		}
 		printf("\n\n______________________\n\n");
