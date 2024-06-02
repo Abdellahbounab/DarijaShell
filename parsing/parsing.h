@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/02 12:29:11 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/02 16:06:51 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,6 @@ char **append_array(char **old_array, char *arg);
 
 int check_name(char *name);
 char *var_name(char *token);
-char *single_q_filter(char *token, int *start);
-
+// char *single_q_filter(char *token, int *start);
+char *filter(char *line, t_env *env);
 #endif
