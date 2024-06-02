@@ -26,8 +26,9 @@ int main()
 	int i;
 	char *line;
 	char **cmd;
-	int status;
-	char *str;
+	t_cmd *command;
+	// int status;
+	// char *str;
 	t_env *env;
 
 	env = malloc(sizeof(t_env));
@@ -41,17 +42,32 @@ int main()
 	{
 		line = readline("minishell-$ ");
 		add_history(line);
-		str = filter(line, env);
-		printf("%s\n", str);
-		// cmd = split_cmd(line);
-		// i = 0;
-		// while (cmd && cmd[i])
-		// {
-		// 	printf("|%s|\t", cmd[i]);
-
-		// 	i++;
-		// }
-		// printf("\n\n______________________\n\n");
+		// str = filter(line, env);
+		cmd = split_cmd(line);
+		i = 0;
+		while (cmd && cmd[i])
+		{
+			printf("|%s|\t", cmd[i]);
+			i++;
+		}
+		printf("\n");
+		// command = create_cmd(cmd, env);
+		command = parse_cmds(cmd, env);
+		// printf("filelename: %s\ntype:%d\n", command->files->name, command->files->type);
+		while(command)
+		{
+			while (command && command->files)
+			{
+				printf("filelename: %s\ntype:%d\n", command->files->name, command->files->type);
+				command->files = command->files->next;
+			}
+			printf("args: ");
+			i = 0;
+			while (command && command->args && command->args[i])
+				printf("%s\t", command->args[i++]);
+			printf("\n\n______________________\n\n");
+			command = command->next;
+		}
 
 		// i = 0;
 		// while (cmd && cmd[i])

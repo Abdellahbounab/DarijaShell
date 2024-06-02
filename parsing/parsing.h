@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/02 16:06:51 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/02 21:27:11 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,20 +24,22 @@
 # define ERROR -1
 # define GOOD 0
 
-#define TAB 9
-#define SPACE 32
+// #define TAB 9
+// #define SPACE 32
 
 // <Makefile>out cat|wc>test|grep -v "test">out<Make""'file'""""
 
 typedef enum s_type {
-	here_doc = 1,
-	infile = 2,
+	infile = 1,
+	oufile = 2,
 	append = 3,
-	oufile = 4,
+	here_doc = 4,
 } t_type;
 typedef struct s_file{
 	char *name; //name file ds
 	t_type type;
+	struct  s_file *next;
+	
 } t_file;
 
 typedef struct s_cmd
@@ -45,7 +47,7 @@ typedef struct s_cmd
 	char	**args;
 	char	*path;
 	int		*status;
-	t_file **files;
+	t_file *files;
 	struct s_cmd *next;
 }	t_cmd;
 
@@ -68,8 +70,10 @@ char **split_cmd(char *line);
 /// @brief appand and element to end of an array
 char **append_array(char **old_array, char *arg);
 
-int check_name(char *name);
-char *var_name(char *token);
+// int check_name(char *name);
+// char *var_name(char *token);
 // char *single_q_filter(char *token, int *start);
+// t_cmd *create_cmd(char **line, t_env *env);
 char *filter(char *line, t_env *env);
+t_cmd *parse_cmds(char **split_cmd, t_env *env);
 #endif
