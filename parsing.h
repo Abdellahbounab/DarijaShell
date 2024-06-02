@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/05/31 17:08:23 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/02 14:18:51 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <readline/history.h>
 #include <unistd.h>
 #include "libft/libft.h"
+#include "env.h"
 #include <fcntl.h>
 
 # define ERROR -1
@@ -39,12 +40,7 @@ typedef struct s_command
 }	t_command ;
 
 //variables are type string
-typedef struct s_env
-{
-	char *key;
-	char *value;
-	struct s_env *next;
-} t_env;
+
 
 
 /// @brief split a line depand to a space or tab or single quote or double quote
@@ -64,5 +60,6 @@ char **append_array(char **old_array, char *arg);
 
 
 // env nodes
-int	get_env(t_env **env, char **envp);
+
+
 #endif

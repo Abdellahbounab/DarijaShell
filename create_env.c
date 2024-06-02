@@ -6,13 +6,121 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 17:04:39 by abounab           #+#    #+#             */
-/*   Updated: 2024/05/31 17:16:40 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/02 14:20:16 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
+#include "env.h"
 
-static void	env_addback(t_env **lst, t_env *new)
+int	env_update(t_env **lst, char *key, char *newval)
+{
+	t_env	*cpy;
+	
+	if (!lst && !*lst)
+		return 0;
+	cpy = env_getkey(*lst, key);
+	if (cpy)
+	{
+		free(cpy->value);
+		cpy->value = ft_strdup(newval);
+		if (!cpy->value)
+			return 0;
+		return 1;
+	}
+	return 0;
+}
+
+int	env_read(t_env *lst)
+{
+	int	counter;
+
+	counter = 0;
+	while (lst)
+	{
+		printf("%s=%s\n", lst->key, lst->value);
+		lst = lst->next;
+		counter++;
+	}
+	return (counter);
+}
+
+int	env_export(t_env **lst, char *key, char *val)
+{
+	t_env *newnode;
+	
+	if (!lst)
+		return 0;
+	if (env_getkey(*lst, key))
+	{
+		if (env_update(lst, key, val))
+			return 1;
+		return 0;
+	}
+	newnode = malloc(sizeof(t_env));
+	if (!newnode)
+		return 0;
+	newnode->key = ft_strdup(key);
+	newnode->value = ft_strdup(val);
+	newnode->next = NULL;
+	if (!*lst)
+		return (*lst = newnode, 1);
+	else if (env_addback(lst, newnode))
+		return 1;
+	return 0;
+}
+
+int	env_unset(t_env **lst, char *key)
+{
+	t_env	*cpy;
+	t_env	*prev;
+
+	if (!lst)
+		return 0;
+	cpy = *lst;
+	if (env_getkey(*lst, key))
+	{
+		if (cpy && !ft_strcmp(cpy->key, key))
+			*lst = cpy->next;
+		else
+		{
+			while (cpy && ft_strcmp(cpy->key, key))
+			{
+				prev = cpy;
+				cpy = cpy->next;
+			}
+			prev->next = cpy->next;	
+		}
+		free(cpy);
+		return 1;
+	}
+	return 0;
+}
+
+char *env_getval(t_env *lst, char *key)
+{
+	if (env_getkey(lst, key))
+		return (env_getkey(lst, key)->value);
+	return 0;
+}
+
+t_env *env_getkey(t_env *lst, char *key)
+{
+	t_env *cpy;
+
+	if (!lst)
+		return (0);
+	cpy = lst;
+	while (cpy)
+	{
+		if (!ft_strcmp(cpy->key, key))
+			return cpy;
+		cpy = cpy->next;
+	}
+	return cpy;
+}
+
+
+int	env_addback(t_env **lst, t_env *newnode)
 {
 	t_env *cpy;
 
@@ -20,50 +128,45 @@ static void	env_addback(t_env **lst, t_env *new)
 	if (lst)
 	{
 		if (!*lst)
-			*lst = new;
+			*lst = newnode;
 		else
 		{
 			while (cpy && cpy->next)
 				cpy = cpy->next;
-			cpy->next = new;
+			cpy->next = newnode;
 		}
+		return 1;
 	}
+	return 0;
 }
 
-static t_env	*create_env(char *key, char **value)
+static char	*join_strs(char **value)
 {
-	t_env	*node;
+	char	*saver;
 	int		counter;
 	char	*tmp;
 
-	node = malloc(sizeof(t_env));
-	if (!node)
-		return (NULL);
-	node->key = ft_strdup(key);
-	node->value = 0;
 	counter = 0;
+	saver = ft_strdup("");
 	while (value && value[counter])
 	{
-		tmp = node->value;
+		tmp = saver;
 		if (counter)
 		{
-			node->value = ft_strjoin(tmp, "=");
+			saver = ft_strjoin(tmp, "=");
 			free(tmp);
-			tmp = node->value;
+			tmp = saver;
 		}
-		node->value = ft_strjoin(tmp, *value);
-		value++;
+		saver = ft_strjoin(tmp, value[counter]);
 		counter++;
 		free(tmp);
 	}
-	printf("%s=%s\n", node->key, node->value);
-	node->next = NULL;
-	return (node);
+	return (saver);
 }
 
 int	get_env(t_env **env, char **envp)
 {
-	t_env *cpy;
+	char *value;
 	char **line_env;
 
 	while (envp && *envp)
@@ -71,15 +174,13 @@ int	get_env(t_env **env, char **envp)
 		line_env = ft_split(*envp, '=');
 		if (!line_env)
 			return (0); // have to free the nodes
-		cpy = create_env(line_env[0], line_env + 1);
-		if (!cpy)
+		value = join_strs(line_env + 1);
+		if (!value)
 			return (0); // have to free the nodes
-		if (*env)
-			env_addback(env, cpy);
-		else
-			*env = cpy;
-		envp++;
+		env_export(env, *line_env, value);
 		free(line_env);
+		free(value);
+		envp++;
 	}
 	return 1;
 }

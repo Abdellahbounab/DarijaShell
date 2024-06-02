@@ -21,7 +21,7 @@ TST=	test.c \
 all: test
 
 test: lib
-	cc -lreadline -lncurses -fsanitize=address libft/libft.a $(TST)
+	cc -lreadline -lncurses -fsanitize=address -g libft/libft.a $(TST)
 
 fclean:
 	make fclean -C libft

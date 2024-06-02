@@ -1,35 +1,6 @@
 
 #include "parsing.h"
 
-// , "SECURITYSESSIONID=186a8"
-// , "USER=achakkaf"
-// , "MallocNanoZone=0"
-// , "COMMAND_MODE=unix2003"
-// , "SHELL=/bin/zsh"
-// , "LaunchInstanceID=FAAC1BAA-F040-4F08-9871-74038559C113"
-// , "__CF_USER_TEXT_ENCODING=0x18C0F:0x0:0x0"
-// , "XPC_SERVICE_NAME=0"
-// , "SSH_AUTH_SOCK=/private/tmp/com.apple.launchd.85iQXN54hh/Listeners"
-// , "XPC_FLAGS=0x0"
-// , "LOGNAME=achakkaf"
-// , "TMPDIR=/var/folders/zz/zyxvpxvq6csfxvn_n000cc1w00330g/T/"
-// , "ORIGINAL_XDG_CURRENT_DESKTOP=undefined"
-// , "SHLVL=1"
-// , "PWD=/Users/achakkaf/Desktop/minishell"
-// , "OLDPWD=/Users/achakkaf/Desktop/minishell/mylib"
-// , "TERM_PROGRAM=vscod"
-// , "TERM_PROGRAM_VERSION=1.85.0"
-// , "LANG=en_US.UTF-8"
-// , "COLORTERM=truecolor"
-// , "GIT_ASKPASS=/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/git/dist/askpass.sh"
-// , "VSCODE_GIT_ASKPASS_NODE=/Applications/Visual Studio Code.app/Contents/Frameworks/Code Helper (Plugin).app/Contents/MacOS/Code Helper (Plugin)"
-// , "ZDOTDIR=/Users/achakkaf"
-// , "USER_ZDOTDIR=/Users/achakkaf"
-// , "TERM=xterm-256color"
-// , "_=/usr/bin/env"
-
-
-
 int main(int ac, char **av, char **env)
 {
 	int i;
@@ -39,21 +10,35 @@ int main(int ac, char **av, char **env)
 	t_env		*environmenet;
 
 	environmenet = NULL;
-	get_env(&environmenet, env);
+	get_env(&environmenet, env); //get all env available
+	// t_env *tester = env_getkey(environmenet, av[1]); // to get an env depends of its value
+	// printf("unset : %d\n", env_unset(&environmenet, av[1])); // to unset a variable in the env
+	// env_update(&environmenet, "USER", av[2]);
+	// set_signals();//to set the signlas needed
+	// env_read(environmenet);
 	while (1)
 	{
 		line = readline("minishell-$ ");
 		add_history(line);
 		cmd = split_cmd(line);
 		command = create_cmd_linked_list(cmd);
-		while (command)
-		{
-			printf("append:%d\ninput:%s\noutput:%s\npath:%s\n", command->append, command->input_files, command->output_files, command->path);
-			printf("limitor:%s\nheredoc:%d\n", command->limitor, command->heredoc);
-			i = 0;
-			while (command->args && command->args[i] != NULL)
-				printf("|%s|\n", command->args[i++]);
-			command = command->next;
+		// while (command)
+		// {
+		// 	printf("append:%d\ninput:%s\noutput:%s\npath:%s\n", command->append, command->input_files, command->output_files, command->path);
+		// 	printf("limitor:%s\nheredoc:%d\n", command->limitor, command->heredoc);
+		// 	i = 0;
+		// 	while (command->args && command->args[i] != NULL)
+		// 		printf("|%s|\n", command->args[i++]);
+		// 	command = command->next;
+		// }
+		if (command){
+			printf("command->args[0] : %s\n", command->args[0]);
+			if (!ft_strcmp(command->args[0], "unset"))
+				env_unset(&environmenet, command->args[1]);
+			else if (!ft_strcmp(command->args[0], "export"))
+				env_export(&environmenet, command->args[1], command->args[2]);
+			else if (!ft_strcmp(command->args[0], "env"))
+				env_read(environmenet);
 		}
 	}
 	// char *str = malloc (0);
