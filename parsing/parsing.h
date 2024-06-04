@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/02 21:27:11 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/04 11:33:39 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@
 # define ERROR -1
 # define GOOD 0
 
-// #define TAB 9
-// #define SPACE 32
+#define TAB 9
+#define SPACE 32
 
 // <Makefile>out cat|wc>test|grep -v "test">out<Make""'file'""""
 

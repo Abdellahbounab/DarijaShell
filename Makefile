@@ -16,16 +16,16 @@ TST=	parsing/test.c \
 		parsing/parsing_tooles.c \
 		parsing/meaning.c \
 		# exec.c \
-		# set_defaults.c 
+		# set_defaults.c -fsanitize=address
 OTST=$(TST:.c=.o)
 
 all: test
 
-# test: lib $(OTST)
-# 	cc -lreadline -lncurses -fsanitize=address -Llibft -lft libft/libft.a $(OTST)
+test: lib
+	cc -lreadline -lncurses  -Llibft libft/libft.a $(TST)
 
-test: lib $(OTST) parsing/parsing.h
-	cc $(OTST) -Llibft -lft -lreadline -lncurses -fsanitize=address -o test
+# test: lib $(OTST) parsing/parsing.h
+# 	cc $(OTST) -Llibft -lft -lreadline -lncurses -fsanitize=address -o test
 	
 fclean:
 	make fclean -C libft
