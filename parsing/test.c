@@ -21,6 +21,8 @@
 // 	}
 // }
 
+
+// space, tab, newline, ‘|’, ‘&’, ‘;’, ‘(’, ‘)’.
 int main()
 {
 	int i;
@@ -36,7 +38,7 @@ int main()
 
 	env = malloc(sizeof(t_env));
 	env->key = "arg";
-	env->value = "Makefile";
+	env->value = "ls -la";
 	env->next = malloc(sizeof(t_env));
 	env->next->key = "arg2";
 	env->next->value = "file2";
@@ -45,40 +47,11 @@ int main()
 	{
 		line = readline("minishell-$ ");
 		add_history(line);
-		if (ft_strcmp("h", line) == 0)
-		{
-			rl_redisplay();
-			continue;
-		}
-		// str = filter(line, env);
 		cmd = split_cmd(line);
-		i = 0;
-		// while (cmd && cmd[i])
-		// {
-		// 	printf("|%s|\t", cmd[i]);
-		// 	i++;
-		// }
-		// printf("\n");
-		// command = create_cmd(cmd, env);
-		command = parse_cmds(cmd, env);
-		// printf("filelename: %s\ntype:%d\n", command->files->name, command->files->type);
-		// cmd_tmp = command;
-		// while (cmd_tmp)
-		// {
-		// 	while (cmd_tmp && cmd_tmp->files)
-		// 	{
-		// 		printf("filelename: %s\ntype:%d\n", cmd_tmp->files->name, cmd_tmp->files->type);
-		// 		cmd_tmp->files = cmd_tmp->files->next;
-		// 	}
-		// 	printf("args: ");
-		// 	i = 0;
-		// 	while (cmd_tmp && cmd_tmp->args && cmd_tmp->args[i])
-		// 		printf("%s\t", cmd_tmp->args[i++]);
-		// 	printf("\n\n______________________\n\n");
-		// 	cmd_tmp = cmd_tmp->next;
-		// }
 		free(line);
 		line = NULL;
+		command = parse_cmds(cmd, env);
+		i = 0;
 		while (cmd && cmd[i])
 		{
 			printf("|%s|\t", cmd[i]);
@@ -87,27 +60,26 @@ int main()
 		}
 		free(cmd);
 		cmd = NULL;
-
+		
 		printf("\n");
-
+		
 		cmd_tmp = command;
 		tmp = NULL;
 		while (cmd_tmp)
 		{
 			while (cmd_tmp && cmd_tmp->files)
 			{
-				printf("filelename: %s\ntype:%d\n", cmd_tmp->files->name, cmd_tmp->files->type);
+				printf("filelename: |%s|\ntype:%d\n", cmd_tmp->files->name, cmd_tmp->files->type);
 				free(cmd_tmp->files->name);
 				tmp = cmd_tmp->files->next;
 				free(cmd_tmp->files);
 				cmd_tmp->files = tmp;
 			}
-			// free(cmd_tmp->files);
 			printf("args: ");
 			i = 0;
 			while (cmd_tmp && cmd_tmp->args && cmd_tmp->args[i])
 			{
-				printf("%s\t", cmd_tmp->args[i]);
+				printf("|%s|\t", cmd_tmp->args[i]);
 				free(cmd_tmp->args[i++]);
 			}
 			free(cmd_tmp->args);
@@ -117,9 +89,7 @@ int main()
 			printf("\n\n______________________\n\n");
 			cmd_tmp = cmd_tmp2;
 		}
+		// free(cmd_tmp);
 		// system("leaks a.out");
-		// free(cmd_->files);
-		// command = create_cmd_linked_list(cmd);
-		// print_cmd(command);
 	}
 }
