@@ -69,7 +69,7 @@ int main()
 		{
 			while (cmd_tmp && cmd_tmp->files)
 			{
-				printf("filelename: |%s|\ntype:%d\n", cmd_tmp->files->name, cmd_tmp->files->type);
+				printf("filelename: |%s|\ttype:%d\tvar_from:%d\n", cmd_tmp->files->name, cmd_tmp->files->type, cmd_tmp->files->text_type);
 				free(cmd_tmp->files->name);
 				tmp = cmd_tmp->files->next;
 				free(cmd_tmp->files);

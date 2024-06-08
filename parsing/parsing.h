@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/06 17:41:09 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/08 12:00:36 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,15 @@
 
 # define ERROR -1
 # define GOOD 0
-# define DOUBLE_Q 22
+# define SINGLE_Q 39
+# define DOUBLE_Q 34
+# define WITHOUT 32
 #define TAB 9
 #define SPACE 32
 
 // <Makefile>out cat|wc>test|grep -v "test">out<Make""'file'""""
+// <Makefile>out<<$arg cat|wc>test|grep -v "test">out<Make""'file'""""
+// $arg -> ls -la
 
 typedef enum s_type {
 	infile = 1,
@@ -36,11 +40,23 @@ typedef enum s_type {
 	here_doc = 4,
 } t_type;
 
+
+// only redirect case :
+// 		in case of <'$ar' ->return $ar and variable = 0; -> iwould undertand it as a file name and not to be extended
+// 		in case of <$ar$ar1 -> return $ar and variable = 1; -> iwoudl understand it as to be extended
+// 		in case of <"$ar" -> return extended variable in a file name
+
+
+// in other cases than redirection : 
+// << $ar -> return $ar as a delimiter and not extend it
+// $ar -> return extended variable using split
+// '$ar' -> return $ar as arg
+// "$ar" -> return its value in a single arg
 typedef struct s_file{
-	char *name; //name file ds
+	char *name;
 	t_type type;
+	int	text_type; //1 for extend else 0
 	struct  s_file *next;
-	
 } t_file;
 
 typedef struct s_cmd
@@ -65,6 +81,8 @@ typedef struct s_parsing_info
 	int end;
 	int cmd_i;
 	int file;
+	int dollar;
+	int var_from;
 	t_env *env;
 } t_parsing_info;
 
