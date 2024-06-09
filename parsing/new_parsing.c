@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 11:15:13 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/09 11:26:31 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/09 11:37:03 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -452,6 +452,8 @@ char *parsing_extend_var(char *string, t_env *env)
 	tmp = NULL;
 	while (string[info->end])
 	{
+		if (string[info->end] == '\'')
+			quote_skip(string, &info->end, '\'');				
 		if (string[info->end] == '$')
 		{
 			tmp = dollar_sign(string, info, tmp);
@@ -465,32 +467,13 @@ char *parsing_extend_var(char *string, t_env *env)
 	return (new_string);
 }
 
-
-
-int quote_skip_(char *str, int *index, char quote)
-{
-	(*index)++;
-	while (str[*index] && str[*index] != quote)
-		(*index)++;
-	return (GOOD);
-}
-
-void alloc_appand_(char *line, int start, int end, char ***words_symboles)
-{
-	char *tmp;
-
-	tmp = ft_substr(line, start, end - start);
-	*words_symboles = append_array(*words_symboles, tmp);
-	free(tmp);
-}
-
-int blank_quote_(char *line, int start, int *end, char ***words_symboles)
+int blank_quote(char *line, int start, int *end, char ***words_symboles)
 {
 	while (line[*end] && line[*end] != SPACE && line[*end] != TAB)
 	{
 		if (line[*end] == '\'')
 		{
-			if (quote_skip_(line, &*end, '\'') == ERROR)
+			if (quote_skip(line, &*end, '\'') == ERROR)
 			{
 				free_array(words_symboles);
 				return (ERROR);
@@ -498,7 +481,7 @@ int blank_quote_(char *line, int start, int *end, char ***words_symboles)
 		}
 		else if (line[*end] == '"')
 		{
-			if (quote_skip_(line, &*end, '"') == ERROR)
+			if (quote_skip(line, &*end, '"') == ERROR)
 			{
 				free_array(words_symboles);
 				return (ERROR);
@@ -506,7 +489,7 @@ int blank_quote_(char *line, int start, int *end, char ***words_symboles)
 		}
 		(*end)++;
 	}
-	alloc_appand_(line, start, *end, words_symboles);
+	alloc_appand(line, start, *end, words_symboles);
 	return (GOOD);
 }
 
@@ -525,7 +508,7 @@ char **parsing_split(char *string)
 		start = end;
 		if (string[end] || string[end] == '"' || string[end] == '\'')
 		{
-			if (blank_quote_(string, start, &end, &words_symboles))
+			if (blank_quote(string, start, &end, &words_symboles))
 				return (NULL);
 		}
 	}

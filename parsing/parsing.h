@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/09 11:23:41 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/09 11:30:10 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,9 @@ char *dollar_sign(char *string, t_parsing_info *info, char *var_value);
 /*----------------------split_cmd----------------------*/
 
 char **split_cmd(char *line);
-
+void free_array(char ***array);
+int quote_skip(char *str, int *index, char quote);
+void alloc_appand(char *line, int start, int end, char ***words_symboles);
 /// @brief appand and element to end of an array
 char **append_array(char **old_array, char *arg);
 
@@ -136,7 +138,7 @@ int create_files(t_cmd *cmd, char **line, t_parsing_info *info, t_type type);
 char *single_quote(char *line, t_parsing_info *info);
 char *double_without(char *part, t_parsing_info *info, int flage);
 
-void free_array(char ***array);
+
 char *parsing_extend_var(char *string, t_env *env);
 char **parsing_split(char *string);
 

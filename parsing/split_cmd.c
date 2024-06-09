@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 12:31:21 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/02 11:11:33 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/09 11:31:00 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void alloc_appand(char *line, int start, int end, char ***words_symboles)
 	free(tmp);
 }
 
-int blank_quote(char *line, int start, int *end, char ***words_symboles)
+static int blank_quote(char *line, int start, int *end, char ***words_symboles)
 {
 	while (line[*end] && line[*end] != SPACE && line[*end] != TAB)
 	{
