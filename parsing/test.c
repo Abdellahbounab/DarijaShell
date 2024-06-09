@@ -41,16 +41,18 @@ int main()
 	env->value = "ls -la";
 	env->next = malloc(sizeof(t_env));
 	env->next->key = "arg2";
-	env->next->value = "file2";
+	env->next->value = "s -l";
 	env->next->next = NULL;
 	while (1)
 	{
 		line = readline("minishell-$ ");
 		add_history(line);
-		cmd = split_cmd(line);
-		free(line);
-		line = NULL;
-		command = parse_cmds(cmd, env);
+		line = parsing_extend_var(line, env);
+		printf("new_line: %s\n", line);
+		cmd = parsing_split(line);
+		// free(line);
+		// line = NULL;
+		// command = parse_cmds(cmd, env);
 		i = 0;
 		while (cmd && cmd[i])
 		{
@@ -58,38 +60,54 @@ int main()
 			free(cmd[i]);
 			i++;
 		}
-		free(cmd);
-		cmd = NULL;
+		// free(cmd);
+		// cmd = NULL;
 		
 		printf("\n");
 		
-		cmd_tmp = command;
-		tmp = NULL;
-		while (cmd_tmp)
-		{
-			while (cmd_tmp && cmd_tmp->files)
-			{
-				printf("filelename: |%s|\ttype:%d\tvar_from:%d\n", cmd_tmp->files->name, cmd_tmp->files->type, cmd_tmp->files->text_type);
-				free(cmd_tmp->files->name);
-				tmp = cmd_tmp->files->next;
-				free(cmd_tmp->files);
-				cmd_tmp->files = tmp;
-			}
-			printf("args: ");
-			i = 0;
-			while (cmd_tmp && cmd_tmp->args && cmd_tmp->args[i])
-			{
-				printf("|%s|\t", cmd_tmp->args[i]);
-				free(cmd_tmp->args[i++]);
-			}
-			free(cmd_tmp->args);
-			cmd_tmp2 = cmd_tmp->next;
-			free(cmd_tmp);
-			cmd_tmp = NULL;
-			printf("\n\n______________________\n\n");
-			cmd_tmp = cmd_tmp2;
-		}
+		// cmd_tmp = command;
+		// tmp = NULL;
+		// while (cmd_tmp)
+		// {
+		// 	while (cmd_tmp && cmd_tmp->files)
+		// 	{
+		// 		printf("filelename: |%s|\ttype:%d\tvar_from:%d\n", cmd_tmp->files->name, cmd_tmp->files->type, cmd_tmp->files->text_type);
+		// 		free(cmd_tmp->files->name);
+		// 		tmp = cmd_tmp->files->next;
+		// 		free(cmd_tmp->files);
+		// 		cmd_tmp->files = tmp;
+		// 	}
+		// 	printf("args: ");
+		// 	i = 0;
+		// 	while (cmd_tmp && cmd_tmp->args && cmd_tmp->args[i])
+		// 	{
+		// 		printf("|%s|\t", cmd_tmp->args[i]);
+		// 		free(cmd_tmp->args[i++]);
+		// 	}
+		// 	free(cmd_tmp->args);
+		// 	cmd_tmp2 = cmd_tmp->next;
+		// 	free(cmd_tmp);
+		// 	cmd_tmp = NULL;
+		// 	printf("\n\n______________________\n\n");
+		// 	cmd_tmp = cmd_tmp2;
+		// }
 		// free(cmd_tmp);
 		// system("leaks a.out");
 	}
 }
+
+
+// int main()
+// {
+// 	char *args[3] = {"ls", "-las", NULL};
+
+// 	int pid;
+
+// 	pid = fork();
+// 		if (pid == 0)
+// 	{
+// 		execv("/bin/ls", args);
+// 	}
+// 	wait(NULL);
+
+// }

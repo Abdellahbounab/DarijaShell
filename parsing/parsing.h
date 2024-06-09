@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/08 12:00:36 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/09 11:23:41 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,11 @@
 
 # define ERROR -1
 # define GOOD 0
+
 # define SINGLE_Q 39
 # define DOUBLE_Q 34
 # define WITHOUT 32
+
 #define TAB 9
 #define SPACE 32
 
@@ -52,10 +54,21 @@ typedef enum s_type {
 // $ar -> return extended variable using split
 // '$ar' -> return $ar as arg
 // "$ar" -> return its value in a single arg
+
+// < "helo wolr" cat < ls"$Ar" ar="ls -la"
+
+
+typedef struct s_filenam{
+	char *name; //splitted by $
+	int	variable; //0 or 1
+	struct s_file_name *next;
+}t_filename;
 typedef struct s_file{
 	char *name;
+	// t_filename *names;
 	t_type type;
 	int	text_type; //1 for extend else 0
+	int	*pos;
 	struct  s_file *next;
 } t_file;
 
@@ -84,6 +97,7 @@ typedef struct s_parsing_info
 	int dollar;
 	int var_from;
 	t_env *env;
+	t_cmd *cmd;
 } t_parsing_info;
 
 /*-----------------------var_tooles----------------------*/
@@ -121,5 +135,9 @@ t_cmd *parse_cmds(char **split_cmd, t_env *env);
 int create_files(t_cmd *cmd, char **line, t_parsing_info *info, t_type type);
 char *single_quote(char *line, t_parsing_info *info);
 char *double_without(char *part, t_parsing_info *info, int flage);
+
+void free_array(char ***array);
+char *parsing_extend_var(char *string, t_env *env);
+char **parsing_split(char *string);
 
 #endif
