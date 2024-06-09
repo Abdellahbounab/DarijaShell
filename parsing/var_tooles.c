@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 17:50:44 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/09 11:15:47 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/09 14:27:50 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,28 @@ char *dollar_sign(char *string, t_parsing_info *info, char *var_value)
 	free(tmp);
 	free(var_value);
 	var_value = var_extand(string, info);
+	// printf("var_value1:%s\n", var_value);
+	tmp = var_value;
+	var_value = ft_strjoin(before_dollar, var_value);
+	// printf("var_value2:%s\n", var_value);
+	free(tmp);
+	free(before_dollar);
+	return (var_value);
+}
+
+char *quation_mark(char *string, t_parsing_info *info, char *var_value, int *status)
+{
+	char *before_dollar;
+	char *tmp;
+
+	before_dollar = ft_substr(string, info->start, info->end - info->start);
+	// printf("before_dollar1:%s\n", before_dollar);
+	tmp = before_dollar;
+	before_dollar = ft_strjoin(var_value, before_dollar);
+	// printf("before_dollar2:%s\n", before_dollar);
+	free(tmp);
+	free(var_value);
+	var_value = ft_itoa(*status);
 	// printf("var_value1:%s\n", var_value);
 	tmp = var_value;
 	var_value = ft_strjoin(before_dollar, var_value);

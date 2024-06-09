@@ -21,7 +21,6 @@
 // 	}
 // }
 
-
 // space, tab, newline, ‘|’, ‘&’, ‘;’, ‘(’, ‘)’.
 int main()
 {
@@ -32,10 +31,11 @@ int main()
 	t_cmd *cmd_tmp;
 	t_cmd *cmd_tmp2;
 	t_file *tmp;
-	// int status;
+	int status;
 	// char *str;
 	t_env *env;
 
+	status = 0;
 	env = malloc(sizeof(t_env));
 	env->key = "arg";
 	env->value = "ls -la";
@@ -47,12 +47,12 @@ int main()
 	{
 		line = readline("minishell-$ ");
 		add_history(line);
-		line = parsing_extend_var(line, env);
-		printf("new_line: %s\n", line);
-		cmd = parsing_split(line);
-		// free(line);
-		// line = NULL;
-		// command = parse_cmds(cmd, env);
+		if (line[0] == 'e' && line[1] == 'x'&& line[2] == 'i' && line[3] == 't')
+			exit(0);
+		cmd = split_cmd(line);
+		free(line);
+		line = NULL;
+		command = parse_cmds(cmd, env, &status);
 		i = 0;
 		while (cmd && cmd[i])
 		{
@@ -60,42 +60,52 @@ int main()
 			free(cmd[i]);
 			i++;
 		}
-		// free(cmd);
-		// cmd = NULL;
-		
+		free(cmd);
+		cmd = NULL;
+
 		printf("\n");
-		
-		// cmd_tmp = command;
-		// tmp = NULL;
-		// while (cmd_tmp)
-		// {
-		// 	while (cmd_tmp && cmd_tmp->files)
-		// 	{
-		// 		printf("filelename: |%s|\ttype:%d\tvar_from:%d\n", cmd_tmp->files->name, cmd_tmp->files->type, cmd_tmp->files->text_type);
-		// 		free(cmd_tmp->files->name);
-		// 		tmp = cmd_tmp->files->next;
-		// 		free(cmd_tmp->files);
-		// 		cmd_tmp->files = tmp;
-		// 	}
-		// 	printf("args: ");
-		// 	i = 0;
-		// 	while (cmd_tmp && cmd_tmp->args && cmd_tmp->args[i])
-		// 	{
-		// 		printf("|%s|\t", cmd_tmp->args[i]);
-		// 		free(cmd_tmp->args[i++]);
-		// 	}
-		// 	free(cmd_tmp->args);
-		// 	cmd_tmp2 = cmd_tmp->next;
-		// 	free(cmd_tmp);
-		// 	cmd_tmp = NULL;
-		// 	printf("\n\n______________________\n\n");
-		// 	cmd_tmp = cmd_tmp2;
-		// }
-		// free(cmd_tmp);
+
+		cmd_tmp = command;
+		tmp = NULL;
+		int j;
+
+		while (cmd_tmp)
+		{
+			while (cmd_tmp && cmd_tmp->files)
+			{
+				j = 0;
+				printf("filenames: \t");
+				while (cmd_tmp->files->name && cmd_tmp->files->name[j])
+				{
+					printf("|%s|\t", cmd_tmp->files->name[j]);
+					free(cmd_tmp->files->name[j++]);
+				}
+				if (cmd_tmp->files->name)
+					free(cmd_tmp->files->name[j]);
+				printf("type:%d\n", cmd_tmp->files->type);
+				free(cmd_tmp->files->name);
+				tmp = cmd_tmp->files->next;
+				free(cmd_tmp->files);
+				cmd_tmp->files = tmp;
+			}
+			printf("args: ");
+			i = 0;
+			while (cmd_tmp && cmd_tmp->args && cmd_tmp->args[i])
+			{
+				printf("|%s|\t", cmd_tmp->args[i]);
+				free(cmd_tmp->args[i++]);
+			}
+			free(cmd_tmp->args);
+			cmd_tmp2 = cmd_tmp->next;
+			free(cmd_tmp);
+			cmd_tmp = NULL;
+			printf("\n\n______________________\n\n");
+			cmd_tmp = cmd_tmp2;
+		}
+		free(cmd_tmp);
 		// system("leaks a.out");
 	}
 }
-
 
 // int main()
 // {

@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/09 11:30:10 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/09 14:27:27 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ typedef struct s_filenam{
 	struct s_file_name *next;
 }t_filename;
 typedef struct s_file{
-	char *name;
+	char **name;
 	// t_filename *names;
 	t_type type;
 	int	text_type; //1 for extend else 0
@@ -76,8 +76,8 @@ typedef struct s_cmd
 {
 	char	**args;
 	char	*path;
-	int		*status;
-	t_file *files;
+	int		*status; // handle this
+	t_file	*files;
 	struct s_cmd *next;
 }	t_cmd;
 
@@ -132,14 +132,15 @@ char **append_array(char **old_array, char *arg);
 
 /*-----------------------parsing----------------------*/
 
-char *filter(char *line, t_parsing_info *info);
-t_cmd *parse_cmds(char **split_cmd, t_env *env);
+char *filter(char *line);
+t_cmd *parse_cmds(char **split_cmd, t_env *env, int *status);
 int create_files(t_cmd *cmd, char **line, t_parsing_info *info, t_type type);
-char *single_quote(char *line, t_parsing_info *info);
-char *double_without(char *part, t_parsing_info *info, int flage);
+// char *single_quote(char *line, t_parsing_info *info);
+// char *double_without(char *part, t_parsing_info *info, int flage);
 
+char *quation_mark(char *string, t_parsing_info *info, char *var_value, int *status);
 
-char *parsing_extend_var(char *string, t_env *env);
+char *parsing_extend_var(char *string, t_env *env, int *status);
 char **parsing_split(char *string);
 
 #endif
