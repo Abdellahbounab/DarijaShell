@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/10 15:43:03 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/10 16:10:41 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,32 +31,12 @@
 #define TAB 9
 #define SPACE 32
 
-// <Makefile>out cat|wc>test|grep -v "test">out<Make""'file'""""
-// <Makefile>out<<$arg cat|wc>test|grep -v "test">out<Make""'file'""""
-// $arg -> ls -la
-
 typedef enum s_type {
 	infile = 1,
 	oufile = 2,
 	append = 3,
 	here_doc = 4,
 } t_type;
-
-
-// only redirect case :
-// 		in case of <'$ar' ->return $ar and variable = 0; -> iwould undertand it as a file name and not to be extended
-// 		in case of <$ar$ar1 -> return $ar and variable = 1; -> iwoudl understand it as to be extended
-// 		in case of <"$ar" -> return extended variable in a file name
-
-
-// in other cases than redirection : 
-// << $ar -> return $ar as a delimiter and not extend it
-// $ar -> return extended variable using split
-// '$ar' -> return $ar as arg
-// "$ar" -> return its value in a single arg
-
-// < "helo wolr" cat < ls"$Ar" ar="ls -la"
-
 
 typedef struct s_file{
 	char **name;
@@ -68,7 +48,7 @@ typedef struct s_cmd
 {
 	char	**args;
 	char	*path;
-	int		*status; // handle this
+	int		*status;
 	t_file	*files;
 	struct s_cmd *next;
 }	t_cmd;
@@ -137,19 +117,23 @@ char **append_array(char **old_array, char *arg);
 /// @note it return NULL if tokens is NULL or create_cmd function faild or faild to allocate
 t_cmd *parse_cmds(char **tokens, t_env *env, int *status);
 
+/// @brief this where all the algorith of parsing is
+/// @param line reading line from readline function
+/// @param env envirment variable
+/// @param status the address of status variable
+/// @return a head of all command in the linked list
+t_cmd	*parsing(char *line, t_env *env, int *status);
 
-
-t_cmd *parsing(char *line, t_env *env, int *status);
-int check_next(char *str, char *line);
-int create_files(t_cmd *cmd, char **line, t_info *info, t_type type);
-void free_cmd(t_cmd *cmd);
-char *parsing_extend_var(char *string, t_env *env, int *status);
-char **parsing_split(char *string);
-char *filter(char *part);
-int set_default(t_cmd **cmd, int *status);
-void add_back_cmd(t_cmd *head, t_cmd *next_command);
-char *quation_mark(char *string, t_info *info, char *var_value, int *status);
-int quote_skip(char *str, int *index, char quote);
-void alloc_appand(char *line, int start, int end, char ***words_symboles);
+int		check_next(char *str, char *line);
+int		create_files(t_cmd *cmd, char **line, t_info *info, t_type type);
+void	free_cmd(t_cmd *cmd);
+char	*parsing_extend_var(char *string, t_env *env, int *status);
+char	**parsing_split(char *string);
+char	*filter(char *part);
+int		set_default(t_cmd **cmd, int *status);
+void	add_back_cmd(t_cmd *head, t_cmd *next_command);
+char	*quation_mark(char *string, t_info *info, char *var_value, int *status);
+int		quote_skip(char *str, int *index, char quote);
+void	alloc_appand(char *line, int start, int end, char ***words_symboles);
 
 #endif
