@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/09 14:27:27 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/10 13:30:02 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ typedef struct s_env
 	struct s_env *next;
 } t_env;
 
-typedef struct s_parsing_info
+typedef struct s_info
 {
 	int start;
 	int end;
@@ -98,7 +98,7 @@ typedef struct s_parsing_info
 	int var_from;
 	t_env *env;
 	t_cmd *cmd;
-} t_parsing_info;
+} t_info;
 
 /*-----------------------var_tooles----------------------*/
 /// @brief Checks if the given name is valid
@@ -111,36 +111,52 @@ char *get_var_value(t_env *env, char *var_name);
 
 /// @brief Extract the variable name from a string
 /// @return variable name
-char *get_var_name(char *string, t_parsing_info *info);
+char *get_var_name(char *string, t_info *info);
 
 /// @brief Extand all variables in a string if there are next each other
 /// @return variables value or NULL if no variable execte at env
-char *var_extand(char *string, t_parsing_info *info);
+char *var_extand(char *string, t_info *info);
 
 /// @brief what should you do when you find a dollar sign
 /// @return string with extanded all the variable in the string
-char *dollar_sign(char *string, t_parsing_info *info, char *var_value);
+char *dollar_sign(char *string, t_info *info, char *var_value);
 
-/*----------------------split_cmd----------------------*/
+/*----------------------split_line----------------------*/
 
-char **split_cmd(char *line);
+/// @brief this function will split a line to a tokens
+/// @return an array of tokens
+char **split_line(char *line);
+
+/// @brief free an array
 void free_array(char ***array);
-int quote_skip(char *str, int *index, char quote);
-void alloc_appand(char *line, int start, int end, char ***words_symboles);
-/// @brief appand and element to end of an array
+
+/// @brief calculate size of an array
+/// @return size of the array
+int array_size(char **array);
+
+/// @brief add arg to end of an array and free the old array
+/// @return new array with arg as a last pramiter
 char **append_array(char **old_array, char *arg);
 
-/*-----------------------parsing----------------------*/
 
-char *filter(char *line);
-t_cmd *parse_cmds(char **split_cmd, t_env *env, int *status);
-int create_files(t_cmd *cmd, char **line, t_parsing_info *info, t_type type);
-// char *single_quote(char *line, t_parsing_info *info);
-// char *double_without(char *part, t_parsing_info *info, int flage);
+/// @brief create a commands linked list with all info in command and its args, rediraction functions, status pointer ...
+/// @param tokens An array of tokens 
+/// @param status address of status variable
+/// @return head of the command linked list
+/// @note it return NULL if tokens is NULL or create_cmd function faild or faild to allocate
+t_cmd *parse_cmds(char **tokens, t_env *env, int *status);
 
-char *quation_mark(char *string, t_parsing_info *info, char *var_value, int *status);
-
+t_cmd *parsing(char *line, t_env *env, int *status);
+int check_next(char *str, char *line);
+int create_files(t_cmd *cmd, char **line, t_info *info, t_type type);
+void free_cmd(t_cmd *cmd);
 char *parsing_extend_var(char *string, t_env *env, int *status);
 char **parsing_split(char *string);
+char *filter(char *part);
+int set_default(t_cmd **cmd, int *status);
+void add_back_cmd(t_cmd *head, t_cmd *next_command);
+char *quation_mark(char *string, t_info *info, char *var_value, int *status);
+int quote_skip(char *str, int *index, char quote);
+void alloc_appand(char *line, int start, int end, char ***words_symboles);
 
 #endif

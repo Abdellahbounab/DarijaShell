@@ -22,6 +22,20 @@
 // }
 
 // space, tab, newline, ‘|’, ‘&’, ‘;’, ‘(’, ‘)’.
+
+// void print_array(char **array)
+// {
+// 	int i;
+
+// 	i = 0;
+// 	while (cmd && cmd[i])
+// 	{
+// 		printf("|%s|\t", cmd[i]);
+// 		free(cmd[i]);
+// 		i++;
+// 	}
+// }
+
 int main()
 {
 	int i;
@@ -47,21 +61,15 @@ int main()
 	{
 		line = readline("minishell-$ ");
 		add_history(line);
-		if (line[0] == 'e' && line[1] == 'x'&& line[2] == 'i' && line[3] == 't')
+		if (line[0] == 'e' && line[1] == 'x' && line[2] == 'i' && line[3] == 't')
 			exit(0);
-		cmd = split_cmd(line);
-		free(line);
-		line = NULL;
-		command = parse_cmds(cmd, env, &status);
-		i = 0;
-		while (cmd && cmd[i])
-		{
-			printf("|%s|\t", cmd[i]);
-			free(cmd[i]);
-			i++;
-		}
-		free(cmd);
-		cmd = NULL;
+		// cmd = split_cmd(line);
+		// free(line);
+		// line = NULL;
+		command = parsing(line, env, &status);
+
+		// free(cmd);
+		// cmd = NULL;
 
 		printf("\n");
 
@@ -103,7 +111,7 @@ int main()
 			cmd_tmp = cmd_tmp2;
 		}
 		free(cmd_tmp);
-		// system("leaks a.out");
+		system("leaks a.out");
 	}
 }
 

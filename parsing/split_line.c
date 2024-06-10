@@ -1,26 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   split_cmd.c                                        :+:      :+:    :+:   */
+/*   split_line.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 12:31:21 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/09 11:31:00 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/10 13:31:27 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
-
-void free_array(char ***array)
-{
-	int size;
-
-	size = 0;
-	while (array && *array && (*array)[size])
-		free((*array)[size++]);
-	free((*array));
-}
 
 char **append_array(char **old_array, char *arg)
 {
@@ -29,9 +19,7 @@ char **append_array(char **old_array, char *arg)
 
 	if (arg == NULL)
 		return (old_array);
-	size = 0;
-	while (old_array && old_array[size])
-		size++;
+	size = array_size(old_array);
 	new_array = malloc(sizeof(char *) * (size + 2));
 	if (new_array == NULL)
 		return (NULL);
@@ -45,10 +33,9 @@ char **append_array(char **old_array, char *arg)
 	while (old_array[size])
 	{
 		new_array[size] = ft_strdup(old_array[size]);
-		free(old_array[size]);
 		size++;
 	}
-	free(old_array);
+	free_array(&old_array);
 	new_array[size++] = ft_strdup(arg);
 	new_array[size] = NULL;
 	return (new_array);
@@ -104,11 +91,7 @@ static int blank_quote(char *line, int start, int *end, char ***words_symboles)
 	return (GOOD);
 }
 
-// cat -e "Makefile" 						-> 			[cat, -e, "Makefile"]
-// < hello cat -e "Makefile" 				-> 			[< , hello, cat, -e , "Makefile"]
-// helo>makefile<howled cat|wc >"out"'' 	-> 			[helo, >, makefile, <, howled, cat, |, wc, "out",'']
-// hello>>out<<ok cat 						-> 			[hello, >>, out, <<, ok, cat]
-char **split_cmd(char *line)
+char **split_line(char *line)
 {
 	char **words_symboles;
 	int start;

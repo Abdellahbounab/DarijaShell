@@ -11,23 +11,23 @@ CFLAGS = -Wall -Wextra -Werror -lreadline -lncurses
 
 # re:
 
-TST=	parsing/test.c \
-		parsing/split_cmd.c \
-		parsing/var_tooles.c \
+TST=	parsing/cmd.c \
+		parsing/free.c \
 		parsing/new_filter.c \
 		parsing/new_parsing.c \
-		# parsing/parsing.c \
-		# parsing/filter.c \
-		# exec.c \
-		# set_defaults.c 
+		parsing/parsing_tooles.c \
+		parsing/split_line.c 	\
+		parsing/test.c \
+		parsing/var_tooles.c 
+	
 OTST=$(TST:.c=.o)
 
 all: test
 
 test: lib
-	cc -lreadline -lncurses -fsanitize=address -Llibft libft/libft.a $(TST)
+	cc -lreadline -lncurses  -Llibft libft/libft.a $(TST)
 
-# test: lib $(OTST) parsing/parsing.h
+# test: lib $(OTST) parsing/parsing.h-fsanitize=address
 # 	cc $(OTST) -Llibft -lft -lreadline -lncurses -fsanitize=address -o test
 	
 fclean:
