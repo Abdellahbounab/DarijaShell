@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/10 13:30:02 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/10 15:43:03 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,17 +58,9 @@ typedef enum s_type {
 // < "helo wolr" cat < ls"$Ar" ar="ls -la"
 
 
-typedef struct s_filenam{
-	char *name; //splitted by $
-	int	variable; //0 or 1
-	struct s_file_name *next;
-}t_filename;
 typedef struct s_file{
 	char **name;
-	// t_filename *names;
 	t_type type;
-	int	text_type; //1 for extend else 0
-	int	*pos;
 	struct  s_file *next;
 } t_file;
 
@@ -138,13 +130,14 @@ int array_size(char **array);
 /// @return new array with arg as a last pramiter
 char **append_array(char **old_array, char *arg);
 
-
 /// @brief create a commands linked list with all info in command and its args, rediraction functions, status pointer ...
 /// @param tokens An array of tokens 
 /// @param status address of status variable
 /// @return head of the command linked list
 /// @note it return NULL if tokens is NULL or create_cmd function faild or faild to allocate
 t_cmd *parse_cmds(char **tokens, t_env *env, int *status);
+
+
 
 t_cmd *parsing(char *line, t_env *env, int *status);
 int check_next(char *str, char *line);

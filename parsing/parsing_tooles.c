@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:23:00 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/10 15:19:28 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/10 16:01:51 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,16 +89,16 @@ int check_next(char *str, char *line)
 {
 	if (str == NULL || ft_strcmp(str, "|") == GOOD)
 	{
-		ft_putstr_fd("parse error near '", STDERR_FILENO);
-		ft_putstr_fd(str, STDERR_FILENO);
-		write(STDERR_FILENO, "'\n", 2);
+		ft_putstr_fd("syntax error \n", STDERR_FILENO);
+		// ft_putstr_fd(str, STDERR_FILENO);
+		// write(STDERR_FILENO, "'\n", 2);
 		return (ERROR);
 	}
 	if (ft_strcmp(str, ">") == 0 || ft_strcmp(str, ">>") == 0 || ft_strcmp(str, "<") == 0 || ft_strcmp(str, "<<") == 0)
 	{
-		ft_putstr_fd("syntax error near unexpected token '", STDERR_FILENO);
-		ft_putstr_fd(str, STDERR_FILENO);
-		write(STDERR_FILENO, "'\n", 2);
+		ft_putstr_fd("syntax error \n", STDERR_FILENO);
+		// ft_putstr_fd(str, STDERR_FILENO);
+		// write(STDERR_FILENO, "'\n", 2);
 		return (ERROR);
 	}
 	return (GOOD);

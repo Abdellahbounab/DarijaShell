@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:21:34 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/10 15:18:10 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/10 16:03:23 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,9 +106,9 @@ static t_cmd *create_cmd(char **tokens, t_info *info, int *status)
 	{
 		if (ft_strcmp(tokens[info->cmd_i], "|") == 0)
 		{
-			if (tokens[++(info->cmd_i)] == NULL)
+			if (tokens[0] || tokens[info->cmd_i + 1] == NULL || ft_strcmp(tokens[++(info->cmd_i)], "|") == 0)
 			{
-				ft_putstr_fd("syntax error near unexpected token `|'\n", STDERR_FILENO);
+				ft_putstr_fd("syntax error \n", STDERR_FILENO);
 				free_cmd(cmd);
 				return (NULL);
 			}

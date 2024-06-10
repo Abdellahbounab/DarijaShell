@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 11:15:13 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/10 15:23:52 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/10 16:02:57 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,6 @@ t_cmd *parsing(char *line, t_env *env, int *status)
 	free(line);
 	line = NULL;
 	cmds_head = parse_cmds(tokens, env, status);
-	// free tokens
 	free_array(&tokens);
 	return (cmds_head);
 }
