@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 17:50:44 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/10 13:10:03 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/11 11:50:45 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ char *var_extand(char *part, t_info *info)
 	char *var_name;
 	char *tmp;
 	char *var_value;
-	t_env *tmp_env;
+	// t_env *tmp_env;
 
 	string = NULL;
 	while (part[info->end] == '$')

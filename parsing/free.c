@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:22:05 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/10 15:19:33 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/11 14:26:25 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,13 @@ void free_array(char ***array)
 	int size;
 
 	size = 0;
-	if (array == NULL || *array == NULL)
-		return;
-	while ((*array)[size])
-		free((*array)[size++]);
-	free((*array));
-	*array = NULL;
+	if (array && *array)
+	{
+		while ((*array)[size])
+			free((*array)[size++]);
+		free((*array));
+		*array = NULL;
+	}
 }
 
 int array_size(char **array)

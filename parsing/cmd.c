@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:21:34 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/10 16:03:23 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/11 14:34:29 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,17 @@ static int input_files(char **line, t_cmd *cmd, t_info *info)
 	if (ft_strcmp(line[info->cmd_i], "<") == 0)
 	{
 		info->file = 1;
-		if (check_next(line[++(info->cmd_i)], "<") == ERROR)
+		if (check_next(line[++(info->cmd_i)]) == ERROR)
 			status = ERROR;
-		if (create_files(cmd, line, info, infile) == ERROR)
+		if (create_files(cmd, line, info, INFILE) == ERROR)
 			status = ERROR;
 	}
 	else if (ft_strcmp(line[info->cmd_i], "<<") == 0)
 	{
 		info->file = 1;
-		if (check_next(line[++(info->cmd_i)], "<<") == ERROR)
+		if (check_next(line[++(info->cmd_i)]) == ERROR)
 			status = ERROR;
-		if (create_files(cmd, line, info, here_doc) == ERROR)
+		if (create_files(cmd, line, info, HERE_DOC) == ERROR)
 			status = ERROR;
 	}
 	if (status == ERROR)
@@ -46,18 +46,18 @@ static int output_files(char **line, t_cmd *cmd, t_info *info)
 	if (ft_strcmp(line[info->cmd_i], ">") == 0)
 	{
 		info->file = 1;
-		if (check_next(line[++(info->cmd_i)], ">") == ERROR)
+		if (check_next(line[++(info->cmd_i)]) == ERROR)
 			status = ERROR;
-		if (create_files(cmd, line, info, oufile) == ERROR)
+		if (create_files(cmd, line, info, OUFILE) == ERROR)
 			status = ERROR;
 	}
 	else if (ft_strcmp(line[info->cmd_i], ">>") == 0)
 	{
 		info->file = 1;
-		if (check_next(line[++(info->cmd_i)], ">>") == ERROR)
+		if (check_next(line[++(info->cmd_i)]) == ERROR)
 			status = ERROR;
 
-		if (create_files(cmd, line, info, append) == ERROR)
+		if (create_files(cmd, line, info, APPEND) == ERROR)
 			status = ERROR;
 	}
 	if (status == ERROR)
@@ -106,9 +106,9 @@ static t_cmd *create_cmd(char **tokens, t_info *info, int *status)
 	{
 		if (ft_strcmp(tokens[info->cmd_i], "|") == 0)
 		{
-			if (tokens[0] || tokens[info->cmd_i + 1] == NULL || ft_strcmp(tokens[++(info->cmd_i)], "|") == 0)
+			if (ft_strcmp(tokens[0], "|") == 0 || tokens[info->cmd_i + 1] == NULL || ft_strcmp(tokens[++(info->cmd_i)], "|") == 0)
 			{
-				ft_putstr_fd("syntax error \n", STDERR_FILENO);
+				ft_putstr_fd("syntax error0 \n", STDERR_FILENO);
 				free_cmd(cmd);
 				return (NULL);
 			}
@@ -126,7 +126,6 @@ t_cmd *parse_cmds(char **tokens, t_env *env, int *status)
 {
 	t_info *info;
 	t_cmd *cmd;
-	int i;
 
 	if (tokens == NULL)
 		return (NULL);
@@ -135,14 +134,9 @@ t_cmd *parse_cmds(char **tokens, t_env *env, int *status)
 		return (NULL);
 	info->cmd_i = 0;
 	info->env = env;
-	cmd = create_cmd(tokens, info, status); // when it return NULL ?
-	if (cmd == NULL)
-	{
-		free(info);
-		return (NULL);
-	}
+	cmd = create_cmd(tokens, info, status);
 	while (cmd && tokens && tokens[info->cmd_i])
-		add_back_cmd(cmd, create_cmd(tokens, info, status)); // when it is faild ?
+		add_back_cmd(cmd, create_cmd(tokens, info, status));
 	free(info);
 	return (cmd);
 }

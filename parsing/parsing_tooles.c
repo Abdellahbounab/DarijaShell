@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:23:00 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/10 16:01:51 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/11 14:24:39 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,13 @@ int create_files(t_cmd *cmd, char **line, t_info *info, t_type type)
 	file = malloc(sizeof(t_file));
 	if (file == NULL)
 		return (ERROR);
-	if (type != here_doc)
+	if (type != HERE_DOC)
 		tmp = parsing_extend_var(line[info->cmd_i], info->env, info->cmd->status);
 	else
 		tmp = line[info->cmd_i];
 	file->type = type;
 	file->name = parsing_split(tmp);
-	if (type != here_doc)
+	if (type != HERE_DOC)
 		free(tmp);
 	while (file->name && file->name[i])
 	{
@@ -85,20 +85,16 @@ void add_back_cmd(t_cmd *head, t_cmd *next_command)
 	}
 }
 
-int check_next(char *str, char *line)
+int check_next(char *str)
 {
 	if (str == NULL || ft_strcmp(str, "|") == GOOD)
 	{
-		ft_putstr_fd("syntax error \n", STDERR_FILENO);
-		// ft_putstr_fd(str, STDERR_FILENO);
-		// write(STDERR_FILENO, "'\n", 2);
+		ft_putstr_fd("syntax error1 \n", STDERR_FILENO);
 		return (ERROR);
 	}
 	if (ft_strcmp(str, ">") == 0 || ft_strcmp(str, ">>") == 0 || ft_strcmp(str, "<") == 0 || ft_strcmp(str, "<<") == 0)
 	{
-		ft_putstr_fd("syntax error \n", STDERR_FILENO);
-		// ft_putstr_fd(str, STDERR_FILENO);
-		// write(STDERR_FILENO, "'\n", 2);
+		ft_putstr_fd("syntax error2 \n", STDERR_FILENO);
 		return (ERROR);
 	}
 	return (GOOD);

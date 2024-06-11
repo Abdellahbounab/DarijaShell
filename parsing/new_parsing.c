@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 11:15:13 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/10 16:02:57 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/11 14:29:30 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,9 @@ char *parsing_extend_var(char *string, t_env *env, int *status)
 	info = malloc(sizeof(t_info));
 	if (info == NULL)
 		return (NULL);
-	info->end = 0, info->start = 0, info->env = env;
+	info->end = 0;
+	info->start = 0;
+	info->env = env;
 	new_string = NULL;
 	tmp = extend_var_logic(string, info, status);
 	new_string = ft_substr(string, info->start, info->end - info->start);

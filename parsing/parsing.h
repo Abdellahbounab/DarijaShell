@@ -6,71 +6,14 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/10 16:10:41 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/11 14:18:42 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSING_H
 #define PARSING_H
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <unistd.h>
-#include "../libft/libft.h"
-#include <fcntl.h>
-
-# define ERROR -1
-# define GOOD 0
-
-# define SINGLE_Q 39
-# define DOUBLE_Q 34
-# define WITHOUT 32
-
-#define TAB 9
-#define SPACE 32
-
-typedef enum s_type {
-	infile = 1,
-	oufile = 2,
-	append = 3,
-	here_doc = 4,
-} t_type;
-
-typedef struct s_file{
-	char **name;
-	t_type type;
-	struct  s_file *next;
-} t_file;
-
-typedef struct s_cmd
-{
-	char	**args;
-	char	*path;
-	int		*status;
-	t_file	*files;
-	struct s_cmd *next;
-}	t_cmd;
-
-typedef struct s_env
-{
-	char *key;
-	char *value;
-	struct s_env *next;
-} t_env;
-
-typedef struct s_info
-{
-	int start;
-	int end;
-	int cmd_i;
-	int file;
-	int dollar;
-	int var_from;
-	t_env *env;
-	t_cmd *cmd;
-} t_info;
+#include "../types.h"
 
 /*-----------------------var_tooles----------------------*/
 /// @brief Checks if the given name is valid
@@ -124,7 +67,7 @@ t_cmd *parse_cmds(char **tokens, t_env *env, int *status);
 /// @return a head of all command in the linked list
 t_cmd	*parsing(char *line, t_env *env, int *status);
 
-int		check_next(char *str, char *line);
+int		check_next(char *str);
 int		create_files(t_cmd *cmd, char **line, t_info *info, t_type type);
 void	free_cmd(t_cmd *cmd);
 char	*parsing_extend_var(char *string, t_env *env, int *status);

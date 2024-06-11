@@ -1,42 +1,39 @@
 NAME = minishell
-CFLAGS = -Wall -Wextra -Werror -lreadline -lncurses 
+CFLAGS = -Wall -Wextra -Werror
 
-# all:
-
-# $(NAME): 
-
-# clean:
-
-# fclean:
-
-# re:
-
-# INCLUDES= 
-
-TST=	parsing/cmd.c \
+#  -fsanitize=address
+SRC =	main.c \
+		parsing/cmd.c \
 		parsing/free.c \
 		parsing/new_filter.c \
 		parsing/new_parsing.c \
 		parsing/parsing_tooles.c \
 		parsing/split_line.c 	\
-		parsing/test.c \
 		parsing/var_tooles.c \
-		env/built_in.c\
-		env/create_env.c
-	
-OTST=$(TST:.c=.o)
+		# env/built_in.c\
+		# env/create_env.c 
 
-all: test
+INCLUDES=	env/env.h \
+			parsing/parsing.h\
+			types.h 
 
-test: lib
-	cc -lreadline -lncurses  -Llibft libft/libft.a $(TST)
+OBJ=$(SRC:.c=.o)
 
-# test: lib $(OTST) parsing/parsing.h-fsanitize=address
-# 	cc $(OTST) -Llibft -lft -lreadline -lncurses -fsanitize=address -o test
-	
-fclean:
-	make fclean -C libft
-	rm -f a.out $(OTST)
+%.o: %.c $(INCLUDES)
+	cc $(CFLAGS) -c $< -o $@
 
-lib:
+all: $(NAME)
+
+$(NAME): $(OBJ) 
 	make -C libft
+	cc $(CFLAGS) -lreadline -lncurses $(OBJ) libft/libft.a -o $@
+
+clean: 
+	make clean -C libft
+	rm -f $(OBJ)
+
+fclean: clean
+	make fclean -C libft
+	rm -f $(NAME)
+
+re: fclean all 
