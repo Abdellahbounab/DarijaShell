@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:22:05 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/11 14:26:25 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/11 16:17:32 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ void free_cmd(t_cmd *cmd)
 			free_array(&cmd->files->name);
 			tmp_file = cmd->files->next;
 			free(cmd->files);
-			cmd->files = NULL;
 			cmd->files = tmp_file;
 		}
 		cmd_tmp = cmd->next;
