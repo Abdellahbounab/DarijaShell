@@ -10,10 +10,9 @@ void print_cmd(t_cmd *command)
 
 	cmd_tmp = command;
 	t_file *tmp_file;
-	if (cmd_tmp)
-		tmp_file = cmd_tmp->files;
 	while (cmd_tmp)
 	{
+		tmp_file = cmd_tmp->files;
 		while (cmd_tmp && tmp_file)
 		{
 			j = 0;
@@ -33,7 +32,7 @@ void print_cmd(t_cmd *command)
 	cmd_tmp = NULL;
 }
 
-int main()
+int main(int ac, char **av, char **envp)
 {
 	char *line;
 	t_cmd *command;
@@ -41,7 +40,9 @@ int main()
 	t_env *env;
 
 	status = 0;
-	env = NULL;
+	if (!get_env(&env, envp))
+		return (127);
+	// ft_signals();
 	while (1)
 	{
 		line = readline("minishell-$ ");
