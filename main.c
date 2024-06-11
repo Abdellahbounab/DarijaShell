@@ -10,7 +10,8 @@ void print_cmd(t_cmd *command)
 
 	cmd_tmp = command;
 	t_file *tmp_file;
-	tmp_file = cmd_tmp->files;
+	if (cmd_tmp)
+		tmp_file = cmd_tmp->files;
 	while (cmd_tmp)
 	{
 		while (cmd_tmp && tmp_file)
