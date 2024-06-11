@@ -40,8 +40,8 @@ int main(int ac, char **av, char **envp)
 	t_env *env;
 
 	status = 0;
-	if (!get_env(&env, envp))
-		return (127);
+	if (!get_env(&env, envp) || ft_strcmp(av[ac - 1], "./minishell"))
+		return (127);//we have to return the error message too
 	// ft_signals();
 	while (1)
 	{
@@ -50,6 +50,9 @@ int main(int ac, char **av, char **envp)
 		if (line[0] == 'e' && line[1] == 'x' && line[2] == 'i' && line[3] == 't')
 			exit(0);
 		command = parsing(line, env, &status);
+		
+		excution(command, env);
+
 		print_cmd(command);
 		free_cmd(command);
 	}

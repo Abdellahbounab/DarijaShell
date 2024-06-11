@@ -10,8 +10,8 @@ SRC =	main.c \
 		parsing/parsing_tooles.c \
 		parsing/split_line.c 	\
 		parsing/var_tooles.c \
-		# env/built_in.c\
-		# env/create_env.c 
+		env/create_env.c 
+		# env/built_in.c
 
 INCLUDES=	env/env.h \
 			parsing/parsing.h\
