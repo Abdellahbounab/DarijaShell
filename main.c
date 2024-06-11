@@ -10,7 +10,8 @@ void print_cmd(t_cmd *command)
 
 	cmd_tmp = command;
 	t_file *tmp_file;
-	tmp_file = cmd_tmp->files;
+	if (cmd_tmp)
+		tmp_file = cmd_tmp->files;
 	while (cmd_tmp)
 	{
 		while (cmd_tmp && tmp_file)
@@ -32,6 +33,12 @@ void print_cmd(t_cmd *command)
 	cmd_tmp = NULL;
 }
 
+// void write_nl(int n)
+// {
+// 	if (n)
+// 		write(STDOUT_FILENO, "hello", 1);
+// }
+
 int main()
 {
 	char *line;
@@ -45,6 +52,7 @@ int main()
 	{
 		line = readline("minishell-$ ");
 		add_history(line);
+		// signal(SIGINT, write_nl);
 		if (line[0] == 'e' && line[1] == 'x' && line[2] == 'i' && line[3] == 't')
 			exit(0);
 		command = parsing(line, env, &status);
