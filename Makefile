@@ -10,7 +10,9 @@ SRC =	main.c \
 		parsing/parsing_tooles.c \
 		parsing/split_line.c 	\
 		parsing/var_tooles.c \
-		env/create_env.c 
+		env/create_env.c \
+		excution/main_excution.c\
+		getnextline/get_next_line_bonus.c
 		# env/built_in.c
 
 INCLUDES=	env/env.h \
@@ -26,7 +28,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ) 
 	make -C libft
-	cc $(CFLAGS) -lreadline -lncurses $(OBJ) libft/libft.a -o $@
+	cc $(CFLAGS) -lreadline -lncurses $(OBJ) libft/libft.a -o $@ -fsanitize=address -g
 
 clean: 
 	make clean -C libft

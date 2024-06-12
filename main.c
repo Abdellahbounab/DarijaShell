@@ -1,6 +1,7 @@
 
 #include "parsing/parsing.h"
-#include "env/env.h"
+// #include "env/env.h"
+#include "excution/excution.h"
 
 void print_cmd(t_cmd *command)
 {

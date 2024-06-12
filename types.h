@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   types.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:30:27 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/11 11:34:42 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/12 14:29:10 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,5 +74,13 @@ typedef struct s_info
 	t_cmd *cmd;
 } t_info;
 
+typedef struct s_excute{
+	char			*cmd;
+	char			**arguments;
+	int				infile;
+	int				outfile;
+	int				pid;
+	struct s_excute	*next;
+}	t_excute;
 
 #endif
