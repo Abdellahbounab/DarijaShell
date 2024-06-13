@@ -52,9 +52,9 @@ int main(int ac, char **av, char **envp)
 		// 	exit(0);
 		command = parsing(line, env, &status);
 		
-		excution(command, env, &status);
+		// print_cmd(command);
+		excution(command, env, &status, envp);
 
-		print_cmd(command);
 		free_cmd(command);
 	}
 }

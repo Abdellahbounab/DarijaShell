@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_tooles.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:23:00 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/11 16:34:55 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/13 20:53:17 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ int set_default(t_cmd **cmd, int *status)
 	if (*cmd == NULL)
 		return (ERROR);
 	(*cmd)->args = NULL;
-	(*cmd)->path = NULL;
 	(*cmd)->status = status;
 	(*cmd)->files = NULL;
 	(*cmd)->next = NULL;

@@ -12,8 +12,8 @@ SRC =	main.c \
 		parsing/var_tooles.c \
 		env/create_env.c \
 		excution/main_excution.c\
-		getnextline/get_next_line_bonus.c
-		# env/built_in.c
+		getnextline/get_next_line_bonus.c\
+		env/built_in.c
 
 INCLUDES=	env/env.h \
 			parsing/parsing.h\

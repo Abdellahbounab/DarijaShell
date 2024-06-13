@@ -1,6 +1,7 @@
 {
 	"files.associations": {
 		"get_next_line_bonus.h": "c",
-		"fcntl.h": "c"
+		"fcntl.h": "c",
+		"excution.h": "c"
 	}
 }

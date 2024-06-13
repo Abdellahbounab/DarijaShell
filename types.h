@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:30:27 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/13 17:55:40 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/13 20:53:21 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ typedef struct s_file{
 typedef struct s_cmd
 {
 	char	**args;
-	char	*path;
 	int		*status;
 	t_file	*files;
 	struct s_cmd *next;

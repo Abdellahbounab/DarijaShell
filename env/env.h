@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 14:16:27 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/11 11:32:07 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/13 22:05:38 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,7 @@ int	env_export(t_env **lst, char *key, char *val);
 int	env_addback(t_env **lst, t_env *newnode);
 int	env_update(t_env **lst, char *key, char *newval);
 char *env_getval(t_env *lst, char *key);
+
+int	is_builtin(char *cmd);
 
 #endif
