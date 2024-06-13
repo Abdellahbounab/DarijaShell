@@ -48,11 +48,11 @@ int main(int ac, char **av, char **envp)
 	{
 		line = readline("minishell-$ ");
 		add_history(line);
-		if (line[0] == 'e' && line[1] == 'x' && line[2] == 'i' && line[3] == 't')
-			exit(0);
+		// if (line[0] == 'e' && line[1] == 'x' && line[2] == 'i' && line[3] == 't')
+		// 	exit(0);
 		command = parsing(line, env, &status);
 		
-		excution(command, env);
+		excution(command, env, &status);
 
 		print_cmd(command);
 		free_cmd(command);

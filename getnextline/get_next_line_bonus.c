@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/09 13:44:03 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/12 15:02:12 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/13 17:09:59 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ char	*ft_update(char *str)
 	return (cpy);
 }
 
+#include <fcntl.h>
 char	*get_next_line(int fd)
 {
 	char		*line;

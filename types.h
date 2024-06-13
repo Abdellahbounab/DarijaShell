@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:30:27 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/12 14:29:10 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/13 17:55:40 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@
 #define SPACE 32
 
 typedef enum s_type {
-	INFILE = 1,
-	OUFILE = 2,
-	APPEND = 3,
+	INFILE = O_RDONLY,
+	OUFILE = O_CREAT | O_TRUNC | O_WRONLY,
+	APPEND = O_CREAT | O_WRONLY | O_APPEND,
 	HERE_DOC = 4,
 } t_type;
 
