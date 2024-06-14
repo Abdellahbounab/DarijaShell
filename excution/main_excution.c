@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/13 22:50:42 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/14 22:17:59 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,10 @@ t_excute	*cmd_create(int inpipe)
 	cmd = ft_calloc(1, sizeof(t_excute));
 	if (!cmd)
 		return (0);
-	cmd->infile = inpipe;
-	cmd->outfile = STDOUT_FILENO;
+	cmd->infile = dup(inpipe); //+4(STDIN) | +5(PIPEOUT)
+	// printf("closed pipe %d\n", inpipe);
+	close(inpipe);
+	cmd->outfile = dup(STDOUT_FILENO); // +6 (STDOUT)
 	return (cmd);
 }
 
@@ -123,7 +125,8 @@ int	cmd_addback(t_excute **cmds, t_excute *node)
 int	open_heredoc(char *heredoc, int outfile)
 {
 	char	*line;
-	
+
+	// check if $variable to expand it
 	write(STDOUT_FILENO, ">", 1);
 	line = get_next_line(STDIN_FILENO);
 	while (line && ft_strncmp(line, heredoc, ft_strlen(heredoc)))
@@ -169,9 +172,8 @@ int	heredoc_management(t_file	*files, t_excute *node)
 		{
 			if (pipe(fd) < 0)
 				return (-1); //error handling
-			// dup2(fd[1], node->infile);
-			node->infile = fd[1];
-			// close(fd[1]);
+			dup2(fd[1], node->infile);
+			close(fd[1]);
 		}
 		if (files->type == HERE_DOC)
 		{
@@ -190,18 +192,23 @@ t_excute	*heredoc_update(t_cmd *command)
 	int			fds[2];
 
 	cmds = NULL;
-	fds[1] = STDIN_FILENO;
+	fds[1] = dup(STDIN_FILENO);
 	while (command)
 	{
 		node = cmd_create(fds[1]);
 		if (!node)
 			return (cmd_free(&cmds), NULL);
-		if (command->next && pipe(fds) != -1)
-			node->outfile = fds[0];
+		if (command->next && pipe(fds) != -1) 
+		{
+			dup2(fds[0], node->outfile); //+3 PIPEIN
+			close(fds[0]);
+		}
 		heredoc_management(command->files, node);
 		cmd_addback(&cmds, node);
+		// printf("(%d, %d)\n",  node->infile, node->outfile);
 		command = command->next;
 	}
+	// while(1);// the while (1)
 	return (cmds);
 }
 
@@ -216,9 +223,7 @@ int	infile_update(t_file *files, t_excute *cmds)
 			return (printf("ambigious"), -1);//error  of ambigious by exit(1);
 		if (files->type == INFILE)
 		{
-			printf("[%s]\n", files->name[0]);
 			fd = open(files->name[0], INFILE);
-			printf("fd : %d\n", fd);
 			if (fd < 0)
 				return (printf("fd no persmission or not exist"), fd) ;//error of file does not exist or no permission will be saved in the errno
 			dup2(fd, cmds->infile);
@@ -300,86 +305,107 @@ char *get_commands(char **argv, char ***cmd_argv, char **paths)
 	if (argv)
 	{
 		if (argv[0] && is_builtin(argv[0]))//checking if it is a builtin 
-			return (printf("here2"),free_array(&paths), *cmd_argv = argv + 1, ft_strdup(argv[0]));//check if some of my builtins to be excuted , wont need a path
+			return (free_array(&paths), *cmd_argv = argv + 1, ft_strdup(argv[0]));//check if some of my builtins to be excuted , wont need a path
 		else if (paths)
 		{
 			if (is_absolutecmd(argv[0], ft_split("/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki", ':'))) //iwould check if it does have a path in its beginning as an abs command
-				return (printf("here3"),*cmd_argv = argv, free_array(&paths), ft_strdup(argv[0]));
+				return (*cmd_argv = argv, free_array(&paths), ft_strdup(argv[0]));
 			cmd = ft_strjoin("/", argv[0]); //ex if ls : it wil be /ls to be used later when joining the paths
 			if (!cmd)
-				return (printf("here4"),free_array(&paths), NULL);//error
+				return (free_array(&paths), NULL);//error
 			if (get_path(cmd, paths))
 			{
 				tmp = cmd;
 				cmd = ft_strjoin(paths[get_path(cmd, paths)], tmp);
 				free(tmp);
 				if (cmd)
-					return (printf("here5"),*cmd_argv = argv, free_array(&paths), cmd);
-				return (printf("here6"),free_array(&paths), NULL); //error 
+					return (*cmd_argv = argv, free_array(&paths), cmd);
+				return (free_array(&paths), NULL); //error 
 			}
 			free(cmd);
 			free_array(&paths);
 			if (ft_strncmp("./", argv[0], 2)) //checking it is a shell script command
-				return (printf("here7"), NULL); //error not a ./ file
+				return ( NULL); //error not a ./ file
 			if (access(argv[0], X_OK) != -1)
-				return (printf("here8"),*cmd_argv = argv, ft_strdup(argv[0]));
-			return (printf("here9"),NULL);
+				return (*cmd_argv = argv, ft_strdup(argv[0]));
+			return (NULL);
 		}
 	}
-	return (printf("here1"), free_array(&paths), NULL);
+	return (free_array(&paths), NULL);
 }
 
-int	excut_cmd(t_excute *cmds, char **envp)
+int	excute_cmd(t_excute *cmds, char **envp)
 {
-	printf("entred\n");
+	dup2(cmds->infile, STDIN_FILENO);
+	close(cmds->infile);
+	dup2(cmds->outfile, STDOUT_FILENO);
+	close(cmds->outfile);
 	if (is_builtin(cmds->cmd))
 		// excute_builtin(cmds);
 		return (printf("is builtins"), 1);
 	else if (cmds && cmds->cmd && cmds->arguments)
-	{
-		dup2(STDOUT_FILENO, cmds->outfile);
-		printf("duplicated");
+	{	
+		// while (1);
 		if (execve(cmds->cmd, cmds->arguments ,envp) == -1)
 			return (-1); //error
 	}
-	printf(">>>cmd:%p\n", cmds->arguments);
 	return (0);
 }
 
 int	child_excution(t_cmd *command, t_excute *cmds, t_env **env, char **envp)
 {
-	// check if ambigious redirect 
+	// check if ambigious redirect
+	printf("(%d, %d)\n", cmds->infile, cmds->outfile);
 	if (infile_update(command->files, cmds) < 0)
 		return (exit(1), 0);//use errno to annonce the error depends if invalid files or ambigious
 	if (outfile_update(command->files, cmds) < 0)
 		return (exit(1), 0);//use errno to annonce the error depends if invalid files or ambigious
 	cmds->cmd = get_commands(command->args, &cmds->arguments, ft_split(env_getval(*env, "PATH"), ':'));
-	printf("cmd : %s\n", cmds->cmd);
-	excut_cmd(cmds, envp);
-	close(cmds->infile);
-	close(cmds->outfile);
+	excute_cmd(cmds, envp);
 	exit(0);
+	// return (1);
+}
+
+int	close_other(t_excute *head, int pos)
+{
+	int	i;
+
+	i = 0;
+	while (head)
+	{
+		if (i != pos)
+		{
+			close(head->infile);
+			close(head->outfile);
+		}
+		i++;
+		head = head->next;
+	}
+	return (1);
 }
 
 int	redirection_update(t_cmd *command, t_excute **head, t_env **env, char **envp)
 {
 	int			pid;
 	t_excute	*cmds;
+	int			i;
 
 	cmds = *head;
+	i = 0;
 	while (command && cmds)
 	{
 		pid = fork();
 		if (!pid)
-			return (child_excution(command, cmds, env, envp));
+			return (close_other(*head, i), child_excution(command, cmds, env, envp));
 		if (pid && pid != -1)
 			cmds->pid = pid;
 		else
 			return (0);//error handling	
 		cmds = cmds->next;
 		command = command->next;
+		i++;
 	}
-	return (1);
+	return (close_other(*head, -1), 1);
 }
 
 int	waitprocess(t_excute *cmds, int *status)
@@ -387,8 +413,6 @@ int	waitprocess(t_excute *cmds, int *status)
 	while (cmds)
 	{
 		waitpid(cmds->pid, status, 0);
-		if (cmds->infile)
-			close(cmds->infile);
 		cmd_free_node(cmds);
 		cmds = cmds->next;
 	}
@@ -397,12 +421,6 @@ int	waitprocess(t_excute *cmds, int *status)
 
 int	excution(t_cmd *command, t_env *env, int *status, char **envp)
 {
-	// 1 - starting by files
-	// important :ihave to open all heredocs first and get the input of whetevr cmd i have 
-	// 		for inputfiles , we check for the last herdoc we use before opening other files , 
-	// 				then if herdoc is not the last file of input files , we wont use it but we return if the files are valid then we use the last input of them
-	// 		for output of append file we wont check if file exist but we only gonna user flag of creat or append + create in case
-	// 2 - verifie the cmd (would be 1st string in args) + get its path in *path
 	// 3 - after we get its commands and all args after verification or return errno with exit status
 	
 	// ihave to pipe if multiple cmd before fork and dup2 the input/ ihave to fork for each node of cmd / this is where iwould get each command in a new t_excute linkedList (get) + ihave to register the pid of the fork in each command in a array of pids
@@ -410,7 +428,6 @@ int	excution(t_cmd *command, t_env *env, int *status, char **envp)
 	
 	cmds = heredoc_update(command);
 	redirection_update(command, &cmds, &env, envp);
-
 	waitprocess(cmds, status);
 	printf("done process\n");
 	return (1);

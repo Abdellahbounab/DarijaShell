@@ -53,6 +53,7 @@ int main(int ac, char **av, char **envp)
 		command = parsing(line, env, &status);
 		
 		// print_cmd(command);
+		
 		excution(command, env, &status, envp);
 
 		free_cmd(command);
