@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/15 21:42:01 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/15 22:50:24 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ int	heredoc_management(t_file	*files, t_excute *node)
 	int fd[2];
 	
 	i = 0;
-	fd[0] = -1;
+	fd[1] = -1;
 	heredoc_postion = get_heredoc_position(files) - 1;
 	while (heredoc_postion >= 0 && files)
 	{
@@ -172,12 +172,12 @@ int	heredoc_management(t_file	*files, t_excute *node)
 		{
 			if (pipe(fd) < 0)
 				return (-1); //error handling
-			dup2(fd[1], node->infile);
-			close(fd[1]);
+			dup2(fd[0], node->infile);
+			close(fd[0]);
 		}
 		if (files->type == HERE_DOC)
 		{
-			open_heredoc(files->name[0], fd[0]);
+			open_heredoc(files->name[0], fd[1]);
 			i++;
 		}
 		files = files->next;
@@ -193,23 +193,21 @@ t_excute	*heredoc_update(t_cmd *command)
 
 	cmds = NULL;
 	if (command)
-		fds[1] = dup(STDIN_FILENO);
+		fds[0] = dup(STDIN_FILENO);
 	while (command)
 	{
-		node = cmd_create(fds[1]);
+		node = cmd_create(fds[0]);
 		if (!node)
 			return (cmd_free(&cmds), NULL);
 		if (command->next && pipe(fds) != -1) 
 		{
-			dup2(fds[0], node->outfile); //+3 PIPEIN
-			close(fds[0]);
+			dup2(fds[1], node->outfile); //it does output in the 1 to be read by 0
+			close(fds[1]);
 		}
 		heredoc_management(command->files, node);
 		cmd_addback(&cmds, node);
-		// printf("(%d, %d)\n",  node->infile, node->outfile);
 		command = command->next;
 	}
-	// while(1);// the while (1)
 	return (cmds);
 }
 
@@ -227,7 +225,8 @@ int	infile_update(t_file *files, t_excute *cmds)
 			fd = open(files->name[0], INFILE);
 			if (fd < 0)
 				return (printf("fd no persmission or not exist"), fd) ;//error of file does not exist or no permission will be saved in the errno
-			dup2(fd, cmds->infile);
+			if (!files->next)
+				dup2(fd, cmds->infile);
 			close(fd);
 		}
 		files = files->next;
@@ -395,7 +394,7 @@ int	excute_cmd(t_excute *cmds, t_env **env)
 int	child_excution(t_cmd *command, t_excute *cmds, t_env **env)
 {
 	// check if ambigious redirect
-	printf("(%d, %d)\n", cmds->infile, cmds->outfile);
+	// printf("(%d, %d)\n", cmds->infile, cmds->outfile);
 	if (infile_update(command->files, cmds) < 0)
 		return (exit(1), 0);//use errno to annonce the error depends if invalid files or ambigious
 	if (outfile_update(command->files, cmds) < 0)
