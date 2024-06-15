@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/14 22:17:59 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/15 21:42:01 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	cmd_free_node(t_excute *cpy)
 	i = 0;
 	while (cpy && cpy->arguments && cpy->arguments[i])
 		free(cpy->arguments[i++]);
-	free(cpy->arguments);
+	// free(cpy->arguments);
 	free(cpy->cmd);
 	cpy = NULL;
 	return (1);
@@ -192,7 +192,8 @@ t_excute	*heredoc_update(t_cmd *command)
 	int			fds[2];
 
 	cmds = NULL;
-	fds[1] = dup(STDIN_FILENO);
+	if (command)
+		fds[1] = dup(STDIN_FILENO);
 	while (command)
 	{
 		node = cmd_create(fds[1]);
@@ -295,6 +296,27 @@ int	get_path(char *cmd, char **paths)
 	return (0);
 }
 
+char **env_to_array(t_env *env)
+{
+	char	**arr;
+	char	*joined;
+	int		i;
+
+	i = 0;
+	arr = ft_calloc(env_size(env) + 1, sizeof(char *));
+	if (!arr)
+		return (0);
+	while (env)
+	{
+		joined = ft_strjoin(env->key, "=");
+		// malloc for the array
+		arr[i] = ft_strjoin(joined, env->value);
+		free(joined);
+		env = env->next;
+	}
+	return arr;
+}
+
 char *get_commands(char **argv, char ***cmd_argv, char **paths)
 {
 	char	*cmd;
@@ -334,25 +356,43 @@ char *get_commands(char **argv, char ***cmd_argv, char **paths)
 	return (free_array(&paths), NULL);
 }
 
-int	excute_cmd(t_excute *cmds, char **envp)
+int	excute_builtin(t_excute *cmds, t_env **env)
 {
+	int len;
+	
+	len = ft_strlen(cmds->cmd);
+	if (cmds && !ft_strncmp(cmds->cmd, "echo", len))
+		builtin_echo(cmds);
+	else if (cmds && !ft_strncmp(cmds->cmd, "pwd", len))
+		builtin_pwd(cmds, *env);
+	else if (cmds && !ft_strncmp(cmds->cmd, "env", len))
+		builtin_env(cmds, *env);
+	else if (cmds && !ft_strncmp(cmds->cmd, "unset", len))
+		builtin_unset(env, cmds);
+	else if (cmds && !ft_strncmp(cmds->cmd, "export", len))
+		builtin_export(env, cmds);
+	else if (cmds && !ft_strncmp(cmds->cmd, "exit", len))
+		exit(1);
+	return (1);
+}
+
+int	excute_cmd(t_excute *cmds, t_env **env)
+{
+	if (is_builtin(cmds->cmd))
+		return (printf("is builtin\n"), excute_builtin(cmds, env));
 	dup2(cmds->infile, STDIN_FILENO);
 	close(cmds->infile);
 	dup2(cmds->outfile, STDOUT_FILENO);
 	close(cmds->outfile);
-	if (is_builtin(cmds->cmd))
-		// excute_builtin(cmds);
-		return (printf("is builtins"), 1);
-	else if (cmds && cmds->cmd && cmds->arguments)
-	{	
-		// while (1);
-		if (execve(cmds->cmd, cmds->arguments ,envp) == -1)
+	if (cmds && cmds->cmd && cmds->arguments)
+	{
+		if (execve(cmds->cmd, cmds->arguments, env_to_array(*env)) == -1)
 			return (-1); //error
 	}
 	return (0);
 }
 
-int	child_excution(t_cmd *command, t_excute *cmds, t_env **env, char **envp)
+int	child_excution(t_cmd *command, t_excute *cmds, t_env **env)
 {
 	// check if ambigious redirect
 	printf("(%d, %d)\n", cmds->infile, cmds->outfile);
@@ -361,9 +401,9 @@ int	child_excution(t_cmd *command, t_excute *cmds, t_env **env, char **envp)
 	if (outfile_update(command->files, cmds) < 0)
 		return (exit(1), 0);//use errno to annonce the error depends if invalid files or ambigious
 	cmds->cmd = get_commands(command->args, &cmds->arguments, ft_split(env_getval(*env, "PATH"), ':'));
-	excute_cmd(cmds, envp);
+	if (excute_cmd(cmds, env))
+		return (1);
 	exit(0);
-	// return (1);
 }
 
 int	close_other(t_excute *head, int pos)
@@ -384,7 +424,7 @@ int	close_other(t_excute *head, int pos)
 	return (1);
 }
 
-int	redirection_update(t_cmd *command, t_excute **head, t_env **env, char **envp)
+int	redirection_update(t_cmd *command, t_excute **head, t_env **env)
 {
 	int			pid;
 	t_excute	*cmds;
@@ -394,13 +434,18 @@ int	redirection_update(t_cmd *command, t_excute **head, t_env **env, char **envp
 	i = 0;
 	while (command && cmds)
 	{
-		pid = fork();
-		if (!pid)
-			return (close_other(*head, i), child_excution(command, cmds, env, envp));
-		if (pid && pid != -1)
-			cmds->pid = pid;
+		if (is_builtin(command->args[0]))
+			child_excution(command, cmds, env);
 		else
-			return (0);//error handling	
+		{
+			pid = fork();
+			if (!pid)
+				return (close_other(*head, i), child_excution(command, cmds, env));
+			if (pid && pid != -1)
+				cmds->pid = pid;
+			else
+				return (0);//error handling	
+		}
 		cmds = cmds->next;
 		command = command->next;
 		i++;
@@ -412,14 +457,18 @@ int	waitprocess(t_excute *cmds, int *status)
 {
 	while (cmds)
 	{
-		waitpid(cmds->pid, status, 0);
-		cmd_free_node(cmds);
+		if (cmds->pid)
+		{
+			waitpid(cmds->pid, status, 0);
+			cmd_free_node(cmds);
+			
+		}
 		cmds = cmds->next;
 	}
 	return (1);
 }
 
-int	excution(t_cmd *command, t_env *env, int *status, char **envp)
+int	excution(t_cmd *command, t_env *env, int *status)
 {
 	// 3 - after we get its commands and all args after verification or return errno with exit status
 	
@@ -427,7 +476,7 @@ int	excution(t_cmd *command, t_env *env, int *status, char **envp)
 	t_excute	*cmds;
 	
 	cmds = heredoc_update(command);
-	redirection_update(command, &cmds, &env, envp);
+	redirection_update(command, &cmds, &env);
 	waitprocess(cmds, status);
 	printf("done process\n");
 	return (1);

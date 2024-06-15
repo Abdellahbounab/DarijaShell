@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/09 13:46:45 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/12 15:10:47 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/15 22:16:33 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
-# include "../libft/libft.h"
+# include "../types.h"
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 10

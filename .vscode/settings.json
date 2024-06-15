@@ -2,6 +2,9 @@
 	"files.associations": {
 		"get_next_line_bonus.h": "c",
 		"fcntl.h": "c",
-		"excution.h": "c"
+		"excution.h": "c",
+		"env.h": "c",
+		"parsing.h": "c",
+		"types.h": "c"
 	}
 }

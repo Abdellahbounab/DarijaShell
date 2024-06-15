@@ -1,6 +1,6 @@
 
 #include "parsing/parsing.h"
-// #include "env/env.h"
+#include "env/env.h"
 #include "excution/excution.h"
 
 void print_cmd(t_cmd *command)
@@ -54,7 +54,7 @@ int main(int ac, char **av, char **envp)
 		
 		// print_cmd(command);
 		
-		excution(command, env, &status, envp);
+		excution(command, env, &status);
 
 		free_cmd(command);
 	}

@@ -6,11 +6,24 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 17:04:39 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/02 14:20:16 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/15 22:10:33 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
+
+int	env_size(t_env *env)
+{
+	int	i;
+
+	i = 0;
+	while (env)
+	{
+		i++;
+		env = env->next;
+	}
+	return (i);
+}
 
 int	env_update(t_env **lst, char *key, char *newval)
 {
@@ -28,20 +41,6 @@ int	env_update(t_env **lst, char *key, char *newval)
 		return 1;
 	}
 	return 0;
-}
-
-int	env_read(t_env *lst)
-{
-	int	counter;
-
-	counter = 0;
-	while (lst)
-	{
-		printf("%s=%s\n", lst->key, lst->value);
-		lst = lst->next;
-		counter++;
-	}
-	return (counter);
 }
 
 int	env_export(t_env **lst, char *key, char *val)
@@ -140,7 +139,7 @@ int	env_addback(t_env **lst, t_env *newnode)
 	return 0;
 }
 
-static char	*join_strs(char **value)
+char	*join_strs(char **value)
 {
 	char	*saver;
 	int		counter;
