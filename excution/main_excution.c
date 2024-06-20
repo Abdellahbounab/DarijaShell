@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/20 20:56:40 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/20 21:04:51 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,7 @@ int	open_heredoc(char *heredoc, int outfile)
 	char	*line;
 
 	// check if $variable to expand it
+	// there is an error tha occur when using the using a cmd with builtin 'echo' and a heredoc in diffrent cmds
 	write(STDOUT_FILENO, ">", 1);
 	line = get_next_line(STDIN_FILENO);
 	while (line && ft_strncmp(line, heredoc, ft_strlen(heredoc)))

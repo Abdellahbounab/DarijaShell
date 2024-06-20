@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 19:16:19 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/20 16:51:44 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/20 20:59:32 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ int	builtin_echo(t_excute *cmd)
 		flag = i++;
 	while (cmd->arguments && cmd->arguments[i])
 	{
-		// printf("%s", cmd->arguments[i]);
 		write(cmd->outfile, cmd->arguments[i], ft_strlen(cmd->arguments[i]));
 		if (cmd->arguments[i + 1])
 			write(cmd->outfile, " ", 1);
