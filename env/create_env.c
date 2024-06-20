@@ -6,11 +6,21 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 17:04:39 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/15 22:10:33 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/20 14:26:07 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
+
+int	env_read(t_env *env)// to debug
+{
+	while (env)
+	{
+		printf("%s=%s\n", env->key, env->value);
+		env = env->next;
+	}
+	return (1);
+}
 
 int	env_size(t_env *env)
 {
@@ -55,12 +65,11 @@ int	env_export(t_env **lst, char *key, char *val)
 			return 1;
 		return 0;
 	}
-	newnode = malloc(sizeof(t_env));
+	newnode = ft_calloc(1, sizeof(t_env));
 	if (!newnode)
 		return 0;
 	newnode->key = ft_strdup(key);
 	newnode->value = ft_strdup(val);
-	newnode->next = NULL;
 	if (!*lst)
 		return (*lst = newnode, 1);
 	else if (env_addback(lst, newnode))
@@ -68,18 +77,24 @@ int	env_export(t_env **lst, char *key, char *val)
 	return 0;
 }
 
-int	env_unset(t_env **lst, char *key)
+t_env	*env_unset(t_env *lst, char *key)
 {
 	t_env	*cpy;
 	t_env	*prev;
 
 	if (!lst)
 		return 0;
-	cpy = *lst;
-	if (env_getkey(*lst, key))
+	if (env_getkey(lst, key))
 	{
-		if (cpy && !ft_strcmp(cpy->key, key))
-			*lst = cpy->next;
+		cpy = lst;
+		if (cpy && !ft_strcmp((cpy)->key, key))
+		{
+			prev = cpy->next;
+			free(cpy->key);
+			free(cpy->value);
+			free(cpy);
+			lst = prev;
+		}
 		else
 		{
 			while (cpy && ft_strcmp(cpy->key, key))
@@ -88,16 +103,18 @@ int	env_unset(t_env **lst, char *key)
 				cpy = cpy->next;
 			}
 			prev->next = cpy->next;	
+			free(cpy->key);
+			free(cpy->value);
+			free(cpy);
 		}
-		free(cpy);
-		return 1;
+		return (lst);
 	}
 	return 0;
 }
 
 char *env_getval(t_env *lst, char *key)
 {
-	if (env_getkey(lst, key))
+	if (lst && env_getkey(lst, key))
 		return (env_getkey(lst, key)->value);
 	return 0;
 }
@@ -111,7 +128,7 @@ t_env *env_getkey(t_env *lst, char *key)
 	cpy = lst;
 	while (cpy)
 	{
-		if (!ft_strcmp(cpy->key, key))
+		if (!ft_strncmp(cpy->key, key, ft_strlen(cpy->key)))
 			return cpy;
 		cpy = cpy->next;
 	}
@@ -183,3 +200,8 @@ int	get_env(t_env **env, char **envp)
 	}
 	return 1;
 }
+
+// t_env	*copy_env(t_env *head)
+// {
+	
+// }

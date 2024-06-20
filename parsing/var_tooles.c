@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_tooles.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 17:50:44 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/11 11:50:45 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/20 14:27:03 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ char *var_extand(char *part, t_info *info)
 		info->end++;
 		info->start = info->end;
 		var_name = get_var_name(part, info);
-		var_value = get_var_value(info->env, var_name);
+		// var_value = get_var_value(info->env, var_name);
+		var_value = env_getval(info->env, var_name);
 		free(var_name);
 		var_name = NULL;
 		tmp = string;

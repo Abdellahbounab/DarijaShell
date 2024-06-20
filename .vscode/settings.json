@@ -5,6 +5,8 @@
 		"excution.h": "c",
 		"env.h": "c",
 		"parsing.h": "c",
-		"types.h": "c"
+		"types.h": "c",
+		"libft.h": "c",
+		"errno.h": "c"
 	}
 }

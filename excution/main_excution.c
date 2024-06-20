@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/15 22:50:24 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/20 20:56:40 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 
 
 /*
+
+	*testers : https://docs.google.com/spreadsheets/u/0/d/1uJHQu0VPsjjBkR4hxOeCMEt3AOM1Hp_SmUzPFhAH-nA/htmlview?lsrp=1#gid=0
+
 	command : 	**agrs = {cmd , args...}
 				*path = path of cmd
 				*status = integer of exit status
@@ -39,6 +42,28 @@
 // 	return (1);
 // }
 
+
+int	ft_perror(char *header, char *msg, int err)
+{
+	if (msg)
+	{
+		if (err)
+		{
+			if (header)
+				write(STDERR_FILENO, header, ft_strlen(header));
+			write(STDERR_FILENO, msg, ft_strlen(msg));
+			write(STDERR_FILENO, "\n", 1);
+			exit(1);
+		}
+		else
+		{
+			perror(msg);
+			exit(errno);
+		}
+	}
+	return (0);
+}
+
 int	read_excutelist(t_excute *cmds)
 {
 	if (!cmds)
@@ -63,6 +88,7 @@ int	ft_commandslen(t_cmd *command)
 	}
 	return	counter;
 }
+
 int	cmd_free_node(t_excute *cpy)
 {
 	int	i;
@@ -219,12 +245,12 @@ int	infile_update(t_file *files, t_excute *cmds)
 	while (files)
 	{
 		if (!files->name || files->name[1])
-			return (printf("ambigious"), -1);//error  of ambigious by exit(1);
+			return (ft_perror("$", ": Ambigious redirect", 1), -1);//error  of ambigious by exit(1);
 		if (files->type == INFILE)
 		{
 			fd = open(files->name[0], INFILE);
 			if (fd < 0)
-				return (printf("fd no persmission or not exist"), fd) ;//error of file does not exist or no permission will be saved in the errno
+				return (ft_perror(NULL, files->name[0], 0), fd) ;//error of file does not exist or no permission will be saved in the errno
 			if (!files->next)
 				dup2(fd, cmds->infile);
 			close(fd);
@@ -242,12 +268,12 @@ int	outfile_update(t_file *files, t_excute *cmds)
 	while (files)
 	{
 		if (!files->name || files->name[1])
-			return (-1);//error  of ambigious by exit(1);
+			return (ft_perror("$", ": Ambigious redirect", 1), -1);//error  of ambigious by exit(1);
 		if (files->type == OUFILE || files->type == APPEND)
 		{
 			fd = open(files->name[0], files->type, 0720);
 			if (fd < 0)
-				return (printf("no permission\n"), -1) ;//error of no permission will be saved in the errno
+				return (ft_perror(NULL, files->name[0], 0), -1) ;//error of no permission will be saved in the errno
 			dup2(fd, cmds->outfile);
 			close(fd);	
 		}
@@ -308,10 +334,14 @@ char **env_to_array(t_env *env)
 	while (env)
 	{
 		joined = ft_strjoin(env->key, "=");
-		// malloc for the array
+		if (!joined)
+			return (free_array(&arr), NULL);
 		arr[i] = ft_strjoin(joined, env->value);
+		if (!arr[i])
+			return (free_array(&arr), NULL);
 		free(joined);
 		env = env->next;
+		i++;
 	}
 	return arr;
 }
@@ -322,14 +352,13 @@ char *get_commands(char **argv, char ***cmd_argv, char **paths)
 	char	*tmp;
 
 	cmd = NULL;
-	// printf("args:%s\n", argv[0]);
 	if (argv)
 	{
-		if (argv[0] && is_builtin(argv[0]))//checking if it is a builtin 
+		if (argv[0] && is_builtin(argv[0]))
 			return (free_array(&paths), *cmd_argv = argv + 1, ft_strdup(argv[0]));//check if some of my builtins to be excuted , wont need a path
 		else if (paths)
 		{
-			if (is_absolutecmd(argv[0], ft_split("/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki", ':'))) //iwould check if it does have a path in its beginning as an abs command
+			if (is_absolutecmd(argv[0], ft_split("/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki", ':')))
 				return (*cmd_argv = argv, free_array(&paths), ft_strdup(argv[0]));
 			cmd = ft_strjoin("/", argv[0]); //ex if ls : it wil be /ls to be used later when joining the paths
 			if (!cmd)
@@ -346,10 +375,10 @@ char *get_commands(char **argv, char ***cmd_argv, char **paths)
 			free(cmd);
 			free_array(&paths);
 			if (ft_strncmp("./", argv[0], 2)) //checking it is a shell script command
-				return ( NULL); //error not a ./ file
+				return (ft_perror(argv[0], ": command not found", 1), NULL); //error not a ./ file
 			if (access(argv[0], X_OK) != -1)
 				return (*cmd_argv = argv, ft_strdup(argv[0]));
-			return (NULL);
+			return (ft_perror(NULL, argv[0], 0), NULL);
 		}
 	}
 	return (free_array(&paths), NULL);
@@ -357,52 +386,50 @@ char *get_commands(char **argv, char ***cmd_argv, char **paths)
 
 int	excute_builtin(t_excute *cmds, t_env **env)
 {
-	int len;
-	
-	len = ft_strlen(cmds->cmd);
-	if (cmds && !ft_strncmp(cmds->cmd, "echo", len))
+	if (cmds && !ft_strncmp(cmds->cmd, "echo", 4))
 		builtin_echo(cmds);
-	else if (cmds && !ft_strncmp(cmds->cmd, "pwd", len))
-		builtin_pwd(cmds, *env);
-	else if (cmds && !ft_strncmp(cmds->cmd, "env", len))
+	else if (cmds && !ft_strncmp(cmds->cmd, "pwd", 3))
+		builtin_pwd(cmds, env);
+	else if (cmds && !ft_strncmp(cmds->cmd, "env", 3))
 		builtin_env(cmds, *env);
-	else if (cmds && !ft_strncmp(cmds->cmd, "unset", len))
+	else if (cmds && !ft_strncmp(cmds->cmd, "unset", 5))
 		builtin_unset(env, cmds);
-	else if (cmds && !ft_strncmp(cmds->cmd, "export", len))
+	else if (cmds && !ft_strncmp(cmds->cmd, "export", 6))
 		builtin_export(env, cmds);
-	else if (cmds && !ft_strncmp(cmds->cmd, "exit", len))
-		exit(1);
+	else if (cmds && !ft_strncmp(cmds->cmd, "exit", 4))
+		exit(0);
+	else if (cmds && !ft_strncmp(cmds->cmd, "cd", 2))
+		builtin_cd(env, cmds);
 	return (1);
 }
 
 int	excute_cmd(t_excute *cmds, t_env **env)
 {
 	if (is_builtin(cmds->cmd))
-		return (printf("is builtin\n"), excute_builtin(cmds, env));
+		return (excute_builtin(cmds, env));
 	dup2(cmds->infile, STDIN_FILENO);
 	close(cmds->infile);
 	dup2(cmds->outfile, STDOUT_FILENO);
 	close(cmds->outfile);
 	if (cmds && cmds->cmd && cmds->arguments)
 	{
+		// env_read(*env);
 		if (execve(cmds->cmd, cmds->arguments, env_to_array(*env)) == -1)
-			return (-1); //error
+			return (ft_perror(NULL, cmds->cmd, 0)); //error`
 	}
 	return (0);
 }
 
 int	child_excution(t_cmd *command, t_excute *cmds, t_env **env)
 {
-	// check if ambigious redirect
-	// printf("(%d, %d)\n", cmds->infile, cmds->outfile);
 	if (infile_update(command->files, cmds) < 0)
-		return (exit(1), 0);//use errno to annonce the error depends if invalid files or ambigious
+		return (0);//use errno to annonce the error depends if invalid files or ambigious
 	if (outfile_update(command->files, cmds) < 0)
-		return (exit(1), 0);//use errno to annonce the error depends if invalid files or ambigious
+		return (0);//use errno to annonce the error depends if invalid files or ambigious
 	cmds->cmd = get_commands(command->args, &cmds->arguments, ft_split(env_getval(*env, "PATH"), ':'));
 	if (excute_cmd(cmds, env))
 		return (1);
-	exit(0);
+	exit(1);
 }
 
 int	close_other(t_excute *head, int pos)
@@ -433,8 +460,11 @@ int	redirection_update(t_cmd *command, t_excute **head, t_env **env)
 	i = 0;
 	while (command && cmds)
 	{
-		if (is_builtin(command->args[0]))
+		if (command->args && is_builtin(command->args[0]))
+		{
 			child_excution(command, cmds, env);
+			cmds->pid = 0;
+		}
 		else
 		{
 			pid = fork();
@@ -443,7 +473,7 @@ int	redirection_update(t_cmd *command, t_excute **head, t_env **env)
 			if (pid && pid != -1)
 				cmds->pid = pid;
 			else
-				return (0);//error handling	
+				return (ft_perror(NULL, "Malloc", 1));//error handling	
 		}
 		cmds = cmds->next;
 		command = command->next;
@@ -458,9 +488,9 @@ int	waitprocess(t_excute *cmds, int *status)
 	{
 		if (cmds->pid)
 		{
-			waitpid(cmds->pid, status, 0);
+			if (cmds->pid)
+				waitpid(cmds->pid, status, 0);
 			cmd_free_node(cmds);
-			
 		}
 		cmds = cmds->next;
 	}
@@ -477,6 +507,5 @@ int	excution(t_cmd *command, t_env *env, int *status)
 	cmds = heredoc_update(command);
 	redirection_update(command, &cmds, &env);
 	waitprocess(cmds, status);
-	printf("done process\n");
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 19:16:19 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/15 22:27:57 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/20 16:51:44 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,22 +26,19 @@
 
 int	is_builtin(char *cmd)
 {
-	int	len;
-	
-	len = ft_strlen(cmd);
-	if (cmd && !ft_strncmp(cmd, "echo", len))
+	if (cmd && !ft_strncmp(cmd, "echo", 4))
 		return (1);
-	else if (cmd && !ft_strncmp(cmd, "cd", len))
+	else if (cmd && !ft_strncmp(cmd, "cd", 2))
 		return (1);
-	else if (cmd && !ft_strncmp(cmd, "pwd", len))
+	else if (cmd && !ft_strncmp(cmd, "pwd", 3))
 		return (1);
-	else if (cmd && !ft_strncmp(cmd, "export", len))
+	else if (cmd && !ft_strncmp(cmd, "export", 6))
 		return (1);
-	else if (cmd && !ft_strncmp(cmd, "unset", len))
+	else if (cmd && !ft_strncmp(cmd, "unset", 5))
 		return (1);
-	else if (cmd && !ft_strncmp(cmd, "env", len))
+	else if (cmd && !ft_strncmp(cmd, "env", 3))
 		return (1);
-	else if (cmd && !ft_strncmp(cmd, "exit", len))
+	else if (cmd && !ft_strncmp(cmd, "exit", 4))
 		return (1);
 	return (0);
 }
@@ -68,31 +65,39 @@ int	builtin_echo(t_excute *cmd)
 	return (1);
 }
 
-// int	builtin_cd(t_env **env, char *path)
-// {
-// 	if (env && path_exist(path))//funciton that would check the existance of the path
-// 	{
-// 		env_update(env, "OLDPWD", env_getval(env, "PWD"));
-// 		env_update(env, "PWD", path);
-// 		// funciton that would change our directory
-// 		return 1;
-// 	}
-// 	else
-// 		// errno(no file or directory exist)
-// 		return 0;
-// }
-
-int	builtin_pwd(t_excute *cmds, t_env *env)
+int	builtin_cd(t_env **env, t_excute *cmds)
 {
-	char	*pwd;
+	char	str[100];
+	// if (env && path_exist(path))//funciton that would check the existance of the path
+	if (env)//funciton that would check the existance of the path
+	{
+		if (cmds->arguments[0])
+			chdir(cmds->arguments[0]);
+		else
+		{
+			if (env_getval(*env, "HOME"))
+				chdir(env_getval(*env, "HOME"));
+			else
+				chdir("/");
+		}
+		env_export(env, "PWD", getcwd(str, 100));
+		return 1;
+	}
+	else
+		// errno(no file or directory exist)
+		return 0;
+}
+
+int	builtin_pwd(t_excute *cmds, t_env **env)
+{
 	//can be modified to have always the path even if it is not found on env
+	char	str[100];
 
 	if (env)
 	{
-		pwd = env_getval(env, "PWD");
-		write(cmds->outfile, pwd, ft_strlen(pwd));
+		env_export(env, "PWD", getcwd(str, 100));
+		write(cmds->outfile, env_getval(*env, "PWD"), ft_strlen(env_getval(*env, "PWD")));
 		write(cmds->outfile, "\n", 1);
-		free(pwd);
 		return 1;
 	}
 	return (0);
@@ -100,22 +105,18 @@ int	builtin_pwd(t_excute *cmds, t_env *env)
 
 int	builtin_unset(t_env **env, t_excute *cmds)
 {
+	// have to be protected since it does seg when unsetting hte first env or it may be other cases
 	int	i;
 
 	i = 0;
 	while (cmds->arguments && cmds->arguments[i])
 	{
-		env_unset(env, cmds->arguments[i]);
+		*env = env_unset(*env, cmds->arguments[i]);
+		printf("%p\n", env);
 		i++;
 	}
 	return (1);
 }
-
-// int builtin_export(t_env *env, char *key, char *val)
-// {
-// 	// ihave to check the valid name
-// 	env_export(env, key, val);
-// }
 
 int	builtin_env(t_excute *cmds, t_env *env)
 {
@@ -126,7 +127,8 @@ int	builtin_env(t_excute *cmds, t_env *env)
 	{
 		write(cmds->outfile, env->key, ft_strlen(env->key));
 		write(cmds->outfile, "=", 1);
-		write(cmds->outfile, env->value, ft_strlen(env->value));
+		if (env->value)
+			write(cmds->outfile, env->value, ft_strlen(env->value));
 		write(cmds->outfile, "\n", 1);
 		env = env->next;
 		counter++;
@@ -141,7 +143,7 @@ int	builtin_export(t_env **env, t_excute *cmds)
 	char *str;
 
 	i = 0;
-	if (!cmds->arguments)
+	if (cmds->arguments && !cmds->arguments[0])
 		return (builtin_env(cmds, *env));
 	while (cmds->arguments && cmds->arguments[i])
 	{
