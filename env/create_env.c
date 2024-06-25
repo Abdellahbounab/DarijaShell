@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 17:04:39 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/20 14:26:07 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/23 19:54:54 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,17 @@ int	env_read(t_env *env)// to debug
 		env = env->next;
 	}
 	return (1);
+}
+
+int	free_env(t_env **env)
+{
+	if (env && !*env)
+		return (0);
+	else
+	{
+		env_unset(env, (*env)->key);
+		return (free_env(env));
+	}
 }
 
 int	env_size(t_env *env)
@@ -77,23 +88,23 @@ int	env_export(t_env **lst, char *key, char *val)
 	return 0;
 }
 
-t_env	*env_unset(t_env *lst, char *key)
+int	env_unset(t_env **lst, char *key)
 {
 	t_env	*cpy;
 	t_env	*prev;
 
 	if (!lst)
 		return 0;
-	if (env_getkey(lst, key))
+	if (env_getkey(*lst, key))
 	{
-		cpy = lst;
-		if (cpy && !ft_strcmp((cpy)->key, key))
+		cpy = *lst;
+		if (cpy && !ft_strncmp((cpy)->key, key, ft_strlen((cpy)->key)))
 		{
 			prev = cpy->next;
 			free(cpy->key);
 			free(cpy->value);
 			free(cpy);
-			lst = prev;
+			*lst = prev;
 		}
 		else
 		{
@@ -107,7 +118,7 @@ t_env	*env_unset(t_env *lst, char *key)
 			free(cpy->value);
 			free(cpy);
 		}
-		return (lst);
+		return (1);
 	}
 	return 0;
 }
@@ -200,8 +211,3 @@ int	get_env(t_env **env, char **envp)
 	}
 	return 1;
 }
-
-// t_env	*copy_env(t_env *head)
-// {
-	
-// }

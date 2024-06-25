@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Achakkaf <zizcarschak1@gmail.com>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 09:41:34 by Achakkaf          #+#    #+#             */
-/*   Updated: 2023/12/21 10:21:20 by Achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/21 20:40:56 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ static char	**splitp1(char **strings, const char *s, char c)
 
 	s_i = 0;
 	i = 0;
-	strings = malloc(sizeof(char *) * (cwords(s, c) + 1));
+	strings = ft_calloc(cwords(s, c) + 1, sizeof(char *));
 	while (s[i] && strings)
 	{
 		while (s[i] == c && s[i])
@@ -98,8 +98,6 @@ static char	**splitp1(char **strings, const char *s, char c)
 			return (ft_free(strings, s_i));
 		s_i++;
 	}
-	if (strings)
-		strings[s_i] = NULL;
 	return (strings);
 }
 

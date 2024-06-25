@@ -28,7 +28,8 @@ all: $(NAME)
 
 $(NAME): $(OBJ) 
 	make -C libft
-	cc $(CFLAGS) -lreadline -lncurses $(OBJ) libft/libft.a -o $@ -fsanitize=address -g
+	cc $(CFLAGS) -lreadline -lncurses $(OBJ) libft/libft.a -o $@ 
+# -fsanitize=address -g
 
 clean: 
 	make clean -C libft

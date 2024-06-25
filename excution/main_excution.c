@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/20 21:04:51 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/25 14:39:27 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,17 @@
 // 	return (1);
 // }
 
+int			raed_array(char **paths)
+{
+	int i;
+
+	i = 0;
+	while (paths && paths[i])
+		printf(" %s ", paths[i++]);
+	return printf("\n");
+}
+
+
 
 int	ft_perror(char *header, char *msg, int err)
 {
@@ -53,7 +64,7 @@ int	ft_perror(char *header, char *msg, int err)
 				write(STDERR_FILENO, header, ft_strlen(header));
 			write(STDERR_FILENO, msg, ft_strlen(msg));
 			write(STDERR_FILENO, "\n", 1);
-			exit(1);
+			exit(err);
 		}
 		else
 		{
@@ -123,10 +134,9 @@ t_excute	*cmd_create(int inpipe)
 	cmd = ft_calloc(1, sizeof(t_excute));
 	if (!cmd)
 		return (0);
-	cmd->infile = dup(inpipe); //+4(STDIN) | +5(PIPEOUT)
-	// printf("closed pipe %d\n", inpipe);
+	cmd->infile = dup(inpipe);
 	close(inpipe);
-	cmd->outfile = dup(STDOUT_FILENO); // +6 (STDOUT)
+	cmd->outfile = dup(STDOUT_FILENO);
 	return (cmd);
 }
 
@@ -148,16 +158,18 @@ int	cmd_addback(t_excute **cmds, t_excute *node)
 	return (1);
 }
 
-int	open_heredoc(char *heredoc, int outfile)
+int	open_heredoc(char *heredoc, int outfile, t_env **env, int *status)
 {
 	char	*line;
+	char	*tmp;
 
-	// check if $variable to expand it
-	// there is an error tha occur when using the using a cmd with builtin 'echo' and a heredoc in diffrent cmds
 	write(STDOUT_FILENO, ">", 1);
 	line = get_next_line(STDIN_FILENO);
-	while (line && ft_strncmp(line, heredoc, ft_strlen(heredoc)))
+	while (line && ft_strncmp(line, heredoc, ft_strlen(line)))
 	{
+		tmp = line;
+		line = parsing_extend_var(line, *env, status);
+		free(tmp);
 		if (outfile != -1)
 			write(outfile, line, ft_strlen(line));
 		free(line);
@@ -184,7 +196,7 @@ int	get_heredoc_position(t_file *files)
 	return (i);
 }
 
-int	heredoc_management(t_file	*files, t_excute *node)
+int	heredoc_management(t_file	*files, t_excute *node, t_env **env, int *status)
 {
 	int	heredoc_postion;
 	int	i;
@@ -204,7 +216,7 @@ int	heredoc_management(t_file	*files, t_excute *node)
 		}
 		if (files->type == HERE_DOC)
 		{
-			open_heredoc(files->name[0], fd[1]);
+			open_heredoc(files->name[0], fd[1], env, status);
 			i++;
 		}
 		files = files->next;
@@ -212,7 +224,7 @@ int	heredoc_management(t_file	*files, t_excute *node)
 	return (1);
 }
 
-t_excute	*heredoc_update(t_cmd *command)
+t_excute	*heredoc_update(t_cmd *command, t_env **env, int *status)
 {
 	t_excute	*cmds;
 	t_excute	*node;
@@ -231,7 +243,7 @@ t_excute	*heredoc_update(t_cmd *command)
 			dup2(fds[1], node->outfile); //it does output in the 1 to be read by 0
 			close(fds[1]);
 		}
-		heredoc_management(command->files, node);
+		heredoc_management(command->files, node, env, status); //heredoc
 		cmd_addback(&cmds, node);
 		command = command->next;
 	}
@@ -245,8 +257,9 @@ int	infile_update(t_file *files, t_excute *cmds)
 	fd = cmds->infile;
 	while (files)
 	{
+		// have to be handleded in the case of special builtins
 		if (!files->name || files->name[1])
-			return (ft_perror("$", ": Ambigious redirect", 1), -1);//error  of ambigious by exit(1);
+			return (ft_perror("minishell:", " ambiguous redirect", 1), -1);
 		if (files->type == INFILE)
 		{
 			fd = open(files->name[0], INFILE);
@@ -268,13 +281,14 @@ int	outfile_update(t_file *files, t_excute *cmds)
 	fd = cmds->outfile;
 	while (files)
 	{
+		// have to be handleded in the case of special builtins
 		if (!files->name || files->name[1])
-			return (ft_perror("$", ": Ambigious redirect", 1), -1);//error  of ambigious by exit(1);
+			return (ft_perror("minishell:", " ambiguous redirect", 1));//error  of ambigious by exit(1);
 		if (files->type == OUFILE || files->type == APPEND)
 		{
 			fd = open(files->name[0], files->type, 0720);
 			if (fd < 0)
-				return (ft_perror(NULL, files->name[0], 0), -1) ;//error of no permission will be saved in the errno
+				return (ft_perror(NULL, files->name[0], 0)) ;//error of no permission will be saved in the errno
 			dup2(fd, cmds->outfile);
 			close(fd);	
 		}
@@ -292,14 +306,12 @@ int	is_absolutecmd(char *cmd, char **paths)
 	{
 		if (!ft_strncmp(cmd, paths[i], ft_strlen(paths[i])))
 		{
-			free_array(&paths);
 			if (access(cmd, X_OK) != -1)
 				return (1);
 			return (0);
 		}
 		i++;
 	}
-	free_array(&paths);
 	return (0);
 }
 
@@ -359,7 +371,7 @@ char *get_commands(char **argv, char ***cmd_argv, char **paths)
 			return (free_array(&paths), *cmd_argv = argv + 1, ft_strdup(argv[0]));//check if some of my builtins to be excuted , wont need a path
 		else if (paths)
 		{
-			if (is_absolutecmd(argv[0], ft_split("/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki", ':')))
+			if (is_absolutecmd(argv[0], paths))
 				return (*cmd_argv = argv, free_array(&paths), ft_strdup(argv[0]));
 			cmd = ft_strjoin("/", argv[0]); //ex if ls : it wil be /ls to be used later when joining the paths
 			if (!cmd)
@@ -375,14 +387,13 @@ char *get_commands(char **argv, char ***cmd_argv, char **paths)
 			}
 			free(cmd);
 			free_array(&paths);
-			if (ft_strncmp("./", argv[0], 2)) //checking it is a shell script command
-				return (ft_perror(argv[0], ": command not found", 1), NULL); //error not a ./ file
-			if (access(argv[0], X_OK) != -1)
+			if (!ft_strncmp("./", argv[0], 2) && access(argv[0], X_OK) != -1)
 				return (*cmd_argv = argv, ft_strdup(argv[0]));
-			return (ft_perror(NULL, argv[0], 0), NULL);
+			// return (ft_perror(NULL, argv[0], 0), NULL);
+			return (*cmd_argv = argv, ft_strdup(argv[0]));
 		}
 	}
-	return (free_array(&paths), NULL);
+	return (free_array(&paths), ft_perror(argv[0], ": command not found", 1), NULL);
 }
 
 int	excute_builtin(t_excute *cmds, t_env **env)
@@ -390,9 +401,9 @@ int	excute_builtin(t_excute *cmds, t_env **env)
 	if (cmds && !ft_strncmp(cmds->cmd, "echo", 4))
 		builtin_echo(cmds);
 	else if (cmds && !ft_strncmp(cmds->cmd, "pwd", 3))
-		builtin_pwd(cmds, env);
+		builtin_pwd(env);
 	else if (cmds && !ft_strncmp(cmds->cmd, "env", 3))
-		builtin_env(cmds, *env);
+		builtin_env(*env, 0);
 	else if (cmds && !ft_strncmp(cmds->cmd, "unset", 5))
 		builtin_unset(env, cmds);
 	else if (cmds && !ft_strncmp(cmds->cmd, "export", 6))
@@ -404,19 +415,34 @@ int	excute_builtin(t_excute *cmds, t_env **env)
 	return (1);
 }
 
+int	special_builtin(char *cmds, char *arr)
+{
+	if (cmds &&!ft_strncmp(cmds, "unset", 5))
+		return 1;
+	else if (cmds && arr && !ft_strncmp(cmds, "export", 6) )
+		return 1;
+	else if (cmds && !ft_strncmp(cmds, "exit", 4))
+		return 1;
+	else if (cmds && !ft_strncmp(cmds, "cd", 2))
+		return 1;
+	else
+		return 0;
+}
+
 int	excute_cmd(t_excute *cmds, t_env **env)
 {
-	if (is_builtin(cmds->cmd))
+	if (cmds && cmds->cmd && special_builtin(cmds->cmd, cmds->arguments[0]))
 		return (excute_builtin(cmds, env));
-	dup2(cmds->infile, STDIN_FILENO);
-	close(cmds->infile);
 	dup2(cmds->outfile, STDOUT_FILENO);
 	close(cmds->outfile);
+	dup2(cmds->infile, STDIN_FILENO);
+	close(cmds->infile);
+	if (is_builtin(cmds->cmd))
+		return (excute_builtin(cmds, env));
 	if (cmds && cmds->cmd && cmds->arguments)
 	{
-		// env_read(*env);
 		if (execve(cmds->cmd, cmds->arguments, env_to_array(*env)) == -1)
-			return (ft_perror(NULL, cmds->cmd, 0)); //error`
+			return (ft_perror(cmds->cmd, ": command not found", 127)); //error`
 	}
 	return (0);
 }
@@ -424,9 +450,9 @@ int	excute_cmd(t_excute *cmds, t_env **env)
 int	child_excution(t_cmd *command, t_excute *cmds, t_env **env)
 {
 	if (infile_update(command->files, cmds) < 0)
-		return (0);//use errno to annonce the error depends if invalid files or ambigious
+		return (0);
 	if (outfile_update(command->files, cmds) < 0)
-		return (0);//use errno to annonce the error depends if invalid files or ambigious
+		return (0);
 	cmds->cmd = get_commands(command->args, &cmds->arguments, ft_split(env_getval(*env, "PATH"), ':'));
 	if (excute_cmd(cmds, env))
 		return (1);
@@ -461,11 +487,8 @@ int	redirection_update(t_cmd *command, t_excute **head, t_env **env)
 	i = 0;
 	while (command && cmds)
 	{
-		if (command->args && is_builtin(command->args[0]))
-		{
+		if (command->args && special_builtin(command->args[0], command->args[1]))
 			child_excution(command, cmds, env);
-			cmds->pid = 0;
-		}
 		else
 		{
 			pid = fork();
@@ -491,6 +514,7 @@ int	waitprocess(t_excute *cmds, int *status)
 		{
 			if (cmds->pid)
 				waitpid(cmds->pid, status, 0);
+			*status >>= 8;
 			cmd_free_node(cmds);
 		}
 		cmds = cmds->next;
@@ -498,15 +522,12 @@ int	waitprocess(t_excute *cmds, int *status)
 	return (1);
 }
 
-int	excution(t_cmd *command, t_env *env, int *status)
+int	excution(t_cmd *command, t_env **env, int *status)
 {
-	// 3 - after we get its commands and all args after verification or return errno with exit status
-	
-	// ihave to pipe if multiple cmd before fork and dup2 the input/ ihave to fork for each node of cmd / this is where iwould get each command in a new t_excute linkedList (get) + ihave to register the pid of the fork in each command in a array of pids
 	t_excute	*cmds;
 	
-	cmds = heredoc_update(command);
-	redirection_update(command, &cmds, &env);
+	cmds = heredoc_update(command, env, status);
+	redirection_update(command, &cmds, env);
 	waitprocess(cmds, status);
 	return (1);
 }

@@ -41,21 +41,21 @@ int main(int ac, char **av, char **envp)
 	t_env *env;
 
 	status = 0;
-	if (!get_env(&env, envp) || ft_strcmp(av[ac - 1], "./minishell"))
+	(void)av;
+	(void)ac;
+	if (!get_env(&env, envp))
 		return (127);//we have to return the error message too
 	// ft_signals();
+	// if (!ft_signals(&env, envp)) //where to create the signals for my interpretation
+	// 	return (127);//we have to return the error message too
 	while (1)
 	{
 		line = readline("minishell-$ ");
+		if (!line)
+			return (free_env(&env));
 		add_history(line);
-		// if (line[0] == 'e' && line[1] == 'x' && line[2] == 'i' && line[3] == 't')
-		// 	exit(0);
 		command = parsing(line, env, &status);
-		
-		// print_cmd(command);
-		
-		excution(command, env, &status);
-
+		excution(command, &env, &status);
 		free_cmd(command);
 	}
 }
