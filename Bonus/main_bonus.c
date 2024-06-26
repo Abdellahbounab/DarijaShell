@@ -33,6 +33,17 @@ void print_cmd(t_cmd *command)
 	cmd_tmp = NULL;
 }
 
+void print_array(char **array)
+{
+	int i;
+	i = 0;
+	while(array && array[i])
+	{
+		printf("˚%s˚\t", array[i]);
+		i++;
+	}
+	printf("\n");
+}
 
 int main()
 {
@@ -40,6 +51,7 @@ int main()
 	t_cmd *command;
 	int status;
 	t_env *env;
+	char  **tmp;
 
 	status = 0;
 	env = NULL;
@@ -50,6 +62,11 @@ int main()
 		if (line[0] == 'e' && line[1] == 'x' && line[2] == 'i' && line[3] == 't')
 			exit(0);
 		command = parsing(line, env, &status);
+		tmp = get_files();
+		printf("filenames: \t");
+		print_array(tmp);
+		free_array(&tmp);
+		printf("\n");
 		print_cmd(command);
 		free_cmd(command);
 	}

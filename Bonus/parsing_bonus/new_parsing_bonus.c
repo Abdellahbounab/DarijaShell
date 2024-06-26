@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 11:15:13 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/24 13:01:53 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/25 11:19:03 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,18 +116,6 @@ char **parsing_split(char *string)
 		}
 	}
 	return (split_string);
-}
-
-void print_array(char **array)
-{
-	int i;
-	i = 0;
-	while(array && array[i])
-	{
-		printf("˚%s˚\t", array[i]);
-		i++;
-	}
-	printf("\n");
 }
 
 t_cmd *parsing(char *line, t_env *env, int *status)

@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:30:27 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/24 11:45:22 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/24 20:27:01 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "../libft/libft.h"
+#include <dirent.h>
 
 
 # define ERROR -1

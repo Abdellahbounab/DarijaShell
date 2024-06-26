@@ -33,7 +33,6 @@ void print_cmd(t_cmd *command)
 	cmd_tmp = NULL;
 }
 
-
 int main()
 {
 	char *line;

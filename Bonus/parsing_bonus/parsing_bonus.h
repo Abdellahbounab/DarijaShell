@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/24 11:45:31 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/25 11:21:49 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,5 +78,7 @@ void	add_back_cmd(t_cmd *head, t_cmd *next_command);
 char	*quation_mark(char *string, t_info *info, char *var_value, int *status);
 int		quote_skip(char *str, int *index, char quote);
 void	alloc_appand(char *line, int start, int end, char ***words_symboles);
-
+char    **get_files(void);
+// delete these
+void print_array(char **array);
 #endif

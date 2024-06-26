@@ -6,13 +6,12 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:30:27 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/11 11:34:42 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/24 20:26:54 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TYPES_H
 #define TYPES_H
-
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -21,7 +20,6 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "libft/libft.h"
-
 
 # define ERROR -1
 # define GOOD 0
@@ -73,6 +71,5 @@ typedef struct s_info
 	t_env *env;
 	t_cmd *cmd;
 } t_info;
-
 
 #endif

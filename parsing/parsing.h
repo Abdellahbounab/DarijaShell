@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/11 14:18:42 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/24 16:57:16 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ t_cmd *parse_cmds(char **tokens, t_env *env, int *status);
 /// @return a head of all command in the linked list
 t_cmd	*parsing(char *line, t_env *env, int *status);
 
-int		check_next(char *str);
+int		check_next(char *str, int *status);
 int		create_files(t_cmd *cmd, char **line, t_info *info, t_type type);
 void	free_cmd(t_cmd *cmd);
 char	*parsing_extend_var(char *string, t_env *env, int *status);

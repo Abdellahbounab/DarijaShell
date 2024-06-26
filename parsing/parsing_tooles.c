@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:23:00 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/11 16:34:55 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/24 16:56:57 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,16 +85,18 @@ void add_back_cmd(t_cmd *head, t_cmd *next_command)
 	}
 }
 
-int check_next(char *str)
+int check_next(char *str, int *status)
 {
 	if (str == NULL || ft_strcmp(str, "|") == GOOD)
 	{
 		ft_putstr_fd("syntax error1 \n", STDERR_FILENO);
+		*status = 1;
 		return (ERROR);
 	}
 	if (ft_strcmp(str, ">") == 0 || ft_strcmp(str, ">>") == 0 || ft_strcmp(str, "<") == 0 || ft_strcmp(str, "<<") == 0)
 	{
 		ft_putstr_fd("syntax error2 \n", STDERR_FILENO);
+		*status = 1;
 		return (ERROR);
 	}
 	return (GOOD);
