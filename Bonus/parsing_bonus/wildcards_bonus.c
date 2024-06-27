@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 10:54:21 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/27 11:43:51 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/27 13:06:35 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,5 +119,52 @@ char **wildcard(char **filenames, char *pattern)
 	}
 	if (result == NULL)
 		result = append_array(result, pattern);
+	return (result);
+}
+/*
+	array1: {"hello 1", "how", "are", "you", NULL}
+	array2: {"good", "thanks", NULL}
+*/
+char **join_arrays(char **dst_array, char **src_array)
+{
+	int i;
+
+	if (dst_array == NULL && src_array == NULL)
+		return (NULL);
+	if (dst_array == NULL)
+		return (src_array);
+	if (src_array == NULL)
+		return ( dst_array);
+	i = 0;
+	while (src_array[i])
+	{
+		dst_array = append_array(dst_array, src_array[i]);
+		i++;
+	}
+	free(&src_array);
+	return (dst_array);
+}
+
+char **add_wildcard(char **split)
+{
+	int i;
+	char **result;
+	char **filenames;
+	char **tmp;
+
+	i = 0;
+	filenames = get_files();
+	result = NULL;
+	while (split[i])
+	{
+		if (ft_strchr(split[i], '*'))
+		{
+			tmp = wildcard(filenames, split[i]);
+			result = join_arrays(result, tmp);
+		}
+		else
+			result = append_array(result, split[i]);
+		i++;
+	}
 	return (result);
 }

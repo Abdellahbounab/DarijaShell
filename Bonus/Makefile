@@ -17,7 +17,7 @@ SRC := main_bonus.c \
        parsing_bonus/cmd_bonus.c \
        parsing_bonus/free_bonus.c \
        parsing_bonus/new_filter_bonus.c \
-       parsing_bonus/new_parsing_bonus.c \
+       parsing_bonus/parsing_bonus.c \
        parsing_bonus/parsing_tooles_bonus.c \
        parsing_bonus/split_line_bonus.c \
        parsing_bonus/var_tooles_bonus.c \
