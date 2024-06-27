@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/20 14:27:20 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/27 19:43:52 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int		create_files(t_cmd *cmd, char **line, t_info *info, t_type type);
 void	free_cmd(t_cmd *cmd);
 char	*parsing_extend_var(char *string, t_env *env, int *status);
 char	**parsing_split(char *string);
-char	*ft_filter(char *part);
+char	*filter(char *part);
 int		set_default(t_cmd **cmd, int *status);
 void	add_back_cmd(t_cmd *head, t_cmd *next_command);
 char	*quation_mark(char *string, t_info *info, char *var_value, int *status);

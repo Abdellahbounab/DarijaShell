@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 19:16:19 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/24 17:23:58 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/27 21:19:14 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,13 +86,56 @@ int	builtin_cd(t_env **env, t_excute *cmds)
 			if (env_getval(*env, "HOME"))
 				chdir(env_getval(*env, "HOME"));
 			else
+			{
+				status = 1;
 				write(STDERR_FILENO, "minishell: cd: HOME not set\n", 28);
+			}
 		}
 		env_export(env, "PWD", getcwd(str, 100));
 		return 1;
 	}
 	else
 		return (0);
+}
+
+int	is_numerique(char *str)
+{
+	int	i;
+	int	len;
+
+	i = 0;
+	if (str)
+		len = ft_strlen(str);
+	while (str && str[i] && !ft_isdigit(str[i]))
+		i++;
+	if (str && len == i)
+		return 1;
+	return 0;
+}
+
+int	builtin_exit(t_env **env, t_excute *cmds)
+{
+	int	num;
+	
+	num = 0;
+	// ihave to free the envs
+	if (cmds->arguments)
+	{
+		if (cmds->arguments[0])
+			num = ft_atoi(cmds->arguments[0]);
+		if (cmds->arguments[1])
+		{
+			status = 1;
+			return (write (STDERR_FILENO, "exit: too many arguments\n", 25));
+		}
+		if (cmds->arguments[0] && !is_numerique(cmds->arguments[0]))
+		{
+			free_env(env);
+			ft_perror("exit : ", "numeric argument required", 255);
+		}
+	}
+	write (STDIN_FILENO, "exit\n", 5);
+	exit (num);//have to be modified depends
 }
 
 int	builtin_pwd(t_env **env)

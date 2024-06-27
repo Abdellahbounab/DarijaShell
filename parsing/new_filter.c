@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   new_filter.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 17:05:59 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/10 14:57:50 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/27 19:44:41 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ char *double_without(char *part, int *end, int flage)
 	return (string);
 }
 
-char *ft_filter(char *part)
+char *filter(char *part)
 {
 	char *tmp;
 	char *tmp_free;

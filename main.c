@@ -2,6 +2,7 @@
 #include "parsing/parsing.h"
 #include "env/env.h"
 #include "excution/excution.h"
+#include "types.h"
 
 void print_cmd(t_cmd *command)
 {
@@ -37,7 +38,8 @@ void	signal_handler(int sig)
 {
 	(void) sig;
 	ioctl(STDIN_FILENO, TIOCSTI, "\n");
-	rl_replace_line("", 0);
+	status = 1;
+	// rl_replace_line("", 0);
 }
 
 int	ft_signals(void)
@@ -51,7 +53,7 @@ int main(int ac, char **av, char **envp)
 {
 	char *line;
 	t_cmd *command;
-	int status;
+	// int status;
 	t_env *env;
 
 	status = 0;
@@ -62,7 +64,6 @@ int main(int ac, char **av, char **envp)
 	ft_signals();
 	// if (!ft_signals(&env, envp)) //where to create the signals for my interpretation
 	// 	return (127);//we have to return the error message too
-	printf("here\n");
 	while (1)
 	{
 		line = readline("minishell-$ ");
@@ -72,7 +73,6 @@ int main(int ac, char **av, char **envp)
 		command = parsing(line, env, &status);
 		excution(command, &env, &status);
 		free_cmd(command);
-		// system("leaks minishell");
 	}
 }
 

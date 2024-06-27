@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:30:27 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/20 19:30:38 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/27 19:55:09 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,13 @@
 #include <errno.h>
 #include <string.h>
 #include <sys/wait.h>
-#include <curses.h>
-#include <term.h>
+
+// #include <curses.h>
+// #include <term.h>
+#include <sys/ioctl.h>
 
 #include <signal.h>
 
-#include <sys/ioctl.h>
 
 #include "libft/libft.h"
 
@@ -40,8 +41,8 @@
 # define DOUBLE_Q 34
 # define WITHOUT 32
 
-// #define TAB 9
-// #define SPACE 32
+#define TAB 9
+#define SPACE 32
 
 typedef enum s_type {
 	INFILE = O_RDONLY,
@@ -91,5 +92,7 @@ typedef struct s_excute{
 	int				pid;
 	struct s_excute	*next;
 }	t_excute;
+
+int	status;
 
 #endif

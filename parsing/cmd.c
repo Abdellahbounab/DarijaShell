@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:21:34 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/11 14:34:29 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/27 19:41:52 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ static int take_place(char **tokens, t_cmd *cmd, t_info *info)
 			return (GOOD);
 		while (split[i])
 		{
-			tmp = ft_filter(split[i]);
+			tmp = filter(split[i]);
 			cmd->args = append_array(cmd->args, tmp);
 			free(tmp);
 			free(split[i++]);

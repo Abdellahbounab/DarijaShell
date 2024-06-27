@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:23:00 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/13 20:53:17 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/27 19:42:03 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int create_files(t_cmd *cmd, char **line, t_info *info, t_type type)
 	while (file->name && file->name[i])
 	{
 		tmp = file->name[i];
-		file->name[i] = ft_filter(file->name[i]);
+		file->name[i] = filter(file->name[i]);
 		free(tmp);
 		i++;
 	}
