@@ -22,6 +22,10 @@
 #include <readline/history.h>
 #include <errno.h>
 #include <string.h>
+#include <sys/wait.h>
+#include <curses.h>
+#include <term.h>
+
 #include "libft/libft.h"
 
 
@@ -32,8 +36,8 @@
 # define DOUBLE_Q 34
 # define WITHOUT 32
 
-#define TAB 9
-#define SPACE 32
+// #define TAB 9
+// #define SPACE 32
 
 typedef enum s_type {
 	INFILE = O_RDONLY,

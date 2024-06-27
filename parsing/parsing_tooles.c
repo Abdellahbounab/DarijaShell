@@ -61,7 +61,7 @@ int create_files(t_cmd *cmd, char **line, t_info *info, t_type type)
 	while (file->name && file->name[i])
 	{
 		tmp = file->name[i];
-		file->name[i] = filter(file->name[i]);
+		file->name[i] = ft_filter(file->name[i]);
 		free(tmp);
 		i++;
 	}

@@ -398,35 +398,46 @@ char *get_commands(char **argv, char ***cmd_argv, char **paths)
 
 int	excute_builtin(t_excute *cmds, t_env **env)
 {
-	if (cmds && !ft_strncmp(cmds->cmd, "echo", 4))
-		builtin_echo(cmds);
-	else if (cmds && !ft_strncmp(cmds->cmd, "pwd", 3))
-		builtin_pwd(env);
-	else if (cmds && !ft_strncmp(cmds->cmd, "env", 3))
-		builtin_env(*env, 0);
-	else if (cmds && !ft_strncmp(cmds->cmd, "unset", 5))
-		builtin_unset(env, cmds);
-	else if (cmds && !ft_strncmp(cmds->cmd, "export", 6))
-		builtin_export(env, cmds);
-	else if (cmds && !ft_strncmp(cmds->cmd, "exit", 4))
-		exit(0);
-	else if (cmds && !ft_strncmp(cmds->cmd, "cd", 2))
-		builtin_cd(env, cmds);
+	int len;
+
+	if (cmds && cmds->cmd)
+	{
+		len = ft_strlen(cmds->cmd);
+		if (!ft_strncmp(cmds->cmd, "echo", len))
+			builtin_echo(cmds);
+		else if (!ft_strncmp(cmds->cmd, "pwd", len))
+			builtin_pwd(env);
+		else if (!ft_strncmp(cmds->cmd, "env", len))
+			builtin_env(*env, 0);
+		else if (!ft_strncmp(cmds->cmd, "unset", len))
+			builtin_unset(env, cmds);
+		else if (!ft_strncmp(cmds->cmd, "export", len))
+			builtin_export(env, cmds);
+		else if (!ft_strncmp(cmds->cmd, "exit", len))
+			exit(0);
+		else if (!ft_strncmp(cmds->cmd, "cd", len))
+			builtin_cd(env, cmds);
+	}
 	return (1);
 }
 
 int	special_builtin(char *cmds, char *arr)
 {
-	if (cmds &&!ft_strncmp(cmds, "unset", 5))
-		return 1;
-	else if (cmds && arr && !ft_strncmp(cmds, "export", 6) )
-		return 1;
-	else if (cmds && !ft_strncmp(cmds, "exit", 4))
-		return 1;
-	else if (cmds && !ft_strncmp(cmds, "cd", 2))
-		return 1;
-	else
-		return 0;
+	int len;
+
+	if (cmds)
+	{
+		len = ft_strlen(cmds);
+		if (cmds &&!ft_strncmp(cmds, "unset", len))
+			return 1;
+		else if (cmds && arr && !ft_strncmp(cmds, "export", len))
+			return 1;
+		else if (cmds && !ft_strncmp(cmds, "exit", len))
+			return 1;
+		else if (cmds && !ft_strncmp(cmds, "cd", len))
+			return 1;
+	}
+	return 0;
 }
 
 int	excute_cmd(t_excute *cmds, t_env **env)

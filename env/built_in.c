@@ -26,20 +26,26 @@
 
 int	is_builtin(char *cmd)
 {
-	if (cmd && !ft_strncmp(cmd, "echo", 4))
-		return (1);
-	else if (cmd && !ft_strncmp(cmd, "cd", 2))
-		return (1);
-	else if (cmd && !ft_strncmp(cmd, "pwd", 3))
-		return (1);
-	else if (cmd && !ft_strncmp(cmd, "export", 6))
-		return (1);
-	else if (cmd && !ft_strncmp(cmd, "unset", 5))
-		return (1);
-	else if (cmd && !ft_strncmp(cmd, "env", 3))
-		return (1);
-	else if (cmd && !ft_strncmp(cmd, "exit", 4))
-		return (1);
+	int len;
+
+	if (cmd)
+	{
+		len = ft_strlen(cmd);
+		if (!ft_strncmp(cmd, "echo", len))
+			return (1);
+		else if (!ft_strncmp(cmd, "cd", len))
+			return (1);
+		else if (!ft_strncmp(cmd, "pwd", len))
+			return (1);
+		else if (!ft_strncmp(cmd, "export", len))
+			return (1);
+		else if (!ft_strncmp(cmd, "unset", len))
+			return (1);
+		else if (!ft_strncmp(cmd, "env", len))
+			return (1);
+		else if (!ft_strncmp(cmd, "exit", len))
+			return (1);
+	}
 	return (0);
 }
 
@@ -67,7 +73,7 @@ int	builtin_echo(t_excute *cmd)
 int	builtin_cd(t_env **env, t_excute *cmds)
 {
 	char	str[100];
-	// if (env && path_exist(path))//funciton that would check the existance of the path
+
 	if (env)//funciton that would check the existance of the path
 	{
 		if (cmds->arguments[0] && ft_strncmp(cmds->arguments[0], "~", ft_strlen(cmds->arguments[0])))
@@ -80,7 +86,7 @@ int	builtin_cd(t_env **env, t_excute *cmds)
 			if (env_getval(*env, "HOME"))
 				chdir(env_getval(*env, "HOME"));
 			else
-				ft_perror("minishell:"," cd: HOME not set", 1);//this one have to be handled to not exit from the process
+				write(STDERR_FILENO, "minishell: cd: HOME not set\n", 28);
 		}
 		env_export(env, "PWD", getcwd(str, 100));
 		return 1;

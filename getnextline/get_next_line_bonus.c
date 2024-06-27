@@ -49,11 +49,9 @@ char	*ft_read_buff(int fd, char *str)
 
 char	*ft_get_line(char *str)
 {
-	int		i;
 	size_t	len;
 	char	*cpy;
 
-	i = 0;
 	if (!*str)
 		return (0);
 	len = until_line(str) + 1;

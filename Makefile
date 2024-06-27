@@ -28,7 +28,10 @@ all: $(NAME)
 
 $(NAME): $(OBJ) 
 	make -C libft
-	cc $(CFLAGS) -lreadline -lncurses $(OBJ) libft/libft.a -o $@ 
+	cc $(CFLAGS)  $(OBJ) libft/libft.a -o $@ -lreadline -lncurses
+#  cc $(CFLAGS) $(pkg-config --cflags --libs readline) -lreadline -lncurses $(OBJ) libft/libft.a -o $@ 
+
+	
 # -fsanitize=address -g
 
 clean: 

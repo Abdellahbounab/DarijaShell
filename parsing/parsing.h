@@ -73,7 +73,7 @@ int		create_files(t_cmd *cmd, char **line, t_info *info, t_type type);
 void	free_cmd(t_cmd *cmd);
 char	*parsing_extend_var(char *string, t_env *env, int *status);
 char	**parsing_split(char *string);
-char	*filter(char *part);
+char	*ft_filter(char *part);
 int		set_default(t_cmd **cmd, int *status);
 void	add_back_cmd(t_cmd *head, t_cmd *next_command);
 char	*quation_mark(char *string, t_info *info, char *var_value, int *status);
