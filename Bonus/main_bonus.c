@@ -52,6 +52,7 @@ int main()
 	int status;
 	t_env *env;
 	char  **tmp;
+	char **files;
 
 	status = 0;
 	env = NULL;
@@ -65,6 +66,7 @@ int main()
 		tmp = get_files();
 		printf("filenames: \t");
 		print_array(tmp);
+		files = wildcard(tmp, "");
 		free_array(&tmp);
 		printf("\n");
 		print_cmd(command);

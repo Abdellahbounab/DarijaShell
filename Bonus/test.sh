@@ -16,3 +16,6 @@ ls > out | ((ls -e && cat -e Makefile) ls) echo hello
 #  3928 ttys004    0:00.07 bash
 #  5536 ttys004    0:00.00 sleep 10
 sleep 10 && echo hello | echo HI
+
+
+unset HOME && echo $HOME
