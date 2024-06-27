@@ -39,7 +39,7 @@ void print_array(char **array)
 	i = 0;
 	while(array && array[i])
 	{
-		printf("˚%s˚\t", array[i]);
+		printf("|%s|\t", array[i]);
 		i++;
 	}
 	printf("\n");
@@ -63,11 +63,11 @@ int main()
 		if (line[0] == 'e' && line[1] == 'x' && line[2] == 'i' && line[3] == 't')
 			exit(0);
 		command = parsing(line, env, &status);
-		tmp = get_files();
-		printf("filenames: \t");
-		print_array(tmp);
-		files = wildcard(tmp, "");
-		free_array(&tmp);
+		// tmp = get_files();
+		// printf("filenames: \t");
+		// print_array(tmp);
+		// files = wildcard(tmp, "");
+		// free_array(&tmp);
 		printf("\n");
 		print_cmd(command);
 		free_cmd(command);

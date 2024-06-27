@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 10:54:21 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/27 13:06:35 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/27 14:54:39 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,6 @@ char **join_arrays(char **dst_array, char **src_array)
 		dst_array = append_array(dst_array, src_array[i]);
 		i++;
 	}
-	free(&src_array);
 	return (dst_array);
 }
 

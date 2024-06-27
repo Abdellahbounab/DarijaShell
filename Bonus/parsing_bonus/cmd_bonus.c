@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:21:34 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/27 12:47:35 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/27 15:15:21 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,14 +76,19 @@ static int take_place(char **tokens, t_cmd *cmd, t_info *info)
 		return (ERROR);
 	if (info->file == 0)
 	{
+		printf("split[%d]:%s\n", i, split[i]);
+		split = add_wildcard(tokens);
+		// A function extend all the variables 
+		// A funtion 
 		tmp = parsing_extend_var(tokens[info->cmd_i], info->env, info->cmd->status);
 		split = parsing_split(tmp);
+		printf("array:\n");
+		print_array(split);
 		if (split == NULL)
 			return (GOOD);
 		free(tmp), i = 0;
 		while (split[i])
 		{
-			// add_wildcards(split);
 			tmp = filter(split[i]);
 			cmd->args = append_array(cmd->args, tmp);
 			free(tmp);
@@ -103,6 +108,7 @@ static t_cmd *create_cmd(char **tokens, t_info *info, int *status)
 	if (set_default(&cmd, status) == ERROR)
 		return (NULL);
 	info->cmd = cmd;
+	
 	while (tokens[info->cmd_i])
 	{
 		if (ft_strcmp(tokens[info->cmd_i], "|") == 0)
