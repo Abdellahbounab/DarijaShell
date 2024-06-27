@@ -26,6 +26,10 @@
 #include <curses.h>
 #include <term.h>
 
+#include <signal.h>
+
+#include <sys/ioctl.h>
+
 #include "libft/libft.h"
 
 
