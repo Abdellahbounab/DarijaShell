@@ -37,6 +37,8 @@ void	signal_handler(int sig)
 {
 	(void) sig;
 	status = 130;
+	// exit status have to be edited depends on if same process or child process
+	// have to handle heredoc signal
 	write (STDOUT_FILENO, "\n", 1);
 	rl_replace_line("", 1);
 	rl_on_new_line();
