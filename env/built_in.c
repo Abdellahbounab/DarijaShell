@@ -188,7 +188,7 @@ int	builtin_exit(t_env **env, t_excute *cmds)
 	{
 		if (cmds->arguments[0])
 			num = ft_atoi(cmds->arguments[0]);
-		if (cmds->arguments[1])
+		if (cmds->arguments[0] && cmds->arguments[1])
 		{
 			status = 1;
 			return (write (STDERR_FILENO, "exit: too many arguments\n", 25));

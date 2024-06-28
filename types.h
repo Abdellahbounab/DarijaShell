@@ -40,8 +40,8 @@
 # define DOUBLE_Q 34
 # define WITHOUT 32
 
-#define TAB 9
-#define SPACE 32
+// #define TAB 9
+// #define SPACE 32
 
 
 int status;
