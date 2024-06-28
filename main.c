@@ -37,8 +37,8 @@ void	signal_handler(int sig)
 {
 	(void) sig;
 	// ioctl(STDIN_FILENO, TIOCSTI, "\n");
-	// write (STDOUT_FILENO, "\n", 1);
-	rl_replace_line("", 0);
+	write (STDOUT_FILENO, "\n", 1);
+	// rl_replace_line("", 0);
 	rl_redisplay();
 	status = 1;
 }
@@ -57,11 +57,10 @@ int main(int ac, char **av, char **envp)
 	// int status;
 	t_env *env;
 
-	status = 0;
 	(void)av;
 	(void)ac;
 	if (!get_env(&env, envp))
-		return (127);//we have to return the error message too
+		return (ft_perror("minishell :", "error env", 127));//we have to return the error message too
 	ft_signals();
 	while (1)
 	{
