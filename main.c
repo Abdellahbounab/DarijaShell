@@ -36,11 +36,11 @@ void print_cmd(t_cmd *command)
 void	signal_handler(int sig)
 {
 	(void) sig;
-	// ioctl(STDIN_FILENO, TIOCSTI, "\n");
+	status = 130;
 	write (STDOUT_FILENO, "\n", 1);
-	// rl_replace_line("", 0);
+	rl_replace_line("", 1);
+	rl_on_new_line();
 	rl_redisplay();
-	status = 1;
 }
 
 int	ft_signals(void)
@@ -71,7 +71,6 @@ int main(int ac, char **av, char **envp)
 		command = parsing(line, env, &status);
 		excution(command, &env, &status);
 		free_cmd(command);
-		// system("leaks minishell");
 	}
 }
 

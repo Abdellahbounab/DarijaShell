@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/28 18:17:01 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/28 21:04:20 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int	cmd_free_node(t_excute *cpy)
 	i = 0;
 	while (cpy && cpy->arguments && cpy->arguments[i])
 		free(cpy->arguments[i++]);
-	// free(cpy->arguments);
+	free(cpy->arguments);
 	free(cpy->cmd);
 	cpy = NULL;
 	return (1);
@@ -165,7 +165,7 @@ int	open_heredoc(char *heredoc, int outfile, t_env **env, int *status)
 
 	write(STDOUT_FILENO, ">", 1);
 	line = get_next_line(STDIN_FILENO);
-	while (line && ft_strncmp(line, heredoc, ft_strlen(line)))
+	while (line && ft_strncmp(line, heredoc, ft_strlen(line) - 1))
 	{
 		tmp = line;
 		line = parsing_extend_var(line, *env, status);

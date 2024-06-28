@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 19:16:19 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/28 18:21:45 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/28 21:02:00 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,7 +188,7 @@ int	builtin_exit(t_env **env, t_excute *cmds)
 	{
 		if (cmds->arguments[0])
 			num = ft_atoi(cmds->arguments[0]);
-		if (cmds->arguments[1])
+		if (cmds->arguments[0] && cmds->arguments[1])
 		{
 			status = 1;
 			return (write (STDERR_FILENO, "exit: too many arguments\n", 25));
