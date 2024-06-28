@@ -36,8 +36,11 @@ void print_cmd(t_cmd *command)
 void	signal_handler(int sig)
 {
 	(void) sig;
-	ioctl(STDIN_FILENO, TIOCSTI, "\n");
+	// ioctl(STDIN_FILENO, TIOCSTI, "\n");
+	// write (STDOUT_FILENO, "\n", 1);
 	rl_replace_line("", 0);
+	rl_redisplay();
+	status = 1;
 }
 
 int	ft_signals(void)
@@ -51,7 +54,7 @@ int main(int ac, char **av, char **envp)
 {
 	char *line;
 	t_cmd *command;
-	int status;
+	// int status;
 	t_env *env;
 
 	status = 0;
@@ -60,9 +63,6 @@ int main(int ac, char **av, char **envp)
 	if (!get_env(&env, envp))
 		return (127);//we have to return the error message too
 	ft_signals();
-	// if (!ft_signals(&env, envp)) //where to create the signals for my interpretation
-	// 	return (127);//we have to return the error message too
-	printf("here\n");
 	while (1)
 	{
 		line = readline("minishell-$ ");

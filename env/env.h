@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 14:16:27 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/23 19:47:34 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/28 18:13:58 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,6 @@ int	builtin_unset(t_env **env, t_excute *cmds);
 int	builtin_env(t_env *env, int flag);
 int	builtin_export(t_env **env, t_excute *cmds);
 int	builtin_cd(t_env **env, t_excute *cmds);
+int	builtin_exit(t_env **env, t_excute *cmds);
 
 #endif

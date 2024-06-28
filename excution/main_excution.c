@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/25 14:39:27 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/28 18:17:01 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -414,7 +414,7 @@ int	excute_builtin(t_excute *cmds, t_env **env)
 		else if (!ft_strncmp(cmds->cmd, "export", len))
 			builtin_export(env, cmds);
 		else if (!ft_strncmp(cmds->cmd, "exit", len))
-			exit(0);
+			builtin_exit(env, cmds);
 		else if (!ft_strncmp(cmds->cmd, "cd", len))
 			builtin_cd(env, cmds);
 	}
