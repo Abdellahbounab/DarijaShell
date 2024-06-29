@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/28 21:04:20 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/29 10:57:38 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -488,6 +488,31 @@ int	close_other(t_excute *head, int pos)
 	return (1);
 }
 
+void	signal_handler(int sig)
+{
+	(void) sig;
+	status = 130;
+	// exit status have to be edited depends on if same process or child process
+	// have to handle heredoc signal
+	write (STDOUT_FILENO, "\n", 1);
+	rl_replace_line("", 1);
+	rl_on_new_line();
+	rl_redisplay();
+}
+
+
+int	ft_signals(int child)
+{
+	if (!child)
+	{
+		signal(SIGINT, signal_handler);
+		signal(SIGQUIT, SIG_IGN);
+	}
+	else
+		signal(SIGINT, SIG_DFL);
+	return 1;
+}
+
 int	redirection_update(t_cmd *command, t_excute **head, t_env **env)
 {
 	int			pid;
@@ -504,7 +529,7 @@ int	redirection_update(t_cmd *command, t_excute **head, t_env **env)
 		{
 			pid = fork();
 			if (!pid)
-				return (close_other(*head, i), child_excution(command, cmds, env));
+				return (close_other(*head, i), ft_signals(1), child_excution(command, cmds, env));
 			if (pid && pid != -1)
 				cmds->pid = pid;
 			else
@@ -532,6 +557,8 @@ int	waitprocess(t_excute *cmds, int *status)
 	}
 	return (1);
 }
+
+
 
 int	excution(t_cmd *command, t_env **env, int *status)
 {

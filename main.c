@@ -33,24 +33,7 @@ void print_cmd(t_cmd *command)
 	cmd_tmp = NULL;
 }
 
-void	signal_handler(int sig)
-{
-	(void) sig;
-	status = 130;
-	// exit status have to be edited depends on if same process or child process
-	// have to handle heredoc signal
-	write (STDOUT_FILENO, "\n", 1);
-	rl_replace_line("", 1);
-	rl_on_new_line();
-	rl_redisplay();
-}
 
-int	ft_signals(void)
-{
-	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, SIG_IGN);
-	return 1;
-}
 
 int main(int ac, char **av, char **envp)
 {
@@ -63,7 +46,7 @@ int main(int ac, char **av, char **envp)
 	(void)ac;
 	if (!get_env(&env, envp))
 		return (ft_perror("minishell :", "error env", 127));//we have to return the error message too
-	ft_signals();
+	ft_signals(0);
 	while (1)
 	{
 		line = readline("minishell-$ ");
