@@ -1,7 +1,9 @@
 NAME = minishell
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 
-#  -fsanitize=address
+# -L ./goinfre/abounab/homebrew/Cellar/readline/8.2.10/lib -I ./goinfre/abounab/homebrew/Cellar/readline/8.2.10:/include
+
+#  -fsanitize=address -g
 SRC =	main.c \
 		parsing/cmd.c \
 		parsing/free.c \
@@ -17,29 +19,40 @@ SRC =	main.c \
 
 INCLUDES=	env/env.h \
 			parsing/parsing.h\
-			types.h 
+			types.h
+
+RDLINE_NAME = readline
+
+RDLINE = -L ./$(RDLINE_NAME) -I./$(RDLINE_NAME) -lreadline -lncurses
 
 OBJ=$(SRC:.c=.o)
 
 %.o: %.c $(INCLUDES)
 	cc $(CFLAGS) -c $< -o $@
 
-all: $(NAME)
+all: $(RDLINE_NAME) $(NAME)
 
 $(NAME): $(OBJ) 
 	make -C libft
-	cc $(CFLAGS)  $(OBJ) libft/libft.a -o $@ -lreadline -lncurses
+	cc $(CFLAGS)  $(OBJ) libft/libft.a -o $@ $(RDLINE)
 #  cc $(CFLAGS) $(pkg-config --cflags --libs readline) -lreadline -lncurses $(OBJ) libft/libft.a -o $@ 
 
-	
-# -fsanitize=address -g
+ireadline :
+	@brew install $(RDLINE_NAME)
+	mv /goinfre/abounab/homebrew/Cellar/readline/8.2.10 readline
+	cd $(RDLINE_NAME) && ./configure > /dev/null 2>&1
+	echo "compiling readline"
 
-clean: 
+$(RDLINE_NAME) :
+	 		make -C $(RDLINE_NAME) > /dev/null 2>&1
+
+clean:
 	make clean -C libft
 	rm -f $(OBJ)
 
 fclean: clean
 	make fclean -C libft
+	rm -rf $(RDLINE_NAME)
 	rm -f $(NAME)
 
-re: fclean all 
+re: fclean ireadline all
