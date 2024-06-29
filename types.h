@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:30:27 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/24 20:26:54 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/29 11:43:25 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ typedef enum s_type {
 	INFILE = 1,
 	OUFILE = 2,
 	APPEND = 3,
-	HERE_DOC = 4,
+	HERE_DOC_SIMPLE = 4,
+	HERE_DOC_SPECIAL = 5,
 } t_type;
 
 typedef struct s_env
@@ -46,9 +47,9 @@ typedef struct s_env
 } t_env;
 
 typedef struct s_file{
-	char **name;
-	t_type type;
-	struct  s_file *next;
+	char	**name;
+	t_type	type;
+	struct s_file *next;
 } t_file;
 
 typedef struct s_cmd

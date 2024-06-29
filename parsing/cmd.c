@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:21:34 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/24 17:01:46 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/29 11:44:20 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static int input_files(char **line, t_cmd *cmd, t_info *info)
 		info->file = 1;
 		if (check_next(line[++(info->cmd_i)], cmd->status) == ERROR)
 			status = ERROR;
-		if (create_files(cmd, line, info, HERE_DOC) == ERROR)
+		if (create_files(cmd, line, info, HERE_DOC_SIMPLE) == ERROR)
 			status = ERROR;
 	}
 	if (status == ERROR)
