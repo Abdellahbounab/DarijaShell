@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/29 10:57:38 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/29 12:45:52 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -554,7 +554,6 @@ int	waitprocess(t_excute *cmds, int *status)
 		{
 			if (cmds->pid)
 				waitpid(cmds->pid, status, 0);
-			// *status >>= 8;
 			if (WIFSIGNALED(*status))
 				*status = 130;
 			else
