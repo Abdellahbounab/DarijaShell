@@ -165,7 +165,7 @@ int	open_heredoc(char *heredoc, int outfile, t_env **env, int *status)
 
 	write(STDOUT_FILENO, ">", 1);
 	line = get_next_line(STDIN_FILENO);
-	while (line && ft_strncmp(line, heredoc, ft_strlen(line) - 1))
+	while (line && !status && ft_strncmp(line, heredoc, ft_strlen(line) - 1))
 	{
 		tmp = line;
 		line = parsing_extend_var(line, *env, status);
