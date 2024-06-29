@@ -21,9 +21,6 @@ INCLUDES=	env/env.h \
 			parsing/parsing.h\
 			types.h
 
-RDLINE_NAME = readline
-
-# RDLINE = -L ./$(RDLINE_NAME) -I./$(RDLINE_NAME) -lreadline -lncurses
 RDLINE = -lreadline -lncurses
 
 OBJ=$(SRC:.c=.o)
@@ -39,14 +36,6 @@ $(NAME): $(OBJ)
 	cc $(CFLAGS)  $(OBJ) libft/libft.a -o $@ $(RDLINE)
 #  cc $(CFLAGS) $(pkg-config --cflags --libs readline) -lreadline -lncurses $(OBJ) libft/libft.a -o $@ 
 
-ireadline :
-	@brew install $(RDLINE_NAME)
-	mv /goinfre/abounab/homebrew/Cellar/readline/8.2.10 readline
-	cd $(RDLINE_NAME) && ./configure > /dev/null 2>&1
-	echo "compiling readline"
-
-$(RDLINE_NAME) :
-	 		make -C $(RDLINE_NAME) > /dev/null 2>&1
 
 clean:
 	make clean -C libft
@@ -54,7 +43,6 @@ clean:
 
 fclean: clean
 	make fclean -C libft
-	rm -rf $(RDLINE_NAME)
 	rm -f $(NAME)
 
-re: fclean ireadline all
+re: fclean all
