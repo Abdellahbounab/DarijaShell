@@ -23,14 +23,16 @@ INCLUDES=	env/env.h \
 
 RDLINE_NAME = readline
 
-RDLINE = -L ./$(RDLINE_NAME) -I./$(RDLINE_NAME) -lreadline -lncurses
+# RDLINE = -L ./$(RDLINE_NAME) -I./$(RDLINE_NAME) -lreadline -lncurses
+RDLINE = -lreadline -lncurses
 
 OBJ=$(SRC:.c=.o)
 
 %.o: %.c $(INCLUDES)
 	cc $(CFLAGS) -c $< -o $@
 
-all: $(RDLINE_NAME) $(NAME)
+# all: $(RDLINE_NAME) $(NAME)
+all: $(NAME)
 
 $(NAME): $(OBJ) 
 	make -C libft

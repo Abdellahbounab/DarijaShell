@@ -491,11 +491,11 @@ int	close_other(t_excute *head, int pos)
 void	signal_handler(int sig)
 {
 	(void) sig;
-	status = 130;
+	status = 1;
 	// exit status have to be edited depends on if same process or child process
 	// have to handle heredoc signal
 	write (STDOUT_FILENO, "\n", 1);
-	rl_replace_line("", 1);
+	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
 }
@@ -503,9 +503,12 @@ void	signal_handler(int sig)
 
 int	ft_signals(int child)
 {
-	if (!child)
+	if (child)
 	{
-		signal(SIGINT, signal_handler);
+		if (child == 1)
+			signal(SIGINT, signal_handler);
+		else
+			signal(SIGINT, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);
 	}
 	else
@@ -528,8 +531,9 @@ int	redirection_update(t_cmd *command, t_excute **head, t_env **env)
 		else
 		{
 			pid = fork();
+			ft_signals(pid);
 			if (!pid)
-				return (close_other(*head, i), ft_signals(1), child_excution(command, cmds, env));
+				return (close_other(*head, i), child_excution(command, cmds, env));
 			if (pid && pid != -1)
 				cmds->pid = pid;
 			else
@@ -550,7 +554,11 @@ int	waitprocess(t_excute *cmds, int *status)
 		{
 			if (cmds->pid)
 				waitpid(cmds->pid, status, 0);
-			*status >>= 8;
+			// *status >>= 8;
+			if (WIFSIGNALED(*status))
+				*status = 130;
+			else
+				*status = WEXITSTATUS(*status);
 			cmd_free_node(cmds);
 		}
 		cmds = cmds->next;

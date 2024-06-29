@@ -45,9 +45,9 @@ int main(int ac, char **av, char **envp)
 	(void)ac;
 	if (!get_env(&env, envp))
 		return (ft_perror("minishell :", "error env", 127));//we have to return the error message too
-	ft_signals(0);
 	while (1)
 	{
+		ft_signals(1);
 		line = readline("minishell-$ ");
 		if (!line)
 			return (free_env(&env));
