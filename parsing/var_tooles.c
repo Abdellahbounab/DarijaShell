@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 17:50:44 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/11 11:50:45 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/29 13:02:09 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ char *var_extand(char *part, t_info *info)
 	char *var_name;
 	char *tmp;
 	char *var_value;
-	// t_env *tmp_env;
 
 	string = NULL;
 	while (part[info->end] == '$')
@@ -60,7 +59,10 @@ char *var_extand(char *part, t_info *info)
 		info->end++;
 		info->start = info->end;
 		var_name = get_var_name(part, info);
-		var_value = get_var_value(info->env, var_name);
+		if (var_name[0] == '\0' || ft_isdigit(var_name[0]) == GOOD)
+			var_value = ft_substr(part, info->start - 1, info->end);
+		else
+			var_value = get_var_value(info->env, var_name);
 		free(var_name);
 		var_name = NULL;
 		tmp = string;
