@@ -25,7 +25,7 @@
 #include <sys/wait.h>
 
 #include <signal.h>
-
+#include <sys/ioctl.h>
 
 #include "libft/libft.h"
 

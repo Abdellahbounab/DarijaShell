@@ -494,10 +494,11 @@ void	signal_handler(int sig)
 	status = 1;
 	// exit status have to be edited depends on if same process or child process
 	// have to handle heredoc signal
-	write (STDOUT_FILENO, "\n", 1);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
+	// write (STDOUT_FILENO, "\n", 1);
+	// rl_replace_line("", 0);
+	// rl_on_new_line();
+	// rl_redisplay();
+	ioctl(STDIN_FILENO, TIOCSTI, "\n");
 }
 
 
