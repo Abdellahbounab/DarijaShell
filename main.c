@@ -58,5 +58,6 @@ int main(int ac, char **av, char **envp)
 		excution(command, &env);
 		free_cmd(command);
 	}
+	free_env(&env);
 }
 

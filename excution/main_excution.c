@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/29 18:58:29 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/29 21:40:07 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,24 +34,7 @@
 
 /*
 	heredoc signal && any command after
-	
-	export have to handle the identifiers names
-	export have to handle the NULL values when showed
-	(use check_name() in parsing)
-	
-	have to handle the absolute path in the case of unset PATH and cmds used with abs path
-	/asd ==> no such file or directory
 */
-
-// int			raed_array(char **paths)
-// {
-// 	int i;
-
-// 	i = 0;
-// 	while (paths && paths[i])
-// 		printf(" %s ", paths[i++]);
-// 	return printf("\n");
-// }
 
 
 
@@ -164,7 +147,7 @@ int	open_heredoc(char *heredoc, int outfile, t_env **env)
 	char	*line;
 	char	*tmp;
 
-	write(STDOUT_FILENO, ">", 1);
+	write(STDOUT_FILENO, "> ", 2);
 	line = get_next_line(STDIN_FILENO);
 	while (line && !status && ft_strncmp(line, heredoc, ft_strlen(line) - 1))
 	{
@@ -174,7 +157,7 @@ int	open_heredoc(char *heredoc, int outfile, t_env **env)
 		if (outfile != -1)
 			write(outfile, line, ft_strlen(line));
 		free(line);
-		write(STDOUT_FILENO, ">", 1);
+		write(STDOUT_FILENO, "> ", 2);
 		line = get_next_line(STDIN_FILENO);
 	}
 	if (outfile != -1)
@@ -211,13 +194,15 @@ int	heredoc_management(t_file	*files, t_excute *node, t_env **env)
 		if (i == heredoc_postion && files->type == HERE_DOC)
 		{
 			if (pipe(fd) < 0)
-				return (-1); //error handling
+				return (printf("%s\n", strerror(errno)), -1); //error handling
 			dup2(fd[0], node->infile);
 			close(fd[0]);
 		}
 		if (files->type == HERE_DOC)
 		{
 			open_heredoc(files->name[0], fd[1], env);
+			if (status)
+				return (0);
 			i++;
 		}
 		files = files->next;
@@ -244,7 +229,8 @@ t_excute	*heredoc_update(t_cmd *command, t_env **env)
 			dup2(fds[1], node->outfile); //it does output in the 1 to be read by 0
 			close(fds[1]);
 		}
-		heredoc_management(command->files, node, env); //heredoc
+		if (!heredoc_management(command->files, node, env)) //heredoc
+			return (cmd_free(&cmds), NULL);
 		cmd_addback(&cmds, node);
 		command = command->next;
 	}
@@ -369,11 +355,13 @@ char *get_commands(char **argv, char ***cmd_argv, char **paths)
 	if (argv)
 	{
 		if (argv[0] && is_builtin(argv[0]))
-			return (free_array(&paths), *cmd_argv = argv + 1, ft_strdup(argv[0]));//check if some of my builtins to be excuted , wont need a path
+			return (free_array(&paths), *cmd_argv = argv + 1, ft_strdup(argv[0]));
 		else if (paths)
 		{
-			if (is_absolutecmd(argv[0], paths))
+			if (!ft_strncmp(argv[0], "/", 1) && is_absolutecmd(argv[0], ft_split(getenv("PATH"), ':')))
 				return (*cmd_argv = argv, free_array(&paths), ft_strdup(argv[0]));
+			else if (!ft_strncmp(argv[0], "/", 1))
+				return (free_array(&paths), ft_perror(argv[0], ": no such file or directory", 127), NULL);
 			cmd = ft_strjoin("/", argv[0]);
 			if (!cmd)
 				return (free_array(&paths), NULL);//error
@@ -488,12 +476,11 @@ void	signal_handler(int sig)
 	(void) sig;
 	// exit status have to be edited depends on if same process or child process
 	// have to handle heredoc signal
-	// ioctl(STDIN_FILENO, TIOCSTI, "\n");
+	status = 1;
 	write (STDOUT_FILENO, "\n", 1);
 	rl_replace_line("", 0);//ihave to use it since it does delete the whole printed words inserted before entrer
 	rl_on_new_line();
 	rl_redisplay();
-	status = 1;
 }
 
 
@@ -566,7 +553,7 @@ int	waitprocess(t_excute *cmds, int *status)
 int	excution(t_cmd *command, t_env **env)
 {
 	t_excute	*cmds;
-	
+
 	cmds = heredoc_update(command, env);
 	redirection_update(command, &cmds, env);
 	waitprocess(cmds, &status);	

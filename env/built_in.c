@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 19:16:19 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/29 19:01:10 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/29 20:49:34 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,8 @@ int	builtin_export(t_env **env, t_excute *cmds)
 	while (cmds->arguments && cmds->arguments[i])
 	{
 		arr = ft_split(cmds->arguments[i], '=');
+		if (!arr[0] || check_name(arr[0]) < 0)
+			return (write(STDERR_FILENO, "export : not a valid identifier\n", 32), status = 1, 0);
 		str = join_strs(arr + 1);
 		env_export(env, arr[0], str);
 		free_array(&arr);

@@ -22,7 +22,7 @@ INCLUDES =	env/env.h \
 RDLINE_SRCS = excution/main_excution.c\
 			main.c
 
-RDLINE =  -I ./readline/include 
+RDLINE =  -I /goinfre/abounab/homebrew/opt/readline/include 
 
 OBJ=$(SRC:.c=.o)
 
@@ -44,6 +44,7 @@ $(RDLINE_OBJS):%.o: %.c $(INCLUDES)
 clean:
 	make clean -C libft
 	rm -f $(OBJ)
+	rm -f $(RDLINE_OBJS)
 
 fclean: clean
 	make fclean -C libft
