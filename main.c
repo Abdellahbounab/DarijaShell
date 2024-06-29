@@ -34,24 +34,6 @@ void print_cmd(t_cmd *command)
 }
 
 
-void	signal_handler(int sig)
-{
-	(void) sig;
-	status = 130;
-	write (STDOUT_FILENO, "\n", 1);
-	rl_replace_line("", 1);
-	rl_on_new_line();
-	rl_redisplay();
-}
-
-int	ft_signals(void)
-{
-	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, SIG_IGN);
-	return 1;
-}
-
-
 int main(int ac, char **av, char **envp)
 {
 	char *line;
