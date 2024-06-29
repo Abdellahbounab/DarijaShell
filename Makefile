@@ -4,8 +4,7 @@ CFLAGS = -Wall -Wextra -Werror
 # -L ./goinfre/abounab/homebrew/Cellar/readline/8.2.10/lib -I ./goinfre/abounab/homebrew/Cellar/readline/8.2.10:/include
 
 #  -fsanitize=address -g
-SRC =	main.c \
-		parsing/cmd.c \
+SRC =	parsing/cmd.c \
 		parsing/free.c \
 		parsing/new_filter.c \
 		parsing/new_parsing.c \
@@ -13,29 +12,34 @@ SRC =	main.c \
 		parsing/split_line.c 	\
 		parsing/var_tooles.c \
 		env/create_env.c \
-		excution/main_excution.c\
 		getnextline/get_next_line_bonus.c\
 		env/built_in.c
 
-INCLUDES=	env/env.h \
+INCLUDES =	env/env.h \
 			parsing/parsing.h\
 			types.h
 
-RDLINE = -lreadline -lncurses
+RDLINE_SRCS = excution/main_excution.c\
+			main.c
+
+RDLINE =  -I ./readline/include 
 
 OBJ=$(SRC:.c=.o)
+
+RDLINE_OBJS=$(RDLINE_SRCS:.c=.o)
 
 %.o: %.c $(INCLUDES)
 	cc $(CFLAGS) -c $< -o $@
 
-# all: $(RDLINE_NAME) $(NAME)
 all: $(NAME)
 
-$(NAME): $(OBJ) 
+$(NAME): $(OBJ) $(RDLINE_OBJS)
 	make -C libft
-	cc $(CFLAGS)  $(OBJ) libft/libft.a -o $@ $(RDLINE)
-#  cc $(CFLAGS) $(pkg-config --cflags --libs readline) -lreadline -lncurses $(OBJ) libft/libft.a -o $@ 
+	cc $(CFLAGS) -L /goinfre/abounab/homebrew/opt/readline/lib $(RDLINE_OBJS) $(OBJ) libft/libft.a -o $@ -lreadline -lncurses
 
+
+$(RDLINE_OBJS):%.o: %.c $(INCLUDES)
+	cc $(CFLAGS) $(RDLINE) -c $< -o $@ 
 
 clean:
 	make clean -C libft

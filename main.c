@@ -53,7 +53,9 @@ int main(int ac, char **av, char **envp)
 			return (free_env(&env));
 		add_history(line);
 		command = parsing(line, env, &status);
-		excution(command, &env, &status);
+		if (command && status)
+			status = 0;
+		excution(command, &env);
 		free_cmd(command);
 	}
 }

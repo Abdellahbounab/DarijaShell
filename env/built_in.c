@@ -6,12 +6,14 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 19:16:19 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/28 21:02:00 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/29 19:01:10 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 #include "../parsing/parsing.h"
+#include "../excution/excution.h"
+#include "../types.h"
 
 /*
 ◦ echo with option -n *
@@ -26,24 +28,21 @@
 
 int	is_builtin(char *cmd)
 {
-	int len;
-
 	if (cmd)
 	{
-		len = ft_strlen(cmd);
-		if (!ft_strncmp(cmd, "echo", len))
+		if (!ft_strcmp(cmd, "echo"))
 			return (1);
-		else if (!ft_strncmp(cmd, "cd", len))
+		else if (!ft_strcmp(cmd, "cd"))
 			return (1);
-		else if (!ft_strncmp(cmd, "pwd", len))
+		else if (!ft_strcmp(cmd, "pwd"))
 			return (1);
-		else if (!ft_strncmp(cmd, "export", len))
+		else if (!ft_strcmp(cmd, "export"))
 			return (1);
-		else if (!ft_strncmp(cmd, "unset", len))
+		else if (!ft_strcmp(cmd, "unset"))
 			return (1);
-		else if (!ft_strncmp(cmd, "env", len))
+		else if (!ft_strcmp(cmd, "env"))
 			return (1);
-		else if (!ft_strncmp(cmd, "exit", len))
+		else if (!ft_strcmp(cmd, "exit"))
 			return (1);
 	}
 	return (0);
@@ -78,7 +77,10 @@ int	builtin_cd(t_env **env, t_excute *cmds)
 		if (cmds->arguments[0] && ft_strncmp(cmds->arguments[0], "~", ft_strlen(cmds->arguments[0])))
 		{
 			if (chdir(cmds->arguments[0]) < 0)
+			{
 				perror(cmds->arguments[0]);
+				status = 1;
+			}
 		} 
 		else
 		{
@@ -172,6 +174,8 @@ int	is_numerique(char *str)
 	i = 0;
 	if (str)
 		len = ft_strlen(str);
+	if (str[i] == '-' || str[i] == '+')
+		i++;
 	while (str && str[i] && !ft_isdigit(str[i]))
 		i++;
 	if (str && len == i)
@@ -188,13 +192,13 @@ int	builtin_exit(t_env **env, t_excute *cmds)
 	{
 		if (cmds->arguments[0])
 			num = ft_atoi(cmds->arguments[0]);
+		if (cmds->arguments[0] && !is_numerique(cmds->arguments[0]))
+			ft_perror("exit : ", "numeric argument required", 255);
 		if (cmds->arguments[0] && cmds->arguments[1])
 		{
 			status = 1;
 			return (write (STDERR_FILENO, "exit: too many arguments\n", 25));
 		}
-		if (cmds->arguments[0] && !is_numerique(cmds->arguments[0]))
-			ft_perror("exit : ", "numeric argument required", 255);
 	}
 	free_env(env);
 	write (STDIN_FILENO, "exit\n", 5);

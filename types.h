@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:30:27 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/29 14:07:31 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/29 18:33:24 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 #include <sys/wait.h>
 
 #include <signal.h>
-#include <sys/ioctl.h>
+// #include <readline/chardefs.h>
 
 #include "libft/libft.h"
 
@@ -37,8 +37,14 @@
 # define DOUBLE_Q 34
 # define WITHOUT 32
 
+#ifndef TAB
 #define TAB 9
+#endif
+
+#ifndef SPACE
 #define SPACE 32
+#endif
+
 
 
 int status;

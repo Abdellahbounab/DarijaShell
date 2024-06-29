@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/29 15:12:26 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/29 18:58:29 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,26 +31,27 @@
 				outfile = fd output;
 */
 
-// int	free_array(&char **paths)
+
+/*
+	heredoc signal && any command after
+	
+	export have to handle the identifiers names
+	export have to handle the NULL values when showed
+	(use check_name() in parsing)
+	
+	have to handle the absolute path in the case of unset PATH and cmds used with abs path
+	/asd ==> no such file or directory
+*/
+
+// int			raed_array(char **paths)
 // {
-// 	int	i;
+// 	int i;
 
 // 	i = 0;
-// 	while(paths && paths[i])
-// 		free(paths[i++]);
-// 	free(paths);
-// 	return (1);
+// 	while (paths && paths[i])
+// 		printf(" %s ", paths[i++]);
+// 	return printf("\n");
 // }
-
-int			raed_array(char **paths)
-{
-	int i;
-
-	i = 0;
-	while (paths && paths[i])
-		printf(" %s ", paths[i++]);
-	return printf("\n");
-}
 
 
 
@@ -158,7 +159,7 @@ int	cmd_addback(t_excute **cmds, t_excute *node)
 	return (1);
 }
 
-int	open_heredoc(char *heredoc, int outfile, t_env **env, int *status)
+int	open_heredoc(char *heredoc, int outfile, t_env **env)
 {
 	char	*line;
 	char	*tmp;
@@ -168,7 +169,7 @@ int	open_heredoc(char *heredoc, int outfile, t_env **env, int *status)
 	while (line && !status && ft_strncmp(line, heredoc, ft_strlen(line) - 1))
 	{
 		tmp = line;
-		line = parsing_extend_var(line, *env, status);
+		line = parsing_extend_var(line, *env, &status);
 		free(tmp);
 		if (outfile != -1)
 			write(outfile, line, ft_strlen(line));
@@ -196,7 +197,7 @@ int	get_heredoc_position(t_file *files)
 	return (i);
 }
 
-int	heredoc_management(t_file	*files, t_excute *node, t_env **env, int *status)
+int	heredoc_management(t_file	*files, t_excute *node, t_env **env)
 {
 	int	heredoc_postion;
 	int	i;
@@ -205,7 +206,7 @@ int	heredoc_management(t_file	*files, t_excute *node, t_env **env, int *status)
 	i = 0;
 	fd[1] = -1;
 	heredoc_postion = get_heredoc_position(files) - 1;
-	while (heredoc_postion >= 0 && files)
+	while (heredoc_postion >= 0 && files && !status)
 	{
 		if (i == heredoc_postion && files->type == HERE_DOC)
 		{
@@ -216,7 +217,7 @@ int	heredoc_management(t_file	*files, t_excute *node, t_env **env, int *status)
 		}
 		if (files->type == HERE_DOC)
 		{
-			open_heredoc(files->name[0], fd[1], env, status);
+			open_heredoc(files->name[0], fd[1], env);
 			i++;
 		}
 		files = files->next;
@@ -224,7 +225,7 @@ int	heredoc_management(t_file	*files, t_excute *node, t_env **env, int *status)
 	return (1);
 }
 
-t_excute	*heredoc_update(t_cmd *command, t_env **env, int *status)
+t_excute	*heredoc_update(t_cmd *command, t_env **env)
 {
 	t_excute	*cmds;
 	t_excute	*node;
@@ -243,7 +244,7 @@ t_excute	*heredoc_update(t_cmd *command, t_env **env, int *status)
 			dup2(fds[1], node->outfile); //it does output in the 1 to be read by 0
 			close(fds[1]);
 		}
-		heredoc_management(command->files, node, env, status); //heredoc
+		heredoc_management(command->files, node, env); //heredoc
 		cmd_addback(&cmds, node);
 		command = command->next;
 	}
@@ -373,7 +374,7 @@ char *get_commands(char **argv, char ***cmd_argv, char **paths)
 		{
 			if (is_absolutecmd(argv[0], paths))
 				return (*cmd_argv = argv, free_array(&paths), ft_strdup(argv[0]));
-			cmd = ft_strjoin("/", argv[0]); //ex if ls : it wil be /ls to be used later when joining the paths
+			cmd = ft_strjoin("/", argv[0]);
 			if (!cmd)
 				return (free_array(&paths), NULL);//error
 			if (get_path(cmd, paths))
@@ -398,24 +399,21 @@ char *get_commands(char **argv, char ***cmd_argv, char **paths)
 
 int	excute_builtin(t_excute *cmds, t_env **env)
 {
-	int len;
-
 	if (cmds && cmds->cmd)
 	{
-		len = ft_strlen(cmds->cmd);
-		if (!ft_strncmp(cmds->cmd, "echo", len))
+		if (!ft_strcmp(cmds->cmd, "echo"))
 			builtin_echo(cmds);
-		else if (!ft_strncmp(cmds->cmd, "pwd", len))
+		else if (!ft_strcmp(cmds->cmd, "pwd"))
 			builtin_pwd(env);
-		else if (!ft_strncmp(cmds->cmd, "env", len))
+		else if (!ft_strcmp(cmds->cmd, "env"))
 			builtin_env(*env, 0);
-		else if (!ft_strncmp(cmds->cmd, "unset", len))
+		else if (!ft_strcmp(cmds->cmd, "unset"))
 			builtin_unset(env, cmds);
-		else if (!ft_strncmp(cmds->cmd, "export", len))
+		else if (!ft_strcmp(cmds->cmd, "export"))
 			builtin_export(env, cmds);
-		else if (!ft_strncmp(cmds->cmd, "exit", len))
+		else if (!ft_strcmp(cmds->cmd, "exit"))
 			builtin_exit(env, cmds);
-		else if (!ft_strncmp(cmds->cmd, "cd", len))
+		else if (!ft_strcmp(cmds->cmd, "cd"))
 			builtin_cd(env, cmds);
 	}
 	return (1);
@@ -423,18 +421,15 @@ int	excute_builtin(t_excute *cmds, t_env **env)
 
 int	special_builtin(char *cmds, char *arr)
 {
-	int len;
-
 	if (cmds)
 	{
-		len = ft_strlen(cmds);
-		if (cmds &&!ft_strncmp(cmds, "unset", len))
+		if (cmds &&!ft_strcmp(cmds, "unset"))
 			return 1;
-		else if (cmds && arr && !ft_strncmp(cmds, "export", len))
+		else if (cmds && arr && !ft_strcmp(cmds, "export"))
 			return 1;
-		else if (cmds && !ft_strncmp(cmds, "exit", len))
+		else if (cmds && !ft_strcmp(cmds, "exit"))
 			return 1;
-		else if (cmds && !ft_strncmp(cmds, "cd", len))
+		else if (cmds && !ft_strcmp(cmds, "cd"))
 			return 1;
 	}
 	return 0;
@@ -491,14 +486,14 @@ int	close_other(t_excute *head, int pos)
 void	signal_handler(int sig)
 {
 	(void) sig;
-	status = 1;
 	// exit status have to be edited depends on if same process or child process
 	// have to handle heredoc signal
-	// write (STDOUT_FILENO, "\n", 1);
-	// rl_replace_line("", 0);
-	// rl_on_new_line();
-	// rl_redisplay();
-	ioctl(STDIN_FILENO, TIOCSTI, "\n");
+	// ioctl(STDIN_FILENO, TIOCSTI, "\n");
+	write (STDOUT_FILENO, "\n", 1);
+	rl_replace_line("", 0);//ihave to use it since it does delete the whole printed words inserted before entrer
+	rl_on_new_line();
+	rl_redisplay();
+	status = 1;
 }
 
 
@@ -568,12 +563,12 @@ int	waitprocess(t_excute *cmds, int *status)
 
 
 
-int	excution(t_cmd *command, t_env **env, int *status)
+int	excution(t_cmd *command, t_env **env)
 {
 	t_excute	*cmds;
 	
-	cmds = heredoc_update(command, env, status);
+	cmds = heredoc_update(command, env);
 	redirection_update(command, &cmds, env);
-	waitprocess(cmds, status);
+	waitprocess(cmds, &status);	
 	return (1);
 }
