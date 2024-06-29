@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/29 12:45:52 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/29 15:12:26 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -538,7 +538,7 @@ int	redirection_update(t_cmd *command, t_excute **head, t_env **env)
 			if (pid && pid != -1)
 				cmds->pid = pid;
 			else
-				return (ft_perror(NULL, "Malloc", 1));//error handling	
+				return (status = 1, printf("%s\n", strerror(errno)));
 		}
 		cmds = cmds->next;
 		command = command->next;

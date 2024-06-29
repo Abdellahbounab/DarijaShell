@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:30:27 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/29 12:02:58 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/29 14:07:31 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@
 # define DOUBLE_Q 34
 # define WITHOUT 32
 
-// #define TAB 9
-// #define SPACE 32
+#define TAB 9
+#define SPACE 32
 
 
 int status;
