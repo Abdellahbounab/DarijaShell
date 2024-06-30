@@ -1,15 +1,14 @@
 
 #include "parsing/parsing.h"
-#include "env/env.h"
 
 void print_cmd(t_cmd *command)
 {
 	t_cmd *cmd_tmp;
+	t_file *tmp_file;
 	int j;
 	int i;
 
 	cmd_tmp = command;
-	t_file *tmp_file;
 	if (cmd_tmp)
 		tmp_file = cmd_tmp->files;
 	while (cmd_tmp)
@@ -32,7 +31,6 @@ void print_cmd(t_cmd *command)
 	}
 	cmd_tmp = NULL;
 }
-
 
 int main()
 {
