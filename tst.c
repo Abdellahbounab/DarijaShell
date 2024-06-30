@@ -1,15 +1,16 @@
 
 #include "parsing/parsing.h"
-#include "env/env.h"
 
 void print_cmd(t_cmd *command)
 {
 	t_cmd *cmd_tmp;
+	t_file *tmp_file;
 	int j;
 	int i;
 
 	cmd_tmp = command;
-	t_file *tmp_file;
+	if (cmd_tmp)
+		tmp_file = cmd_tmp->files;
 	while (cmd_tmp)
 	{
 		tmp_file = cmd_tmp->files;
@@ -32,24 +33,20 @@ void print_cmd(t_cmd *command)
 	cmd_tmp = NULL;
 }
 
-int main(int ac, char **av, char **envp)
+int main()
 {
 	char *line;
 	t_cmd *command;
 	int status;
-	t_env *env;
 
 	status = 0;
-	if (!get_env(&env, envp))
-		return (127);
-	// ft_signals();
 	while (1)
 	{
 		line = readline("minishell-$ ");
 		add_history(line);
 		if (line[0] == 'e' && line[1] == 'x' && line[2] == 'i' && line[3] == 't')
 			exit(0);
-		command = parsing(line, env, &status);
+		command = parsing(line, NULL, &status);
 		print_cmd(command);
 		free_cmd(command);
 	}

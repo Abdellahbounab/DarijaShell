@@ -1,0 +1,7 @@
+.vscode/
+.DS_Store
+*.o
+/*.o
+libft/*.a
+minishell
+test.c
