@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:21:34 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/29 11:44:20 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/29 19:28:31 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,55 +14,55 @@
 
 static int input_files(char **line, t_cmd *cmd, t_info *info)
 {
-	int status;
-	
-	status = GOOD;
+	int erro;
+
+	erro = GOOD;
 	if (ft_strcmp(line[info->cmd_i], "<") == 0)
 	{
 		info->file = 1;
 		if (check_next(line[++(info->cmd_i)], cmd->status) == ERROR)
-			status = ERROR;
+			erro = ERROR;
 		if (create_files(cmd, line, info, INFILE) == ERROR)
-			status = ERROR;
+			erro = ERROR;
 	}
 	else if (ft_strcmp(line[info->cmd_i], "<<") == 0)
 	{
 		info->file = 1;
 		if (check_next(line[++(info->cmd_i)], cmd->status) == ERROR)
-			status = ERROR;
+			erro = ERROR;
 		if (create_files(cmd, line, info, HERE_DOC_SIMPLE) == ERROR)
-			status = ERROR;
+			erro = ERROR;
 	}
-	if (status == ERROR)
+	if (erro == ERROR)
 		free_cmd(cmd);
-	return (status);
+	return (erro);
 }
 
 static int output_files(char **line, t_cmd *cmd, t_info *info)
 {
-	int status;
+	int erro;
 
-	status = GOOD;
+	erro = GOOD;
 	if (ft_strcmp(line[info->cmd_i], ">") == 0)
 	{
 		info->file = 1;
 		if (check_next(line[++(info->cmd_i)], cmd->status) == ERROR)
-			status = ERROR;
+			erro = ERROR;
 		if (create_files(cmd, line, info, OUFILE) == ERROR)
-			status = ERROR;
+			erro = ERROR;
 	}
 	else if (ft_strcmp(line[info->cmd_i], ">>") == 0)
 	{
 		info->file = 1;
 		if (check_next(line[++(info->cmd_i)], cmd->status) == ERROR)
-			status = ERROR;
+			erro = ERROR;
 
 		if (create_files(cmd, line, info, APPEND) == ERROR)
-			status = ERROR;
+			erro = ERROR;
 	}
-	if (status == ERROR)
+	if (erro == ERROR)
 		free_cmd(cmd);
-	return (status);
+	return (erro);
 }
 
 static int take_place(char **tokens, t_cmd *cmd, t_info *info)
@@ -127,6 +127,7 @@ t_cmd *parse_cmds(char **tokens, t_env *env, int *status)
 {
 	t_info *info;
 	t_cmd *cmd;
+	t_cmd *tmp;
 
 	if (tokens == NULL)
 		return (NULL);
@@ -137,7 +138,17 @@ t_cmd *parse_cmds(char **tokens, t_env *env, int *status)
 	info->env = env;
 	cmd = create_cmd(tokens, info, status);
 	while (cmd && tokens && tokens[info->cmd_i])
-		add_back_cmd(cmd, create_cmd(tokens, info, status));
+	{
+		tmp = create_cmd(tokens, info, status);
+		if (tmp)
+			add_back_cmd(cmd, tmp);
+		else
+		{
+			free_cmd(cmd);
+			free(info);
+			return (NULL);
+		}
+	}
 	free(info);
 	return (cmd);
 }

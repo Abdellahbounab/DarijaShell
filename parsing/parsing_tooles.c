@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:23:00 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/29 11:48:54 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/30 09:59:40 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,18 @@ int create_files(t_cmd *cmd, char **line, t_info *info, t_type type)
 
 	i = 0;
 	file = malloc(sizeof(t_file));
-	if (file == NULL)
+	if (file == NULL )
 		return (ERROR);
 	if (type != HERE_DOC_SIMPLE)
 		tmp = parsing_extend_var(line[info->cmd_i], info->env, info->cmd->status);
 	else
 		tmp = line[info->cmd_i];
 	file->name = parsing_split(tmp);
+	if (file->name == NULL)
+	{
+		free(file);
+		return (ERROR);
+	}
 	if (type != HERE_DOC_SIMPLE)
 		free(tmp);
 	if (type == HERE_DOC_SIMPLE && (ft_strchr(file->name[i], '\'') || ft_strchr(file->name[i], '"')))

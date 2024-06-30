@@ -1,5 +1,6 @@
 NAME = minishell
 CFLAGS = -Wall -Wextra -Werror 
+#-fsanitize=address -g
 LDFLAGS := -lreadline -lncurses
 
 SRC =	main.c \
@@ -11,9 +12,8 @@ SRC =	main.c \
 		parsing/split_line.c 	\
 		parsing/var_tooles.c \
 
-INCLUDES=	env/env.h \
-			parsing/parsing.h\
-			types.h
+INCLUDES=	parsing/parsing.h\
+			types.h \
 
 LIBFT_DIR := libft
 LIBFT := $(LIBFT_DIR)/libft.a
