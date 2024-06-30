@@ -160,6 +160,8 @@ int	open_heredoc(char *heredoc, int outfile, t_env **env)
 		write(STDOUT_FILENO, "> ", 2);
 		line = get_next_line(STDIN_FILENO);
 	}
+	if (!line)
+		write(STDERR_FILENO, "warning : here-document delimited by end-of-file\n", 49);
 	if (outfile != -1)
 		close(outfile);
 	free(line);
@@ -284,18 +286,20 @@ int	outfile_update(t_file *files, t_excute *cmds)
 	return (1);
 }
 
-int	is_absolutecmd(char *cmd, char **paths)
+int	is_absolutecmd(char *cmd)
 {
 	int	i;
+	char **paths;
 
 	i = 0;
+	paths = ft_split(getenv("PATH"), ':');
 	while (paths && paths[i])
 	{
 		if (!ft_strncmp(cmd, paths[i], ft_strlen(paths[i])))
 		{
 			if (access(cmd, X_OK) != -1)
-				return (1);
-			return (0);
+				return (free_array(&paths), 1);
+			return (free_array(&paths), 0);
 		}
 		i++;
 	}
@@ -354,33 +358,31 @@ char *get_commands(char **argv, char ***cmd_argv, char **paths)
 	cmd = NULL;
 	if (argv)
 	{
+		if (!ft_strncmp(argv[0], "/", 1) && is_absolutecmd(argv[0]))
+			return (*cmd_argv = argv, free_array(&paths), ft_strdup(argv[0]));
+		else if (!ft_strncmp(argv[0], "/", 1))
+			return (free_array(&paths), ft_perror(argv[0], ": no such file or directory", 127), NULL);
 		if (argv[0] && is_builtin(argv[0]))
 			return (free_array(&paths), *cmd_argv = argv + 1, ft_strdup(argv[0]));
-		else if (paths)
+		cmd = ft_strjoin("/", argv[0]);
+		if (!cmd)
+			return (free_array(&paths), NULL);//error
+		if (paths && get_path(cmd, paths))
 		{
-			if (!ft_strncmp(argv[0], "/", 1) && is_absolutecmd(argv[0], ft_split(getenv("PATH"), ':')))
-				return (*cmd_argv = argv, free_array(&paths), ft_strdup(argv[0]));
-			else if (!ft_strncmp(argv[0], "/", 1))
-				return (free_array(&paths), ft_perror(argv[0], ": no such file or directory", 127), NULL);
-			cmd = ft_strjoin("/", argv[0]);
-			if (!cmd)
-				return (free_array(&paths), NULL);//error
-			if (get_path(cmd, paths))
-			{
-				tmp = cmd;
-				cmd = ft_strjoin(paths[get_path(cmd, paths)], tmp);
-				free(tmp);
-				if (cmd)
-					return (*cmd_argv = argv, free_array(&paths), cmd);
-				return (free_array(&paths), NULL); //error 
-			}
-			free(cmd);
-			free_array(&paths);
-			if (!ft_strncmp("./", argv[0], 2) && access(argv[0], X_OK) != -1)
-				return (*cmd_argv = argv, ft_strdup(argv[0]));
-			// return (ft_perror(NULL, argv[0], 0), NULL);
-			return (*cmd_argv = argv, ft_strdup(argv[0]));
+			tmp = cmd;
+			cmd = ft_strjoin(paths[get_path(cmd, paths)], tmp);
+			free(tmp);
+			if (cmd)
+				return (*cmd_argv = argv, free_array(&paths), cmd);
+			return (free_array(&paths), NULL); //error 
 		}
+		free(cmd);
+		free_array(&paths);
+		if (!ft_strncmp("./", argv[0], 2) && access(argv[0], X_OK) != -1)
+			return (*cmd_argv = argv, ft_strdup(argv[0]));
+		// return (ft_perror(NULL, argv[0], 0), NULL);
+		return (free_array(&paths), ft_perror(argv[0], ": no such file or directory", 127), NULL);
+		//return (*cmd_argv = argv, ft_strdup(argv[0]));
 	}
 	return (free_array(&paths), ft_perror(argv[0], ": command not found", 1), NULL);
 }
@@ -477,8 +479,8 @@ void	signal_handler(int sig)
 	// exit status have to be edited depends on if same process or child process
 	// have to handle heredoc signal
 	status = 1;
-	write (STDOUT_FILENO, "\n", 1);
 	rl_replace_line("", 0);//ihave to use it since it does delete the whole printed words inserted before entrer
+	write (STDIN_FILENO, "\n\0", 2);
 	rl_on_new_line();
 	rl_redisplay();
 }
