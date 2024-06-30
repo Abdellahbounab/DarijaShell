@@ -30,7 +30,7 @@ OBJ=$(SRC:.c=.o)
 RDLINE_SRCS = excution/main_excution.c\
 			main.c
 
-RDLINE =  /goinfre/achakkaf/homebrew/opt/readline
+RDLINE =  /goinfre/$(shell users)/homebrew/opt/readline
 
 RDLINE_OBJS=$(RDLINE_SRCS:.c=.o)
 
