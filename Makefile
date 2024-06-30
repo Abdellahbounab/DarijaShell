@@ -22,7 +22,7 @@ INCLUDES =	env/env.h \
 RDLINE_SRCS = excution/main_excution.c\
 			main.c
 
-RDLINE =  /goinfre/abounab/homebrew/opt/readline
+RDLINE =  /goinfre/achakkaf/homebrew/opt/readline
 
 OBJ=$(SRC:.c=.o)
 
@@ -31,7 +31,7 @@ RDLINE_OBJS=$(RDLINE_SRCS:.c=.o)
 %.o: %.c $(INCLUDES)
 	cc $(CFLAGS) -c $< -o $@
 
-all: $(NAME) run
+all: $(NAME) 
 
 $(NAME): $(OBJ)  $(RDLINE_OBJS)
 	make -C libft
@@ -57,6 +57,6 @@ clean:
 fclean: clean
 	make fclean -C libft
 	rm -f $(NAME)
-	rm -rf $(RDLINE)
+# rm -rf $(RDLINE)
 
 re: fclean readline all

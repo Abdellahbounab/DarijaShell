@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_excution.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
+/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/30 09:22:51 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/30 11:06:04 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,8 +161,8 @@ int	open_heredoc(char *heredoc, int outfile, t_env **env)
 		write(STDOUT_FILENO, "> ", 2);
 		line = get_next_line(STDIN_FILENO);
 	}
-	if (!line && status != 1)
-		write(STDERR_FILENO, "warning : here-document delimited by end-of-file\n", 49);
+	// if (!line && status != 1)
+	// 	write(STDERR_FILENO, "warning : here-document delimited by end-of-file\n", 49);
 	if (outfile != -1)
 		close(outfile);
 	free(line);
