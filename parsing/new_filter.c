@@ -67,7 +67,7 @@ char *double_without(char *part, int *end, int flage)
 	return (string);
 }
 
-char *filter(char *part)
+char *ft_filter(char *part)
 {
 	char *tmp;
 	char *tmp_free;

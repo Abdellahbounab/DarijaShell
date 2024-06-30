@@ -6,9 +6,10 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:23:00 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/30 10:09:00 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/30 11:44:39 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "parsing.h"
 
@@ -18,7 +19,6 @@ int set_default(t_cmd **cmd, int *status)
 	if (*cmd == NULL)
 		return (ERROR);
 	(*cmd)->args = NULL;
-	(*cmd)->path = NULL;
 	(*cmd)->status = status;
 	(*cmd)->files = NULL;
 	(*cmd)->next = NULL;
@@ -72,7 +72,7 @@ int create_files(t_cmd *cmd, char **line, t_info *info, t_type type)
 	while (file->name && file->name[i])
 	{
 		tmp = file->name[i];
-		file->name[i] = filter(file->name[i]);
+		file->name[i] = ft_filter(file->name[i]);
 		free(tmp);
 		i++;
 	}

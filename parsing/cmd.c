@@ -83,7 +83,7 @@ static int take_place(char **tokens, t_cmd *cmd, t_info *info)
 			return (GOOD);
 		while (split[i])
 		{
-			tmp = filter(split[i]);
+			tmp = ft_filter(split[i]);
 			cmd->args = append_array(cmd->args, tmp);
 			free(tmp);
 			free(split[i++]);

@@ -1,26 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstsize_bonus.c                                 :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/13 16:06:18 by Achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/11 21:22:34 by abounab          ###   ########.fr       */
+/*   Created: 2024/02/09 13:46:45 by abounab           #+#    #+#             */
+/*   Updated: 2024/06/15 22:16:33 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
-int	ft_lstsize(t_list *lst)
-{
-	int		count;
+# include <stdio.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <fcntl.h>
+# include "../types.h"
 
-	count = 0;
-	while (lst != NULL)
-	{
-		count++;
-		lst = lst->next;
-	}
-	return (count);
-}
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 10
+# endif
+
+char	*get_next_line(int fd);
+
+
+size_t	until_line(char *str);
+
+char	*ft_get_line(char *str);
+
+char	*ft_read_buff(int fd, char *str);
+
+char	*ft_update(char *str);
+
+
+#endif

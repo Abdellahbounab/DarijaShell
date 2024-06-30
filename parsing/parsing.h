@@ -6,14 +6,16 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/30 09:56:55 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/06/30 11:44:42 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef PARSING_H
 #define PARSING_H
 
 #include "../types.h"
+#include "../env/env.h"
 
 int     check_name(char *name);
 char    *get_var_value(t_env *env, char *var_name);
@@ -31,7 +33,7 @@ int		create_files(t_cmd *cmd, char **line, t_info *info, t_type type);
 void	free_cmd(t_cmd *cmd);
 char	*parsing_extend_var(char *string, t_env *env, int *status);
 char	**parsing_split(char *string);
-char	*filter(char *part);
+char	*ft_filter(char *part);
 int		set_default(t_cmd **cmd, int *status);
 void	add_back_cmd(t_cmd *head, t_cmd *next_command);
 char	*quation_mark(char *string, t_info *info, char *var_value, int *status);
