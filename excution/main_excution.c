@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/29 21:40:07 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/30 09:22:51 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,7 @@ int	open_heredoc(char *heredoc, int outfile, t_env **env)
 	while (line && !status && ft_strncmp(line, heredoc, ft_strlen(line) - 1))
 	{
 		tmp = line;
+		// check if it is allowed to expand it or not depends
 		line = parsing_extend_var(line, *env, &status);
 		free(tmp);
 		if (outfile != -1)
@@ -160,7 +161,7 @@ int	open_heredoc(char *heredoc, int outfile, t_env **env)
 		write(STDOUT_FILENO, "> ", 2);
 		line = get_next_line(STDIN_FILENO);
 	}
-	if (!line)
+	if (!line && status != 1)
 		write(STDERR_FILENO, "warning : here-document delimited by end-of-file\n", 49);
 	if (outfile != -1)
 		close(outfile);
@@ -228,10 +229,10 @@ t_excute	*heredoc_update(t_cmd *command, t_env **env)
 			return (cmd_free(&cmds), NULL);
 		if (command->next && pipe(fds) != -1) 
 		{
-			dup2(fds[1], node->outfile); //it does output in the 1 to be read by 0
+			dup2(fds[1], node->outfile);
 			close(fds[1]);
 		}
-		if (!heredoc_management(command->files, node, env)) //heredoc
+		if (!heredoc_management(command->files, node, env))
 			return (cmd_free(&cmds), NULL);
 		cmd_addback(&cmds, node);
 		command = command->next;
@@ -380,9 +381,7 @@ char *get_commands(char **argv, char ***cmd_argv, char **paths)
 		free_array(&paths);
 		if (!ft_strncmp("./", argv[0], 2) && access(argv[0], X_OK) != -1)
 			return (*cmd_argv = argv, ft_strdup(argv[0]));
-		// return (ft_perror(NULL, argv[0], 0), NULL);
 		return (free_array(&paths), ft_perror(argv[0], ": no such file or directory", 127), NULL);
-		//return (*cmd_argv = argv, ft_strdup(argv[0]));
 	}
 	return (free_array(&paths), ft_perror(argv[0], ": command not found", 1), NULL);
 }
@@ -476,11 +475,9 @@ int	close_other(t_excute *head, int pos)
 void	signal_handler(int sig)
 {
 	(void) sig;
-	// exit status have to be edited depends on if same process or child process
-	// have to handle heredoc signal
 	status = 1;
-	rl_replace_line("", 0);//ihave to use it since it does delete the whole printed words inserted before entrer
-	write (STDIN_FILENO, "\n\0", 2);
+	write (STDIN_FILENO, "\n", 1);
+	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
 }
@@ -488,10 +485,14 @@ void	signal_handler(int sig)
 
 int	ft_signals(int child)
 {
-	if (child)
-	{
-		if (child == 1)
-			signal(SIGINT, signal_handler);
+	struct sigaction sa;
+
+    sa.sa_handler = signal_handler;
+    sa.sa_flags = 0;  // Do not restart functions if interrupted
+    sigemptyset(&sa.sa_mask);
+    if (child) {
+        if (child == 1)
+            sigaction(SIGINT, &sa, NULL);
 		else
 			signal(SIGINT, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);
@@ -531,18 +532,18 @@ int	redirection_update(t_cmd *command, t_excute **head, t_env **env)
 	return (close_other(*head, -1), 1);
 }
 
-int	waitprocess(t_excute *cmds, int *status)
+int	waitprocess(t_excute *cmds)
 {
 	while (cmds)
 	{
 		if (cmds->pid)
 		{
 			if (cmds->pid)
-				waitpid(cmds->pid, status, 0);
-			if (WIFSIGNALED(*status))
-				*status = 130;
+				waitpid(cmds->pid, &status, 0);
+			if (WIFSIGNALED(status))
+				status = 130;
 			else
-				*status = WEXITSTATUS(*status);
+				status = WEXITSTATUS(status);
 			cmd_free_node(cmds);
 		}
 		cmds = cmds->next;
@@ -558,6 +559,6 @@ int	excution(t_cmd *command, t_env **env)
 
 	cmds = heredoc_update(command, env);
 	redirection_update(command, &cmds, env);
-	waitprocess(cmds, &status);	
+	waitprocess(cmds);	
 	return (1);
 }

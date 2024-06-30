@@ -22,7 +22,7 @@ INCLUDES =	env/env.h \
 RDLINE_SRCS = excution/main_excution.c\
 			main.c
 
-RDLINE =  -I /goinfre/abounab/homebrew/opt/readline/include 
+RDLINE =  /goinfre/abounab/homebrew/opt/readline
 
 OBJ=$(SRC:.c=.o)
 
@@ -31,15 +31,23 @@ RDLINE_OBJS=$(RDLINE_SRCS:.c=.o)
 %.o: %.c $(INCLUDES)
 	cc $(CFLAGS) -c $< -o $@
 
-all: $(NAME)
+all: $(NAME) run
 
-$(NAME): $(OBJ) $(RDLINE_OBJS)
+$(NAME): $(OBJ)  $(RDLINE_OBJS)
 	make -C libft
-	cc $(CFLAGS) -L /goinfre/abounab/homebrew/opt/readline/lib $(RDLINE_OBJS) $(OBJ) libft/libft.a -o $@ -lreadline -lncurses
+	cc $(CFLAGS) -L $(RDLINE)/lib $(RDLINE_OBJS) $(OBJ) libft/libft.a -o $@ -lreadline -lncurses
 
 
-$(RDLINE_OBJS):%.o: %.c $(INCLUDES)
-	cc $(CFLAGS) $(RDLINE) -c $< -o $@ 
+$(RDLINE_OBJS):%.o: %.c $(INCLUDES) $(RDLINE)
+	cc $(CFLAGS) -I $(RDLINE)/include -c $< -o $@ 
+
+$(RDLINE) :
+			@brew install readline
+
+run : 
+	@./$(NAME)
+
+readline : $(RDLINE)
 
 clean:
 	make clean -C libft
@@ -49,5 +57,6 @@ clean:
 fclean: clean
 	make fclean -C libft
 	rm -f $(NAME)
+	rm -rf $(RDLINE)
 
-re: fclean all
+re: fclean readline all
