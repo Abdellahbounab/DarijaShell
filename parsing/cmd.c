@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:21:34 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/01 09:26:36 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/01 12:59:25 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,9 @@ static int take_place(char **tokens, t_cmd *cmd, t_info *info)
 	{
 		tmp = parsing_extend_var(tokens[info->cmd_i], info->env, info->cmd->status);
 		split = parsing_split(tmp);
+		free(tmp), i = 0;
 		if (split == NULL)
 			return (GOOD);
-		free(tmp), i = 0;
 		while (split[i])
 		{
 			tmp = ft_filter(split[i]);
