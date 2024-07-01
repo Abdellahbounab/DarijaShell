@@ -86,6 +86,7 @@ clean:
 	@echo "$(RED)╔════ Cleaning up ════╗$(RESET)"
 	@make -C $(LIBFT_DIR) clean
 	@rm -f $(OBJ)
+	@rm -f $(RDLINE_OBJS)
 	@echo "$(YELLOW)$(BOLD)➜ Removed object files$(RESET)"
 	@echo "$(GREEN)$(BOLD)✔ Clean complete$(RESET)"
 	@echo "$(RED)╚═════════════════════╝$(RESET)"
@@ -117,3 +118,4 @@ readline : $(RDLINE)
 # rm -rf $(RDLINE)
 
 re: fclean readline all
+
