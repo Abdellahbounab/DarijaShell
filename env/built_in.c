@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 19:16:19 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/30 08:31:37 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/01 20:49:18 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int	builtin_cd(t_env **env, t_excute *cmds)
 			}
 		}
 		if (env_getkey(*env, "HOME"))
-			env_export(env, "PWD", getcwd(str, 100));
+			env_export(env, "PWD", getcwd(str, 100), 0);
 		return 1;
 	}
 	else
@@ -107,7 +107,7 @@ int	builtin_pwd(t_env **env)
 
 	if (env)
 	{
-		env_export(env, "PWD", getcwd(str, 100));
+		env_export(env, "PWD", getcwd(str, 100), 1);
 		write(STDOUT_FILENO, env_getval(*env, "PWD"), ft_strlen(env_getval(*env, "PWD")));
 		write(STDOUT_FILENO, "\n", 1);
 		exit(0);
@@ -130,18 +130,26 @@ int	builtin_env(t_env *env, int flag)
 	int	counter;
 
 	counter = 0;
+	if (!env_getkey(env, "PATH"))
+		ft_perror("env :",  "No such file or directory", 127);
 	while (env)
 	{
 		if (flag)
 			write(STDOUT_FILENO, "	declare -x ", 12);
-		write(STDOUT_FILENO, env->key, ft_strlen(env->key));
-		write(STDOUT_FILENO, "=", 1);
-		if (env->value)
-			write(STDOUT_FILENO, env->value, ft_strlen(env->value));
-		write(STDOUT_FILENO, "\n", 1);
+		else
+			env_export(&env, "_", "usr/bin/env", 0);
+		if ((!flag && !env->type) || flag)
+		{
+			write(STDOUT_FILENO, env->key, ft_strlen(env->key));
+			write(STDOUT_FILENO, "=", 1);
+			if (env->value)
+				write(STDOUT_FILENO, env->value, ft_strlen(env->value));
+			write(STDOUT_FILENO, "\n", 1);
+		}
 		env = env->next;
 		counter++;
 	}
+	env_unset(&env, "_");
 	exit(0);
 }
 
@@ -150,8 +158,10 @@ int	builtin_export(t_env **env, t_excute *cmds)
 	int	i;
 	char **arr;
 	char *str;
+	char	type;
 
 	i = 0;
+	type = 0;
 	if (cmds->arguments && !cmds->arguments[0])
 		return (builtin_env(*env, 1));
 	while (cmds->arguments && cmds->arguments[i])
@@ -159,8 +169,10 @@ int	builtin_export(t_env **env, t_excute *cmds)
 		arr = ft_split(cmds->arguments[i], '=');
 		if (!arr[0] || check_name(arr[0]) < 0)
 			return (write(STDERR_FILENO, "export : not a valid identifier\n", 32), status = 1, 0);
+		if (!arr[1] && cmds->arguments[i][ft_strlen(cmds->arguments[i]) - 1] != '=')
+			type = 1;
 		str = join_strs(arr + 1);
-		env_export(env, arr[0], str);
+		env_export(env, arr[0], str, type);
 		free_array(&arr);
 		free(str);
 		i++;

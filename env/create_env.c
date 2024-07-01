@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 17:04:39 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/01 13:00:11 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/01 20:50:03 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	env_update(t_env **lst, char *key, char *newval)
 	return 0;
 }
 
-int	env_export(t_env **lst, char *key, char *val)
+int	env_export(t_env **lst, char *key, char *val, char type)
 {
 	t_env *newnode;
 	
@@ -82,6 +82,7 @@ int	env_export(t_env **lst, char *key, char *val)
 		return 0;
 	newnode->key = ft_strdup(key);
 	newnode->value = ft_strdup(val);
+	newnode->type = type;
 	if (!*lst)
 		return (*lst = newnode, 1);
 	else if (env_addback(lst, newnode))
@@ -204,8 +205,8 @@ int	get_env(t_env **env, char **envp)
 			return (free_env(env)); // have to free the nodes
 		value = join_strs(line_env + 1);
 		if (!value)
-			return (0); // have to free the nodes
-		env_export(env, *line_env, value);
+			return (free_env(env)); // have to free the nodes
+		env_export(env, *line_env, value, 0);
 		free_array(&line_env);
 		free(value);
 		envp++;

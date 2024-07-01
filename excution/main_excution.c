@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/01 18:32:34 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/01 20:54:26 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -581,10 +581,10 @@ int	excution(t_cmd *command, t_env **env)
 
 	echo -n flag
 
-	env & export relation
-
 	path .
 
-	variable : _ & SHLVL
+	variable : SHLVL
+	
+	cntrl \ quit
 
 */
