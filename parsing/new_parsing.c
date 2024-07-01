@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 11:15:13 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/11 14:29:30 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/01 15:27:34 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,26 @@
 	ar=			;	"l"$ar't'a	-> "l"'t'a		-> ["l"'t'a]		->	[lta]
 	ar= hello	;	$ar			-> hello		-> [hello]			->	[hello]
 */
-
+static void double_quote(char *string, t_info *info, char **tmp, int *status)
+{
+	info->end++;
+	while (string[info->end] && string[info->end] != '"')
+	{
+		if (string[info->end] == '$')
+		{
+			if (string[info->end + 1] == '?')
+			{
+				*tmp = quation_mark(string, info, *tmp, status);
+				info->end += 2;
+			}
+			else
+				*tmp = dollar_sign(string, info, *tmp);
+			info->start = info->end;
+		}
+		else
+			info->end++;
+	}
+}
 static char *extend_var_logic(char *string, t_info *info, int *status)
 {
 	char *tmp;
@@ -27,6 +46,8 @@ static char *extend_var_logic(char *string, t_info *info, int *status)
 	{
 		if (string[info->end] == '\'')
 			quote_skip(string, &info->end, '\'');
+		if (string[info->end] == '"')
+			double_quote(string, info, &tmp, status);
 		if (string[info->end] == '$')
 		{
 			if (string[info->end + 1] == '?')
