@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 11:49:17 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/30 11:49:18 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/01 12:17:00 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int main(int ac, char **av, char **envp)
 		ft_signals(1);
 		line = readline("minishell-$ ");
 		if (!line)
-			return (free_env(&env));
+			return (free_env(&env), status);
 		add_history(line);
 		command = parsing(line, env, &status);
 		if (command && status)
