@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_excution.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
+/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/01 13:00:37 by abounab          ###   ########.fr       */
+/*   Updated: 2024/06/30 12:30:17 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -572,6 +572,6 @@ int	excution(t_cmd *command, t_env **env)
 
 	cmds = heredoc_update(command, env);
 	redirection_update(command, &cmds, env);
-	waitprocess(cmds);
+	waitprocess(cmds);	
 	return (1);
 }
