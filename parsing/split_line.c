@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 12:31:21 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/10 13:31:27 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/01 09:32:00 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ int quote_skip(char *str, int *index, char quote)
 	if (str[*index] != quote)
 	{
 		write(STDERR_FILENO, "close the quote\n", 17);
+		status = 1;
 		return (ERROR);
 	}
 	return (GOOD);
