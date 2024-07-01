@@ -6,11 +6,12 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 17:04:39 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/23 19:54:54 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/01 13:00:11 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
+#include "../parsing/parsing.h"
 
 int	env_read(t_env *env)// to debug
 {
@@ -200,12 +201,12 @@ int	get_env(t_env **env, char **envp)
 	{
 		line_env = ft_split(*envp, '=');
 		if (!line_env)
-			return (0); // have to free the nodes
+			return (free_env(env)); // have to free the nodes
 		value = join_strs(line_env + 1);
 		if (!value)
 			return (0); // have to free the nodes
 		env_export(env, *line_env, value);
-		free(line_env);
+		free_array(&line_env);
 		free(value);
 		envp++;
 	}
