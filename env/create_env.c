@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 17:04:39 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/01 20:50:03 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/02 12:32:07 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ t_env *env_getkey(t_env *lst, char *key)
 	cpy = lst;
 	while (cpy)
 	{
-		if (!ft_strncmp(cpy->key, key, ft_strlen(cpy->key)))
+		if (!ft_strcmp(cpy->key, key))
 			return cpy;
 		cpy = cpy->next;
 	}
@@ -211,5 +211,12 @@ int	get_env(t_env **env, char **envp)
 		free(value);
 		envp++;
 	}
+	if (env_getkey(*env, "_") || !env_getkey(*env, "SHLVL"))
+		value = ft_itoa(1);
+	else
+		value =  ft_itoa(ft_atoi(env_getval(*env, "SHLVL")) + 1);
+	env_export(env, "SHLVL", value, 0);
+	free(value);
+	env_unset(env, "_");
 	return 1;
 }

@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 19:16:19 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/01 20:49:18 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/02 13:10:28 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,28 @@ int	builtin_echo(t_excute *cmd)
 {
 	char	flag;
 	int		i;
+	int		j;
 
 	i = 0;
 	flag = '\n';
-	if (cmd->arguments && cmd->arguments[i] && !ft_strncmp(cmd->arguments[i], "-n", 2))
-		flag = i++;
+	while (cmd->arguments && cmd->arguments[i])
+	{
+		if (cmd->arguments[i][0] ==  '-')
+		{
+			j = 1;
+			while (cmd->arguments[i][j] && cmd->arguments[i][j] == 'n')
+				j++;
+			if (!cmd->arguments[i][j])
+			{
+				i++;
+				flag = 0;
+			}
+			else
+				break;
+		}
+		else
+			break;
+	}
 	while (cmd->arguments && cmd->arguments[i])
 	{
 		write(STDOUT_FILENO, cmd->arguments[i], ft_strlen(cmd->arguments[i]));
@@ -121,7 +138,11 @@ int	builtin_unset(t_env **env, t_excute *cmds)
  
 	i = 0;
 	while (cmds->arguments && cmds->arguments[i])
+	{
+		if (!cmds->arguments[i] || check_name(cmds->arguments[i]) < 0)
+			return (write(STDERR_FILENO, "unset : not a valid identifier\n", 31), status = 1, 0);
 		env_unset(env, cmds->arguments[i++]);
+	}
 	return (1);
 }
 
@@ -142,8 +163,12 @@ int	builtin_env(t_env *env, int flag)
 		{
 			write(STDOUT_FILENO, env->key, ft_strlen(env->key));
 			write(STDOUT_FILENO, "=", 1);
+			if (flag)
+				write(STDOUT_FILENO, "\"", 1);
 			if (env->value)
 				write(STDOUT_FILENO, env->value, ft_strlen(env->value));
+			if (flag)
+				write(STDOUT_FILENO, "\"", 1);
 			write(STDOUT_FILENO, "\n", 1);
 		}
 		env = env->next;
