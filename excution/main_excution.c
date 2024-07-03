@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/02 14:52:08 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/03 14:52:15 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -394,7 +394,8 @@ char *get_commands(char **argv, char ***cmd_argv, char **paths)
 				return (*cmd_argv = argv, ft_strdup(argv[0]));
 			return (free_array(&paths), ft_perror(NULL, argv[0] , 0), NULL);
 		}
-		return (free_array(&paths), ft_perror(argv[0], ": no such file or directory", 127), NULL);
+		// return (free_array(&paths), ft_perror(argv[0], ": no such file or directory", 127), NULL);
+		return (*cmd_argv = argv, ft_strdup(argv[0]));
 	}
 	return (free_array(&paths), ft_perror(argv[0], ": command not found", 1), NULL);
 }
