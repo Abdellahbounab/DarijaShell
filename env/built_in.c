@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 19:16:19 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/02 13:10:28 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/03 19:40:46 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,10 +88,12 @@ int	builtin_echo(t_excute *cmd)
 int	builtin_cd(t_env **env, t_excute *cmds)
 {
 	char	str[100];
+	char	current[100];
 
 	if (env)//funciton that would check the existance of the path
 	{
-		if (cmds->arguments[0] && ft_strncmp(cmds->arguments[0], "~", ft_strlen(cmds->arguments[0])))
+		getcwd(current, 100);
+		if (cmds->arguments[0] && ft_strcmp(cmds->arguments[0], "~"))
 		{
 			if (chdir(cmds->arguments[0]) < 0)
 			{
@@ -110,7 +112,10 @@ int	builtin_cd(t_env **env, t_excute *cmds)
 			}
 		}
 		if (env_getkey(*env, "HOME"))
+		{
 			env_export(env, "PWD", getcwd(str, 100), 0);
+			env_export(env, "OLDPWD", current, 0);
+		}
 		return 1;
 	}
 	else

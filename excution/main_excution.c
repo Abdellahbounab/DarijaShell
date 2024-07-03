@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/03 14:52:15 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/03 19:29:22 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -590,6 +590,6 @@ int	excution(t_cmd *command, t_env **env)
 
 /*
 
-	path .
+	- status while pipe
 
 */
