@@ -100,10 +100,6 @@ fclean: clean
 	@echo "$(RED)╚═════════════════════╝$(RESET)"
 
 
-# $(NAME): $(OBJ)  $(RDLINE_OBJS)
-# 	make -C libft
-# 	cc $(CFLAGS) -L $(RDLINE)/lib $(RDLINE_OBJS) $(OBJ) libft/libft.a -o $@ -lreadline -lncurses
-
 $(RDLINE_OBJS):%.o: %.c $(INCLUDES) $(RDLINE)
 	@cc $(CFLAGS) -I $(RDLINE)/include -c $< -o $@ 
 

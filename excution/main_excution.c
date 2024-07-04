@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/03 19:29:22 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/04 10:07:57 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -586,10 +586,3 @@ int	excution(t_cmd *command, t_env **env)
 	waitprocess(cmds);
 	return (1);
 }
-
-
-/*
-
-	- status while pipe
-
-*/
