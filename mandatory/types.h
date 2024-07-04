@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:30:27 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/30 11:38:06 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/02 09:22:42 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 #include <signal.h>
 // #include <readline/chardefs.h>
 
-#include "libft/libft.h"
+#include "../libft/libft.h"
 
 #define ERROR -1
 #define GOOD 0
