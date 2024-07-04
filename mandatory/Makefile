@@ -22,7 +22,7 @@ INCLUDES =	env/env.h \
 			parsing/parsing.h\
 			types.h
 
-LIBFT_DIR := libft
+LIBFT_DIR := ../libft
 LIBFT := $(LIBFT_DIR)/libft.a
 
 OBJ=$(SRC:.c=.o)
@@ -67,8 +67,7 @@ print_logo:
 $(NAME): $(OBJ) $(LIBFT) $(RDLINE_OBJS)
 	@echo "$(ORG)╔══ Linking object files ══╗$(RESET)"
 	@echo "$(CYAN)➜ Creating executable: $(BOLD)$(NAME)$(RESET)"
-# @$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(LDFLAGS) -o $@
-	@cc $(CFLAGS) -L $(RDLINE)/lib $(RDLINE_OBJS) $(OBJ) libft/libft.a -o $@ $(LDFLAGS)
+	@cc $(CFLAGS) -L $(RDLINE)/lib $(RDLINE_OBJS) $(OBJ) $(LIBFT) -o $@ $(LDFLAGS)
 	@echo "$(GREEN)✔ Build successful: $(BOLD)$(NAME) is ready!$(RESET)"
 	@echo "$(ORG)╚══════════════════════════╝$(RESET)"
 

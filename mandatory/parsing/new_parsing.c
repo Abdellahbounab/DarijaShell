@@ -6,9 +6,10 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 11:15:13 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/04 09:56:08 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/04 13:28:11 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "parsing.h"
 
@@ -16,6 +17,7 @@
 	ar= "s -l"	;	"l"$ar't'a	-> "l"s -l't'a	-> ["l"s -l't'a]	->	[ls -lta]
 	ar=			;	"l"$ar't'a	-> "l"'t'a		-> ["l"'t'a]		->	[lta]
 	ar= hello	;	$ar			-> hello		-> [hello]			->	[hello]
+	ar= "a v"	;	 < "$ar"	-> "a v"		-> ["a v", NULL]	->	[a v, NULL]
 */
 static void double_quote(char *string, t_info *info, char **tmp, int *status)
 {

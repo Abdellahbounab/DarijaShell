@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   types.h                                            :+:      :+:    :+:   */
+/*   types_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
+/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:30:27 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/01 19:34:15 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/02 10:33:27 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
-#ifndef TYPES_H
-#define TYPES_H
+#ifndef TYPES_BONUS_H
+#define TYPES_BONUS_H
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -23,11 +23,13 @@
 #include <errno.h>
 #include <string.h>
 #include <sys/wait.h>
+#include <dirent.h>
+#include <stdbool.h>
 
 #include <signal.h>
 // #include <readline/chardefs.h>
 
-#include "libft/libft.h"
+#include "../libft/libft.h"
 
 #define ERROR -1
 #define GOOD 0
@@ -58,7 +60,6 @@ typedef struct s_env
 {
 	char *key;
 	char *value;
-	char type;
 	struct s_env *next;
 } t_env;
 
