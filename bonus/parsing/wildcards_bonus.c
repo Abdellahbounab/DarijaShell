@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 10:54:21 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/02 15:56:34 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/04 12:40:13 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,34 @@ bool match(char *filename, const char *pattern)
 	return (*pattern == '\0' && *filename == '\0');
 }
 
+void swap_str(char **stra, char **strb)
+{
+	char *tmp;
+	tmp = *stra;
+	*stra = *strb;
+	*strb = tmp;
+}
+
+void sort_by_name(char **array)
+{
+	int i;
+	int j;
+
+	j = 0;
+	// print_array(array);
+	while (array && array[j + 1])
+	{
+		i = 0;
+		while (array[i + 1])
+		{
+			if (ft_strcmp(array[i], array[i + 1]) > 0)
+				swap_str(&(array[i]), &(array[i + 1]));
+			i++;
+		}
+		j++;
+	}
+}
+
 char *wildcard(char *pattern)
 {
 	int i;
@@ -116,6 +144,7 @@ char *wildcard(char *pattern)
 	i = 0;
 	result = NULL;
 	filenames = get_files();
+	sort_by_name(filenames);
 	while (filenames && filenames[i])
 	{
 		if (match(filenames[i], pattern))
@@ -135,19 +164,18 @@ char *wildcard(char *pattern)
 	return (result);
 }
 
-
 /*
 bash-3.2$ echo " * "
- * 
+ *
 bash-3.2$ echo ' * '
- * 
+ *
 bash-3.2$ echo "' * '"
 ' * '
 
 
 */
 
-char *args_wildcard(char *line)
+char *var_wildcard(char *line)
 {
 	char **split;
 	int i;
@@ -155,16 +183,15 @@ char *args_wildcard(char *line)
 	char *tmp_free;
 	char *tmp;
 
-	split = split_line(line);
+	split = ft_split(line, ' ');
 	i = 0;
 	result = NULL;
 	tmp = NULL;
 	while (split && split[i])
 	{
-		printf("split[%d]:%s\n", i, split[i]);
 		if (ft_strchr(split[i], '*'))
 			tmp = wildcard(split[i]);
-		else 
+		else
 			tmp = ft_strdup(split[i]);
 		tmp_free = result;
 		result = ft_strjoin(result, tmp);

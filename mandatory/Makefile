@@ -67,7 +67,6 @@ print_logo:
 $(NAME): $(OBJ) $(LIBFT) $(RDLINE_OBJS)
 	@echo "$(ORG)╔══ Linking object files ══╗$(RESET)"
 	@echo "$(CYAN)➜ Creating executable: $(BOLD)$(NAME)$(RESET)"
-# @$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(LDFLAGS) -o $@
 	@cc $(CFLAGS) -L $(RDLINE)/lib $(RDLINE_OBJS) $(OBJ) $(LIBFT) -o $@ $(LDFLAGS)
 	@echo "$(GREEN)✔ Build successful: $(BOLD)$(NAME) is ready!$(RESET)"
 	@echo "$(ORG)╚══════════════════════════╝$(RESET)"

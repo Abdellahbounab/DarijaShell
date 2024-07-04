@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/02 15:21:46 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/04 13:20:33 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,6 @@ void	alloc_appand(char *line, int start, int end, char ***words_symboles);
 
 // wildcads
 char *wildcard(char *pattern);
-char *args_wildcard(char *line);
+char *var_wildcard(char *line);
+void print_array(char **array);
 #endif

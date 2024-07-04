@@ -22,12 +22,23 @@ SRC := main_bonus.c \
        parsing/parsing_tooles_bonus.c \
        parsing/split_line_bonus.c \
        parsing/var_tooles_bonus.c \
-       parsing/wildcards_bonus.c
+       parsing/wildcards_bonus.c \
+	#    env/create_env.c \
+	#    getnextline/get_next_line_bonus.c\
+	#    env/built_in.c
 
-INCLUDES := parsing/parsing_bonus.h \
-            types_bonus.h
+INCLUDES =	parsing/parsing_bonus.h\
+			types_bonus.h \
+			# env/env.h 
 
 OBJ := $(SRC:.c=.o)
+
+# RDLINE_SRCS = excution/main_excution.c\
+			# main.c
+
+# RDLINE =  /goinfre/$(shell users)/homebrew/opt/readline
+
+# RDLINE_OBJS=$(RDLINE_SRCS:.c=.o)
 
 LIBFT_DIR := ../libft
 LIBFT := $(LIBFT_DIR)/libft.a
@@ -55,10 +66,11 @@ print_logo:
 	@echo "$$MINISHELL_LOGO"
 	@echo "$(CYAN)Building Minishell...$(RESET)"
 
-$(NAME): $(OBJ) $(LIBFT)
+$(NAME): $(OBJ) $(LIBFT) $(RDLINE_OBJS)
 	@echo "$(ORG)╔══ Linking object files ══╗$(RESET)"
 	@echo "$(CYAN)➜ Creating executable: $(BOLD)$(NAME)$(RESET)"
-	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(LDFLAGS) -o $@
+# @$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(LDFLAGS) -o $@
+	@cc $(CFLAGS) -L $(RDLINE)/lib $(RDLINE_OBJS) $(OBJ) $(LIBFT) -o $@ $(LDFLAGS)
 	@echo "$(GREEN)✔ Build successful: $(BOLD)$(NAME) is ready!$(RESET)"
 	@echo "$(ORG)╚══════════════════════════╝$(RESET)"
 
@@ -87,5 +99,17 @@ fclean: clean
 	@echo "$(YELLOW)➜ Removed $(BOLD)$(NAME)$(RESET)"
 	@echo "$(GREEN)✔ Full clean complete$(RESET)"
 	@echo "$(RED)╚═══════════════════╝$(RESET)"
+
+# $(RDLINE_OBJS):%.o: %.c $(INCLUDES) $(RDLINE)
+# 	@cc $(CFLAGS) -I $(RDLINE)/include -c $< -o $@ 
+
+# $(RDLINE) :
+# 	@brew install readline
+
+# run : 
+# 	@./$(NAME)
+
+# readline : $(RDLINE)
+
 
 re: fclean all

@@ -6,10 +6,9 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 11:49:17 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/02 15:56:49 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/04 13:20:41 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "parsing/parsing_bonus.h"
 // #include "env/env.h"
@@ -47,6 +46,13 @@ void print_cmd(t_cmd *command)
 	cmd_tmp = NULL;
 }
 
+void print_array(char **array)
+{
+	int j = 0;
+	while (array && array[j])
+		printf("%s\t", array[j++]);
+}
+
 // void leaks(){system("leaks minishell");}
 
 int main(int ac, char **av, char **envp)
@@ -63,16 +69,41 @@ int main(int ac, char **av, char **envp)
 	{
 		line = readline("minishell-$ ");
 		add_history(line);
-		// command = parsing(line, NULL, &status);
-		char *tmp;
-		tmp = wildcard(line);
-		printf("%s\n", tmp);
-		free(tmp);
-		// free_cmd(command);
+		command = parsing(line, NULL, &status);
+		print_cmd(command);
 		// leaks();
 	}
 	// free_env(&env);
 }
+
+// int main(int ac, char **av, char **envp)
+// {
+// 	char *line;
+// 	t_cmd *command;
+// 	t_env *env;
+
+// 	(void)av;
+// 	(void)ac;
+// 	// atexit(leaks);
+
+// 	if (!get_env(&env, envp))
+// 		return (ft_perror("minishell :", "error env", 127)); // we have to return the error message too
+// 	while (1)
+// 	{
+// 		ft_signals(1);
+// 		line = readline("minishell-$ ");
+// 		if (!line)
+// 			return (free_env(&env), status);
+// 		add_history(line);
+// 		command = parsing(line, env, &status);
+// 		// print_cmd(command);
+// 		if (command && status)
+// 			status = 0;
+// 		excution(command, &env);
+// 		free_cmd(command);
+// 	}
+// 	free_env(&env);
+// }
 
 // exception export = when using export it doesnt expand and only would be get as it is parsed : ex="'*'"  => env | grep ex => ex='*'
 // for variable: if "'*'" or '"*"' it doesnt expand (between two ' " + next to a ' or " just by one char") while using arg

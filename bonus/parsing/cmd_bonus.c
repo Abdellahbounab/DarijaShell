@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:21:34 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/02 15:21:59 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/04 13:14:05 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,26 +68,33 @@ static int output_files(char **line, t_cmd *cmd, t_info *info)
 static int take_place(char **tokens, t_cmd *cmd, t_info *info)
 {
 	char *tmp;
+	char *strwild;
 	char **split;
 	int i;
 
+	strwild = NULL;
 	i = 0, split = NULL;
 	if (info->file == 0 && output_files(tokens, cmd, info) == ERROR)
 		return (ERROR);
 	if (info->file == 0)
 	{
-// 		bash-3.2$ export TEST=*
-// 		bash-3.2$ env | grep TEST
-//		TEST=*
 		tmp = parsing_extend_var(tokens[info->cmd_i], info->env, info->cmd->status);
-		// if (tmp && ft_strchar(tmp, '*'))
-		// {
-		// 	tmp = wildcard(tmp);
-		// }
-		split = parsing_split(tmp);
+		if (cmd->args == NULL || info->cmd_i > 1 || ft_strcmp(cmd->args[info->cmd_i - 1], "export") != 0)
+		{
+			if (tmp && ft_strchr(tmp, ' '))
+				strwild = var_wildcard(tmp);
+			else if (tmp && ft_strchr(tmp, '*'))
+				strwild = wildcard(tmp);
+			else
+				strwild = ft_strdup(tmp);
+		}
+		else
+			strwild = ft_strdup(tmp);
+		split = parsing_split(strwild);
 		free(tmp), i = 0;
+		free(strwild);
 		if (split == NULL)
-			return (GOOD);
+			return (ERROR);
 		while (split[i])
 		{
 			tmp = ft_filter(split[i]);
