@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 11:15:13 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/01 15:27:34 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/04 09:56:08 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ static char *extend_var_logic(char *string, t_info *info, int *status)
 			if (string[info->end + 1] == '?')
 			{
 				tmp = quation_mark(string, info, tmp, status);
+				*status = 0;
 				info->end += 2;
 			}
 			else
