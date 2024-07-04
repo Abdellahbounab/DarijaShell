@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   new_parsing_bonus.c                                :+:      :+:    :+:   */
+/*   parsing_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 11:15:13 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/02 10:21:38 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/04 14:24:33 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ static char *extend_var_logic(char *string, t_info *info, int *status)
 			if (string[info->end + 1] == '?')
 			{
 				tmp = quation_mark(string, info, tmp, status);
+				*status = 0;
 				info->end += 2;
 			}
 			else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   types_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:30:27 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/02 10:33:27 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/04 14:17:02 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ typedef struct s_env
 {
 	char *key;
 	char *value;
+	char type;
 	struct s_env *next;
 } t_env;
 

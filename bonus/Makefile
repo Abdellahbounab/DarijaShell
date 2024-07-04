@@ -1,8 +1,8 @@
 
 NAME := minishell_bonus
 CC := cc
-CFLAGS := -g -fsanitize=address
-# -Wall -Wextra -Werror 
+CFLAGS :=  -Wall -Wextra -Werror 
+# -g -fsanitize=address
 LDFLAGS := -lreadline -lncurses
 
 BOLD := \033[1m
@@ -14,8 +14,7 @@ MAGENTA := \033[35;1m
 CYAN := \033[36;1m
 RESET := \033[0m
 
-SRC := main_bonus.c \
-       parsing/cmd_bonus.c \
+SRC := parsing/cmd_bonus.c \
        parsing/free_bonus.c \
        parsing/new_filter_bonus.c \
        parsing/parsing_bonus.c \
@@ -23,22 +22,22 @@ SRC := main_bonus.c \
        parsing/split_line_bonus.c \
        parsing/var_tooles_bonus.c \
        parsing/wildcards_bonus.c \
-	#    env/create_env.c \
-	#    getnextline/get_next_line_bonus.c\
-	#    env/built_in.c
+	   env/create_env.c \
+	   getnextline/get_next_line_bonus.c\
+	   env/built_in.c
 
 INCLUDES =	parsing/parsing_bonus.h\
 			types_bonus.h \
-			# env/env.h 
+			env/env.h 
 
 OBJ := $(SRC:.c=.o)
 
-# RDLINE_SRCS = excution/main_excution.c\
-			# main.c
+RDLINE_SRCS = excution/main_excution.c\
+			main_bonus.c
 
-# RDLINE =  /goinfre/$(shell users)/homebrew/opt/readline
+RDLINE =  /goinfre/$(shell users)/homebrew/opt/readline
 
-# RDLINE_OBJS=$(RDLINE_SRCS:.c=.o)
+RDLINE_OBJS=$(RDLINE_SRCS:.c=.o)
 
 LIBFT_DIR := ../libft
 LIBFT := $(LIBFT_DIR)/libft.a
@@ -88,6 +87,7 @@ clean:
 	@echo "$(RED)╔══ Cleaning up ══╗$(RESET)"
 	@make -C $(LIBFT_DIR) clean
 	@rm -f $(OBJ)
+	@rm -f $(RDLINE_OBJS)
 	@echo "$(YELLOW)➜ Removed object files$(RESET)"
 	@echo "$(GREEN)✔ Clean complete$(RESET)"
 	@echo "$(RED)╚═════════════════╝$(RESET)"
@@ -100,16 +100,16 @@ fclean: clean
 	@echo "$(GREEN)✔ Full clean complete$(RESET)"
 	@echo "$(RED)╚═══════════════════╝$(RESET)"
 
-# $(RDLINE_OBJS):%.o: %.c $(INCLUDES) $(RDLINE)
-# 	@cc $(CFLAGS) -I $(RDLINE)/include -c $< -o $@ 
+$(RDLINE_OBJS):%.o: %.c $(INCLUDES) $(RDLINE)
+	@cc $(CFLAGS) -I $(RDLINE)/include -c $< -o $@ 
 
-# $(RDLINE) :
-# 	@brew install readline
+$(RDLINE) :
+	@brew install readline
 
-# run : 
-# 	@./$(NAME)
+run : 
+	@./$(NAME)
 
-# readline : $(RDLINE)
+readline : $(RDLINE)
 
 
 re: fclean all
