@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/01 13:00:37 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/04 10:07:57 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -368,9 +368,9 @@ char *get_commands(char **argv, char ***cmd_argv, char **paths)
 	cmd = NULL;
 	if (argv)
 	{
-		if (!ft_strncmp(argv[0], "/", 1) && is_absolutecmd(argv[0]))
+		if (argv[0] && !ft_strncmp(argv[0], "/", 1) && is_absolutecmd(argv[0]))
 			return (*cmd_argv = argv, free_array(&paths), ft_strdup(argv[0]));
-		else if (!ft_strncmp(argv[0], "/", 1))
+		else if (argv[0] && !ft_strncmp(argv[0], "/", 1))
 			return (free_array(&paths), ft_perror(argv[0], ": no such file or directory", 127), NULL);
 		if (argv[0] && is_builtin(argv[0]))
 			return (free_array(&paths), *cmd_argv = argv + 1, ft_strdup(argv[0]));
@@ -392,14 +392,15 @@ char *get_commands(char **argv, char ***cmd_argv, char **paths)
 		{
 			if (access(argv[0], X_OK) != -1)
 				return (*cmd_argv = argv, ft_strdup(argv[0]));
-			return (free_array(&paths), ft_perror(NULL, argv[0], 0), NULL);
+			return (free_array(&paths), ft_perror(NULL, argv[0] , 0), NULL);
 		}
-		return (free_array(&paths), ft_perror(argv[0], ": no such file or directory", 127), NULL);
+		// return (free_array(&paths), ft_perror(argv[0], ": no such file or directory", 127), NULL);
+		return (*cmd_argv = argv, ft_strdup(argv[0]));
 	}
 	return (free_array(&paths), ft_perror(argv[0], ": command not found", 1), NULL);
 }
 
-int	excute_builtin(t_excute *cmds, t_env **env)
+int	excute_builtin(t_excute *cmds, t_env **env, int child)
 {
 	if (cmds && cmds->cmd)
 	{
@@ -417,6 +418,8 @@ int	excute_builtin(t_excute *cmds, t_env **env)
 			builtin_exit(env, cmds);
 		else if (!ft_strcmp(cmds->cmd, "cd"))
 			builtin_cd(env, cmds);
+		if (child)
+			exit(errno);
 	}
 	return (1);
 }
@@ -437,32 +440,32 @@ int	special_builtin(char *cmds, char *arr)
 	return 0;
 }
 
-int	excute_cmd(t_excute *cmds, t_env **env)
+int	excute_cmd(t_excute *cmds, t_env **env, int child)
 {
 	if (cmds && cmds->cmd && special_builtin(cmds->cmd, cmds->arguments[0]))
-		return (excute_builtin(cmds, env));
+		return (excute_builtin(cmds, env, child));
 	dup2(cmds->outfile, STDOUT_FILENO);
 	close(cmds->outfile);
 	dup2(cmds->infile, STDIN_FILENO);
 	close(cmds->infile);
 	if (is_builtin(cmds->cmd))
-		return (excute_builtin(cmds, env));
+		return (excute_builtin(cmds, env, child));
 	if (cmds && cmds->cmd && cmds->arguments)
 	{
 		if (execve(cmds->cmd, cmds->arguments, env_to_array(*env)) == -1)
-			return (ft_perror(cmds->cmd, ": command not found", 127)); //error`
+			return (ft_perror(cmds->cmd, ": command not found", 127)); //error
 	}
 	return (0);
 }
 
-int	child_excution(t_cmd *command, t_excute *cmds, t_env **env)
+int	child_excution(t_cmd *command, t_excute *cmds, t_env **env, int child)
 {
 	if (infile_update(command->files, cmds) < 0)
 		return (0);
 	if (outfile_update(command->files, cmds) < 0)
 		return (0);
 	cmds->cmd = get_commands(command->args, &cmds->arguments, ft_split(env_getval(*env, "PATH"), ':'));
-	if (excute_cmd(cmds, env))
+	if (excute_cmd(cmds, env, child))
 		return (1);
 	exit(1);
 }
@@ -489,8 +492,8 @@ void	signal_handler(int sig)
 {
 	(void) sig;
 	status = 1;
-	write (STDIN_FILENO, "\n", 1);
 	rl_replace_line("", 0);
+	write (STDIN_FILENO, "\n", 1);
 	rl_on_new_line();
 	rl_redisplay();
 }
@@ -505,13 +508,16 @@ int	ft_signals(int child)
     sigemptyset(&sa.sa_mask);
     if (child) {
         if (child == 1)
-            sigaction(SIGINT, &sa, NULL);
+            sigaction(SIGINT, &sa, NULL); //first time
 		else
-			signal(SIGINT, SIG_IGN);
-		signal(SIGQUIT, SIG_IGN);
+			signal(SIGINT, SIG_IGN); //parent process when forked
+		signal(SIGQUIT, SIG_IGN); //both
 	}
 	else
-		signal(SIGINT, SIG_DFL);
+	{
+		signal(SIGINT, SIG_DFL); // child process when forked
+		signal(SIGQUIT, SIG_DFL);
+	}
 	return 1;
 }
 
@@ -525,14 +531,14 @@ int	redirection_update(t_cmd *command, t_excute **head, t_env **env)
 	i = 0;
 	while (command && cmds)
 	{
-		if (command->args && special_builtin(command->args[0], command->args[1]))
-			child_excution(command, cmds, env);
+		if (!command->next && !(*head)->next && command->args && special_builtin(command->args[0], command->args[1]))
+			child_excution(command, cmds, env, 0);
 		else
 		{
 			pid = fork();
 			ft_signals(pid);
 			if (!pid)
-				return (close_other(*head, i), child_excution(command, cmds, env));
+				return (close_other(*head, i), child_excution(command, cmds, env, 1));
 			if (pid && pid != -1)
 				cmds->pid = pid;
 			else
@@ -547,6 +553,9 @@ int	redirection_update(t_cmd *command, t_excute **head, t_env **env)
 
 int	waitprocess(t_excute *cmds)
 {
+	t_excute	*tmp;
+
+	
 	while (cmds)
 	{
 		if (cmds->pid)
@@ -554,12 +563,14 @@ int	waitprocess(t_excute *cmds)
 			if (cmds->pid)
 				waitpid(cmds->pid, &status, 0);
 			if (WIFSIGNALED(status))
-				status = 130;
+				status = WTERMSIG(status) + 128;
 			else
 				status = WEXITSTATUS(status);
 			cmd_free_node(cmds);
 		}
-		cmds = cmds->next;
+		tmp = cmds->next;
+		free(cmds);
+		cmds = tmp;
 	}
 	return (1);
 }

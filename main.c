@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 11:49:17 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/01 13:19:18 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/02 14:31:49 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void print_cmd(t_cmd *command)
 	cmd_tmp = NULL;
 }
 
-// void leaks(){system("leaks minishell");}
+void leaks(){system("leaks minishell");}
 
 int main(int ac, char **av, char **envp)
 {
