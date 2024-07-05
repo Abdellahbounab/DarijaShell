@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/05 15:52:23 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/05 15:57:44 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -499,7 +499,10 @@ int	child_excution(t_cmd *command, t_excute *cmds, t_env **env, int child)
 		return (0);
 	if (command->bonus)
 		// going back recursively into the first function where
-		// where in main
+		// where in main where :
+		/*
+			
+		*/
 
 
 

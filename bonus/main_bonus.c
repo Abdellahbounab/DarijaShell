@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:19:56 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/05 15:41:01 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/05 16:39:38 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,28 +48,7 @@ void print_cmd(t_cmd *command)
 
 void leaks(){system("leaks minishell_bonus");}
 
-int main(int ac, char **av, char **envp)
-{
-	char *line;
-	t_bonus *bonus;
-	t_env *env;
-
-	(void)av;
-	(void)ac;
-	// atexit(leaks);
-	
-	if (!get_env(&env, envp))
-		return (ft_perror("minishell :", "error env", 127));//we have to return the error message too
-	while (1)
-	{
-		ft_signals(1);
-		line = readline("minishell-$ ");
-		if (!line)
-			return (free_env(&env), status);
-		add_history(line);
-
-
-		// all have to be grouped in a single function 
+// all have to be grouped in a single function 
 		/*
 			1.where first have to trim the first priority
 			2.second have to split it using &&, || : t_bonus*
@@ -91,6 +70,42 @@ int main(int ac, char **av, char **envp)
 
 
 		*/
+
+
+int	ft_minishell(t_bonus *bonus, t_env *env)
+{
+	ft_bonustrim(bonus); //
+	ft_bonussplit(bonus);
+	ft_pipes(bonus); //where to return syntax error
+	ft_parsing();
+	excution(bonus, env);
+}
+
+
+
+int main(int ac, char **av, char **envp)
+{
+	char *line;
+	t_bonus *bonus;
+	t_env *env;
+
+	(void)av;
+	(void)ac;
+	// atexit(leaks);
+	
+	if (!get_env(&env, envp))
+		return (ft_perror("minishell :", "error env", 127));//we have to return the error message too
+	while (1)
+	{
+		ft_signals(1);
+		line = readline("minishell-$ ");
+		if (!line)
+			return (free_env(&env), status);
+		add_history(line);
+
+		bonus->cmdline = line;
+		ft_minishell(bonus, env);
+
 		bonus->command = parsing(line, env, &status);
 		if (bonus->command && status)
 			status = 0;
