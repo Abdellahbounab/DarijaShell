@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
+/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 11:15:13 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/04 14:24:33 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/05 09:50:59 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static char *extend_var_logic(char *string, t_info *info, int *status)
 	return (tmp);
 }
 
-char *parsing_extend_var(char *string, t_env *env, int *status)
+char *parsing_extend_var(char *string, t_env *env, int *status, int *expend)
 {
 	t_info *info;
 	char *tmp;
@@ -83,6 +83,8 @@ char *parsing_extend_var(char *string, t_env *env, int *status)
 	info->env = env;
 	new_string = NULL;
 	tmp = extend_var_logic(string, info, status);
+	if (tmp && expend)
+		*expend = 1;
 	new_string = ft_substr(string, info->start, info->end - info->start);
 	tmp_free = new_string;
 	new_string = ft_strjoin(tmp, new_string);

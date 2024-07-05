@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:21:34 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/04 13:07:39 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/05 09:37:17 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,26 +70,45 @@ static int take_place(char **tokens, t_cmd *cmd, t_info *info)
 	char *tmp;
 	char **split;
 	int i;
+	int expend;
 
+	expend = 0;
 	i = 0, split = NULL;
 	if (info->file == 0 && output_files(tokens, cmd, info) == ERROR)
 		return (ERROR);
 	if (info->file == 0)
 	{
-		tmp = parsing_extend_var(tokens[info->cmd_i], info->env, info->cmd->status);
-		split = parsing_split(tmp);
-		free(tmp), i = 0;
-		if (split == NULL)
-			return (ERROR);
-		while (split[i])
+		tmp = parsing_extend_var(tokens[info->cmd_i], info->env, info->cmd->status, &expend);
+		if (expend == 1)
 		{
-			tmp = ft_filter(split[i]);
-			cmd->args = append_array(cmd->args, tmp);
-			free(tmp);
-			free(split[i++]);
+			split = ft_split(tmp, SPACE);
+			free(tmp), i = 0;
+			if (split == NULL)
+				return (ERROR);
+			while (split[i])
+			{
+				cmd->args = append_array(cmd->args, split[i]);
+				free(split[i++]);
+			}
+			free(split[i]);
+			free(split);
 		}
-		free(split[i]);
-		free(split);
+		else
+		{
+			split = parsing_split(tmp);
+			free(tmp), i = 0;
+			if (split == NULL)
+				return (ERROR);
+			while (split[i])
+			{
+				tmp = ft_filter(split[i]);
+				cmd->args = append_array(cmd->args, tmp);
+				free(tmp);
+				free(split[i++]);
+			}
+			free(split[i]);
+			free(split);
+		}
 	}
 	return (GOOD);
 }

@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:23:00 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/04 12:44:04 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/05 09:52:59 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,9 @@ int create_files(t_cmd *cmd, char **line, t_info *info, t_type type)
 	char *tmp;
 	char *strwild;
 	int i;
+	int expend;
 
+	expend = 0;
 	i = 0;
 	strwild = NULL;
 	file = malloc(sizeof(t_file));
@@ -54,7 +56,7 @@ int create_files(t_cmd *cmd, char **line, t_info *info, t_type type)
 		return (ERROR);
 	if (type != HERE_DOC_SIMPLE)
 	{
-		tmp = parsing_extend_var(line[info->cmd_i], info->env, info->cmd->status);
+		tmp = parsing_extend_var(line[info->cmd_i], info->env, info->cmd->status, &expend);
 		if (tmp && ft_strchr(tmp, ' '))
 			strwild = var_wildcard(tmp);
 		else if (tmp && ft_strchr(tmp, '*'))
@@ -64,7 +66,10 @@ int create_files(t_cmd *cmd, char **line, t_info *info, t_type type)
 	}
 	else
 		strwild = line[info->cmd_i];
-	file->name = parsing_split(strwild);
+	if (expend == 1)
+		file->name = ft_split(strwild, SPACE);
+	else
+		file->name = parsing_split(strwild);
 	if (type != HERE_DOC_SIMPLE)
 	{
 		free(tmp);

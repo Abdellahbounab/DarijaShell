@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_excution.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
+/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/04 14:47:38 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/05 09:53:26 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ int	open_heredoc(t_file *file, int outfile, t_env **env)
 		// check if it is allowed to expand it or not depends
 		if (file->type == HERE_DOC_SIMPLE)
 		{
-			line = parsing_extend_var(line, *env, &status);
+			line = parsing_extend_var(line, *env, &status, NULL);
 			free(tmp);
 		}
 		if (outfile != -1)
