@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:19:56 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/04 15:04:07 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/04 22:58:17 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,3 +77,53 @@ int main(int ac, char **av, char **envp)
 	free_env(&env);
 }
 
+
+
+/*
+
+	struct bonus_excute{
+		enum relation = {AND, OR, NONE};
+		t_cmd *command;
+		struct bonus_excute *next;
+	};
+
+	1- getting input from user : cat Makefile | wc -l && ((das || export av=hello)&& echo $av) | cat
+	2- checking if simple command !(&&, ||) OUTSIDE PRIORITIES
+		2.1-if yes -> 4
+		2.2-if no -> 3
+	3- separate ||, && OUTSIDE priorities -> 4
+	4- check if | pipe
+		4.1- if yes -> separate | -> fork for each + 2
+		4.2- if no -> 5
+	5- check if () priorities
+		5.1- if yes -> separate first () -> 2
+		5.2- if no -> 6
+	6- excute each 
+	
+
+	repeating algorithm with the command : cat Makefile | wc -l && ((das || export av=hello)&& echo $av) | cat
+	2 - 2.2
+		3 -  cat Makefile | wc -l
+			4 - 4.1 - cat Makefile
+					2 - 4 - 5 - 6 - excute
+				4.1 - wc -l
+					2 - 4 - 5 - 6 - excute
+		3 - ((das || export av=hello)&& echo $av) | cat
+			4 - 4.1 - ((das || export av=hello)&& echo $av)
+				2 - 2.1 - 4 - 4.2 - 5 - 5.1
+					5.1 - (das || export av=hello)&& echo $av
+						2 - 2.2
+							3 - (das || export av=hello)
+								4 - 4.2 - 5 - 5.1 - das || export av=hello
+											2 - 2.2 - 3 - das
+														4 - 4.2 - 5 - 5.2 - 6 - excute
+													3 - export av=hello
+														4 - 4.2 - 5 - 5.2 - 6 - excute
+							3 - echo $av
+								4 - 4.2 - 5 - 5.2 - 6 - excute
+			4 - 4.1 - cat
+					2 - 4 - 4.2 - 5 - 5.2 - 6 - excute
+
+	
+
+*/
