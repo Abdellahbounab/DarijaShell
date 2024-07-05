@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/05 15:57:44 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/05 21:02:48 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -498,19 +498,20 @@ int	child_excution(t_cmd *command, t_excute *cmds, t_env **env, int child)
 	if (outfile_update(command->files, cmds) < 0)
 		return (0);
 	if (command->bonus)
+		ft_minishell(command->bonus, env);
+	else
+	{
+		cmds->cmd = get_commands(command->args, &cmds->arguments, ft_split(env_getval(*env, "PATH"), ':'));
+		if (excute_cmd(cmds, env, child))
+			return (1);
+		// exit(1);
+	}
 		// going back recursively into the first function where
 		// where in main where :
 		/*
 			
 		*/
 
-
-
-		
-	// cmds->cmd = get_commands(command->args, &cmds->arguments, ft_split(env_getval(*env, "PATH"), ':'));
-	// if (excute_cmd(cmds, env, child))
-	// 	return (1);
-	// exit(1);
 }
 
 int	close_other(t_excute *head, int pos)
@@ -587,12 +588,6 @@ int	redirection_update(t_cmd *command,t_excute **head, t_env **env)
 			else
 				return (status = 1, printf("%s\n", strerror(errno)));
 		}
-		if (command->bonus)
-		{
-			// have to be parsed on ()
-			// have to be splitted by &&, ||
-			excution(command->bonus, env); //not excution but where it would be parsed before going to 
-		}
 		cmds = cmds->next;
 		command = command->next;
 		i++;
@@ -641,7 +636,7 @@ int	excution(t_bonus *bonus, t_env **env)
 			|| relation_cpy == NONE)
 		{
 			cmds = heredoc_update(cpy->command, env);
-			redirection_update(cpy, &cmds, env);
+			redirection_update(cpy->command, &cmds, env);
 			waitprocess(cmds);
 		}
 		relation_cpy = cpy->relation;
