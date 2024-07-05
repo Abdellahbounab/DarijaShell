@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_excution.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/05 09:53:26 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/05 15:52:23 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,37 @@
 
 
 /*
-	heredoc signal && any command after
+	
+	cat Makefile | wc -l && ((das || export av=hello) && echo $av) | cat
+	struct t_bonus{
+		enum type relation{AND, OR, NONE}; NONE
+		char *cmdline; "((das || export av=hello) && echo $av) > out | cat << eof"
+		t_command *cmd;
+			arg:	((das || export av=hello) && echo $av > outfile)
+					files = OUTFILE - out
+					t_bonus * (separated priorities) : (das || export av=hello) && echo $av
+														t_bonus : (das || export av=hello) ,type AND
+																t_bonus* :das || export av=hello , type OR
+																		t_cmd :arg :das
+																				files
+																				t_bonus = null
+																			
+																		t_cmd :arg :export av=hello
+																				files
+																				t_bonus = null
+																		
+														t_bonus : echo $av
+																t_cmd = arg _ echo $av
+																		t_bonus = null
+			arg:	cat
+					files = HEREDOC - eof
+					t_bonus *
+		t_bonus *next;
+	};
 */
 
+
+int	excution(t_bonus *bonus, t_env **env);
 
 
 int	ft_perror(char *header, char *msg, int err)
@@ -164,8 +192,6 @@ int	open_heredoc(t_file *file, int outfile, t_env **env)
 		write(STDOUT_FILENO, "> ", 2);
 		line = get_next_line(STDIN_FILENO);
 	}
-	// if (!line && status != 1)
-	// 	write(STDERR_FILENO, "warning : here-document delimited by end-of-file\n", 49);
 	if (outfile != -1)
 		close(outfile);
 	free(line);
@@ -226,25 +252,27 @@ t_excute	*heredoc_update(t_cmd *command, t_env **env)
 {
 	t_excute	*cmds;
 	t_excute	*node;
+	t_cmd		*cpy;
 	int			fds[2];
 
 	cmds = NULL;
-	if (command)
+	cpy = command;
+	if (cpy)
 		fds[0] = dup(STDIN_FILENO);
-	while (command)
+	while (cpy)
 	{
 		node = cmd_create(fds[0]);
 		if (!node)
 			return (cmd_free(&cmds), NULL);
-		if (command->next && pipe(fds) != -1) 
+		if (cpy->next && pipe(fds) != -1) 
 		{
 			dup2(fds[1], node->outfile);
 			close(fds[1]);
 		}
-		if (!heredoc_management(command->files, node, env))
+		if (!heredoc_management(cpy->files, node, env))
 			return (cmd_free(&cmds), NULL);
 		cmd_addback(&cmds, node);
-		command = command->next;
+		cpy = cpy->next;
 	}
 	return (cmds);
 }
@@ -469,10 +497,17 @@ int	child_excution(t_cmd *command, t_excute *cmds, t_env **env, int child)
 		return (0);
 	if (outfile_update(command->files, cmds) < 0)
 		return (0);
-	cmds->cmd = get_commands(command->args, &cmds->arguments, ft_split(env_getval(*env, "PATH"), ':'));
-	if (excute_cmd(cmds, env, child))
-		return (1);
-	exit(1);
+	if (command->bonus)
+		// going back recursively into the first function where
+		// where in main
+
+
+
+		
+	// cmds->cmd = get_commands(command->args, &cmds->arguments, ft_split(env_getval(*env, "PATH"), ':'));
+	// if (excute_cmd(cmds, env, child))
+	// 	return (1);
+	// exit(1);
 }
 
 int	close_other(t_excute *head, int pos)
@@ -526,7 +561,7 @@ int	ft_signals(int child)
 	return 1;
 }
 
-int	redirection_update(t_cmd *command, t_excute **head, t_env **env)
+int	redirection_update(t_cmd *command,t_excute **head, t_env **env)
 {
 	int			pid;
 	t_excute	*cmds;
@@ -548,6 +583,12 @@ int	redirection_update(t_cmd *command, t_excute **head, t_env **env)
 				cmds->pid = pid;
 			else
 				return (status = 1, printf("%s\n", strerror(errno)));
+		}
+		if (command->bonus)
+		{
+			// have to be parsed on ()
+			// have to be splitted by &&, ||
+			excution(command->bonus, env); //not excution but where it would be parsed before going to 
 		}
 		cmds = cmds->next;
 		command = command->next;
@@ -582,12 +623,26 @@ int	waitprocess(t_excute *cmds)
 
 
 
-int	excution(t_cmd *command, t_env **env)
+int	excution(t_bonus *bonus, t_env **env)
 {
 	t_excute	*cmds;
+	t_bonus		*cpy;
+	t_relation  relation_cpy;
 
-	cmds = heredoc_update(command, env);
-	redirection_update(command, &cmds, env);
-	waitprocess(cmds);
+	cpy = bonus;
+	relation_cpy = NONE;
+	while (cpy)
+	{
+		if ((status && relation_cpy == OR)
+			|| (!status && relation_cpy == AND) 
+			|| relation_cpy == NONE)
+		{
+			cmds = heredoc_update(cpy->command, env);
+			redirection_update(cpy, &cmds, env);
+			waitprocess(cmds);
+		}
+		relation_cpy = cpy->relation;
+		cpy = cpy->next;
+	}
 	return (1);
 }

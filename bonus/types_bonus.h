@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:30:27 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/04 14:17:02 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/05 13:14:20 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@
 #endif
 
 int status;
+typedef struct s_cmd;
 typedef enum s_type
 {
 	INFILE = O_RDONLY,
@@ -77,8 +78,39 @@ typedef struct s_cmd
 	int *status;
 	t_file *files;
 	struct s_cmd *next;
+	struct s_bonus *bonus;
 } t_cmd;
 
+
+// new enum t_relation + t_bonus + t_cmd{ + t_bonus*}
+
+typedef enum s_relation
+{
+	AND,
+	OR,
+	NONE,
+} t_relation;
+
+
+typedef struct s_bonus{
+	char  *cmdline;
+	t_relation relation;
+	t_cmd *command;
+	struct s_bonus *next;
+}t_bonus;
+
+
+typedef struct s_excute
+{
+	char *cmd;
+	char **arguments;
+	int infile;
+	int outfile;
+	int pid;
+	struct s_excute *next;
+} t_excute;
+
+// the above struct is made for bonus part
 typedef struct s_info
 {
 	int start;
@@ -91,14 +123,5 @@ typedef struct s_info
 	t_cmd *cmd;
 } t_info;
 
-typedef struct s_excute
-{
-	char *cmd;
-	char **arguments;
-	int infile;
-	int outfile;
-	int pid;
-	struct s_excute *next;
-} t_excute;
 
 #endif
