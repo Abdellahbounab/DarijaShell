@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:21:34 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/05 09:50:29 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/05 10:07:03 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,9 @@ static int take_place(char **tokens, t_cmd *cmd, t_info *info)
 			strwild = ft_strdup(tmp);
 		if (expend == 1)
 		{
-			split = ft_split(tmp, SPACE);
+			split = ft_split(strwild, SPACE);
 			free(tmp), i = 0;
+			free(strwild);
 			if (split == NULL)
 				return (ERROR);
 			while (split[i])
