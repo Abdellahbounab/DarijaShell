@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:30:27 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/06 12:01:04 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/06 14:30:54 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,22 +79,24 @@ typedef enum s_relation
 	NONE,
 } t_relation;
 
+// yellow
 typedef struct s_cmd
 {
 	char **args;
 	int *status;
 	t_file *files;
-	struct s_cmd *next;
+	struct s_cmd *next_pipe;
 	struct s_bonus *bonus;
 } t_cmd;
 
 // new enum t_relation + t_bonus + t_cmd{ + t_bonus*}
 
+// red
 typedef struct s_bonus{
 	char  *cmdline;
 	t_relation relation;
 	t_cmd *command;
-	struct s_bonus *next;
+	struct s_bonus *next_bonus;
 }t_bonus;
 
 
