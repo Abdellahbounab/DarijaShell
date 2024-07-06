@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_bonus.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:21:34 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/06 19:57:39 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/06 20:45:57 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,8 +143,7 @@ static t_cmd *create_cmd(char **tokens, t_info *info, int *status)
 		{
 			start = info->cmd_i;
 			info->cmd_i = skip_and_or(tokens, info->cmd_i);
-			cmd->bonus->cmdline = sub_split(tokens, start, info->cmd_i);
-
+			cmd->bonus = create_bonus(sub_split(tokens, start, info->cmd_i));
 		}
 		// skip () and assign it to cmd->bonus->cmdline
 		// else dkhdm normally as taking riderction and split hte cmd

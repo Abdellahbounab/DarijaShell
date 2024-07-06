@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:19:56 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/06 19:35:20 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/06 20:44:50 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,23 @@ void leaks(){system("leaks minishell_bonus");}
 		*/
 
 
+
+t_bonus	*create_bonus(char **tokens)
+{
+	t_bonus *node;
+
+	if (tokens)
+	{
+		node = ft_calloc(1, sizeof(t_bonus));
+		if (!node)
+			return (0);
+		node->cmdline = tokens;
+		return (node);
+	}
+	return (0);
+}
+
+
 int	ft_minishell(t_bonus *bonus, t_env *env)
 {
 	t_bonus *cpy;
@@ -105,7 +122,7 @@ int	ft_minishell(t_bonus *bonus, t_env *env)
 		if (bonus->command && status)
 			status = 0;
 		excution(bonus->command, &env);
-		cpy = cpy->next;
+		cpy = cpy->next_bonus;
 	}
 }
 

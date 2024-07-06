@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_p_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 10:13:51 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/06 19:27:43 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/06 20:53:33 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,12 +185,15 @@ char **sub_split(char **array, int start, int end)
 	return (sub_array);
 }
 
-void split_and_or(t_bonus *bonus)
+t_bonus *ft_bonussplit(t_bonus *bonus)
 {
 	int i;
 	int cpy;
+	t_bonus *head;
+	t_bonus *cpy;
 
 	i = 0;
+	head = NULL;
 	if (bonus == NULL)
 		return (NULL);
 	while (bonus->cmdline && bonus->cmdline[i])
@@ -201,7 +204,9 @@ void split_and_or(t_bonus *bonus)
 		if (!bonus->cmdline[i] || (!ft_strcmp(bonus->cmdline[i], "||") || !ft_strcmp(bonus->cmdline[i], "&&")))
 		{
 			// bonus->command->bonus->cmdline = sub_split(bonus->cmdline, cpy, i);
-			print_array(sub_split(bonus->cmdline, cpy, i));
+			// ihave to malloc for command too
+			cpy = create_bonus(sub_split(bonus->cmdline, cpy, i));
+			add_back_bonus(&head, cpy);
 			// bonus->command->bonus->cmdline
 		}
 		if (bonus->cmdline[i] ==  NULL)
@@ -209,6 +214,7 @@ void split_and_or(t_bonus *bonus)
 		// bonus->command->files
 		i++;
 	}
+	return (head);
 }
 
 int skip_s(char **array, int index, char *s1)

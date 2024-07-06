@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   types_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:30:27 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/06 15:59:37 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/06 20:45:13 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,5 +123,8 @@ typedef struct s_info
 	t_cmd *cmd;
 } t_info;
 
+
+
+t_bonus	*create_bonus(char **tokens);
 
 #endif
