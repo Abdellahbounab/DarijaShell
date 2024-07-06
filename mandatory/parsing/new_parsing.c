@@ -6,10 +6,9 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 11:15:13 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/05 09:40:31 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/06 09:47:38 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "parsing.h"
 
@@ -88,6 +87,12 @@ char *parsing_extend_var(char *string, t_env *env, int *status, int *expend)
 	if (tmp && expend)
 		*expend = 1;
 	new_string = ft_substr(string, info->start, info->end - info->start);
+	if (tmp)
+	{
+		tmp_free = new_string;
+		new_string = ft_filter(new_string);
+		free(tmp_free);
+	}
 	tmp_free = new_string;
 	new_string = ft_strjoin(tmp, new_string);
 	free(tmp_free);
