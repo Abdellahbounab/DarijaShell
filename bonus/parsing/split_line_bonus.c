@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 12:31:21 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/02 10:22:08 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/06 14:57:44 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ static int blank_quote(char *line, int start, int *end, char ***words_symboles)
 				return (ERROR);
 			}
 		}
-		else if (line[*end] == '>' || line[*end] == '<' || line[*end] == '|')
+		else if (line[*end] == '>' || line[*end] == '<' || line[*end] == '|'|| line[*end] == '&'|| line[*end] == '('|| line[*end] == ')')
 			break;
 		(*end)++;
 	}
@@ -105,12 +105,13 @@ char **split_line(char *line)
 		while (line[end] && (line[end] == SPACE || line[end] == TAB))
 			end++;
 		start = end;
-		if (line[end] && ((line[end] == '<' && line[end + 1] == '<') || (line[end] == '>' && line[end + 1] == '>')))
+		if (line[end] && ((line[end] == '<' && line[end + 1] == '<') || \
+			(line[end] == '>' && line[end + 1] == '>') || (line[end] == '|' && line[end + 1] == '|') || (line[end] == '&' && line[end + 1] == '&')))
 		{
 			end = end + 2;
 			alloc_appand(line, start, end, &words_symboles);
 		}
-		else if (line[end] == '<' || line[end] == '>' || line[end] == '|')
+		else if (line[end] == '<' || line[end] == '>' || line[end] == '|' || line[end] == '('|| line[end] == ')' || line[end] == '&')
 			alloc_appand(line, start, ++end, &words_symboles);
 		else if (line[end] || line[end] == '"' || line[end] == '\'')
 		{

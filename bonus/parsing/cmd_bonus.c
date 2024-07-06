@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:21:34 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/05 10:07:03 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/06 19:57:39 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,7 @@ static int take_place(char **tokens, t_cmd *cmd, t_info *info)
 static t_cmd *create_cmd(char **tokens, t_info *info, int *status)
 {
 	t_cmd *cmd;
+	int start;
 
 	info->file = 0;
 	if (set_default(&cmd, status) == ERROR)
@@ -138,7 +139,16 @@ static t_cmd *create_cmd(char **tokens, t_info *info, int *status)
 	info->cmd = cmd;
 	while (tokens[info->cmd_i])
 	{
-		if (ft_strcmp(tokens[info->cmd_i], "|") == 0)
+		if (!ft_strcmp(tokens[info->cmd_i], "("))
+		{
+			start = info->cmd_i;
+			info->cmd_i = skip_and_or(tokens, info->cmd_i);
+			cmd->bonus->cmdline = sub_split(tokens, start, info->cmd_i);
+
+		}
+		// skip () and assign it to cmd->bonus->cmdline
+		// else dkhdm normally as taking riderction and split hte cmd
+		else if (ft_strcmp(tokens[info->cmd_i], "|") == 0)
 		{
 			if (ft_strcmp(tokens[0], "|") == 0 || tokens[info->cmd_i + 1] == NULL || ft_strcmp(tokens[++(info->cmd_i)], "|") == 0)
 			{

@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/05 09:51:46 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/06 18:50:01 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,15 @@ void	alloc_appand(char *line, int start, int end, char ***words_symboles);
 char *wildcard(char *pattern);
 char *var_wildcard(char *line);
 void print_array(char **array);
+
+char *join_array(char **array);
+int check_paro(char **array);
+int check_f_l(char **array);
+char **remove_f_l(char **array);
+void split_and_or(t_bonus *bonus);
+
+
+
+
 #endif
+

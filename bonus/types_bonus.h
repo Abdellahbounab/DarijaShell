@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:30:27 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/06 14:30:54 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/06 15:59:37 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@
 #endif
 
 int status;
-typedef struct s_cmd;
+
 typedef enum s_type
 {
 	INFILE = O_RDONLY,
@@ -93,7 +93,7 @@ typedef struct s_cmd
 
 // red
 typedef struct s_bonus{
-	char  *cmdline;
+	char  **cmdline;
 	t_relation relation;
 	t_cmd *command;
 	struct s_bonus *next_bonus;

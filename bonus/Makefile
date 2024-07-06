@@ -14,17 +14,18 @@ MAGENTA := \033[35;1m
 CYAN := \033[36;1m
 RESET := \033[0m
 
-SRC := parsing/cmd_bonus.c \
+SRC := parsing/split_line_bonus.c \
        parsing/free_bonus.c \
-       parsing/new_filter_bonus.c \
-       parsing/parsing_bonus.c \
-       parsing/parsing_tooles_bonus.c \
-       parsing/split_line_bonus.c \
-       parsing/var_tooles_bonus.c \
-       parsing/wildcards_bonus.c \
-	   env/create_env.c \
-	   getnextline/get_next_line_bonus.c\
-	   env/built_in.c
+       parsing/parsing_p_bonus.c \
+	#    parsing/cmd_bonus.c \
+    #    parsing/new_filter_bonus.c \
+    #    parsing/parsing_bonus.c \
+    #    parsing/parsing_tooles_bonus.c \
+    #    parsing/var_tooles_bonus.c \
+    #    parsing/wildcards_bonus.c \
+	#    env/create_env.c \
+	#    getnextline/get_next_line_bonus.c\
+	#    env/built_in.c
 
 INCLUDES =	parsing/parsing_bonus.h\
 			types_bonus.h \
@@ -32,8 +33,9 @@ INCLUDES =	parsing/parsing_bonus.h\
 
 OBJ := $(SRC:.c=.o)
 
-RDLINE_SRCS = excution/main_excution.c\
-			main_bonus.c
+RDLINE_SRCS = test.c \
+			# excution/main_excution.c \
+			# main_bonus.c
 
 RDLINE =  /goinfre/$(shell users)/homebrew/opt/readline
 

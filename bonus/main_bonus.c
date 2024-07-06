@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:19:56 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/06 12:58:43 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/06 19:35:20 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,13 @@ int	ft_minishell(t_bonus *bonus, t_env *env)
 	cpy = bonus;
 	// it will only trim this case (echo hey), if there is other things than just priority , it wont be trimmed
 	ft_bonustrim(bonus->cmdline); // trim the cmdline in bonus->cmdline depends on first '()' and fill the bonus->args
+	/*
+		if (check_f_l(line_s) == GOOD)
+			{
+				printf("YOU CAN REMOVE PARO\n");
+				bonus->cmdline = remove_f_l(line_s);
+			}
+	*/
 	ft_bonussplit(bonus); // split bonus->args depends on || && outside of  (), and fill the bonus->t_cmd->bonus
 	while (cpy)
 	{
@@ -93,9 +100,11 @@ int	ft_minishell(t_bonus *bonus, t_env *env)
 						// echo hey
 								// ->args : echo , hey
 		bonus->command = parsing(bonus->cmdline, env, &status);
+		// redirections would be stored in bonus->t_cmd->files
+		// bonus->t_cmd->bonus
 		if (bonus->command && status)
 			status = 0;
-		// excution(bonus->command, &env);
+		excution(bonus->command, &env);
 		cpy = cpy->next;
 	}
 }
