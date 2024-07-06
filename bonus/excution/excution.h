@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   excution.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
+/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:22:03 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/04 14:18:02 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/06 11:35:05 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 int	ft_signals(int child);
 
-int	excution(t_cmd *command, t_env **env);
+// int	excution(t_cmd *command, t_env **env);
 
 int	ft_perror(char *header, char *msg, int err);
 

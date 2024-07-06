@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   types_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
+/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:30:27 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/05 13:14:20 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/06 12:01:04 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,13 @@ typedef struct s_file
 	struct s_file *next;
 } t_file;
 
+typedef enum s_relation
+{
+	AND,
+	OR,
+	NONE,
+} t_relation;
+
 typedef struct s_cmd
 {
 	char **args;
@@ -81,16 +88,7 @@ typedef struct s_cmd
 	struct s_bonus *bonus;
 } t_cmd;
 
-
 // new enum t_relation + t_bonus + t_cmd{ + t_bonus*}
-
-typedef enum s_relation
-{
-	AND,
-	OR,
-	NONE,
-} t_relation;
-
 
 typedef struct s_bonus{
 	char  *cmdline;
