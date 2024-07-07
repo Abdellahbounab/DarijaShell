@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:19:56 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/07 12:53:36 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/07 19:52:20 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int	ft_bonustrim(char ***cmdline)
 {
 	char **tmp;
 
-	if (check_f_l(*cmdline) == GOOD)
+	if (cmdline && *cmdline && check_f_l(*cmdline) == GOOD)
 	{
 		tmp = *cmdline;
 		*cmdline = remove_f_l(tmp);
@@ -145,11 +145,12 @@ int	ft_minishell(t_bonus *bonus, t_env **env)
 int main(int ac, char **av, char **envp)
 {
 	char *line;	
-	t_bonus bonus;
+	t_bonus *bonus;
 	t_env *env;
 
 	(void)av;
 	(void)ac;
+	(void)envp;
 	// atexit(leaks);
 	
 	if (envp && !get_env(&env, envp))
@@ -161,13 +162,14 @@ int main(int ac, char **av, char **envp)
 		if (!line)
 			return (free_env(&env), status);
 		add_history(line);
+		bonus = create_bonus(NULL);
 
 		// bonus->cmdline = line;
 		// bonus->cmdline =
-		bonus.line = line;
-		ft_minishell(&bonus, &env);
-		excution(&bonus, &env, 1);
-		free_cmd(bonus.command);
+		bonus->line = line;
+		ft_minishell(bonus, &env);
+		excution(bonus, &env, 1);
+		free_cmd(bonus->command);
 		// leaks();
 	}
 	free_env(&env);

@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 17:04:39 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/04 14:15:21 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/07 19:46:29 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ t_env *env_getkey(t_env *lst, char *key)
 	cpy = lst;
 	while (cpy)
 	{
-		if (cpy->key && !ft_strcmp(cpy->key, key))
+		if (cpy->key && key && !ft_strcmp(cpy->key, key))
 			return cpy;
 		cpy = cpy->next;
 	}
