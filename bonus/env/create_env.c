@@ -140,7 +140,7 @@ t_env *env_getkey(t_env *lst, char *key)
 	cpy = lst;
 	while (cpy)
 	{
-		if (!ft_strcmp(cpy->key, key))
+		if (cpy->key && !ft_strcmp(cpy->key, key))
 			return cpy;
 		cpy = cpy->next;
 	}

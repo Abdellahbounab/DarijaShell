@@ -1,8 +1,7 @@
 
 NAME := minishell_bonus
 CC := cc
-# CFLAGS :=  -Wall -Wextra -Werror 
-# -g -fsanitize=address
+CFLAGS :=  -Wall -Wextra -Werror  -g -fsanitize=address
 LDFLAGS := -lreadline -lncurses
 
 BOLD := \033[1m

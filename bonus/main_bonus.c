@@ -144,7 +144,7 @@ int	ft_minishell(t_bonus *bonus, t_env **env)
 
 int main(int ac, char **av, char **envp)
 {
-	// char *line;	
+	char *line;	
 	t_bonus bonus;
 	t_env *env;
 
@@ -152,18 +152,19 @@ int main(int ac, char **av, char **envp)
 	(void)ac;
 	// atexit(leaks);
 	
-	if (!get_env(&env, envp))
+	if (envp && !get_env(&env, envp))
 		return (ft_perror("minishell :", "error env", 127));//we have to return the error message too
 	while (1)
 	{
 		ft_signals(1);
-		bonus.line = readline("minishell-$ ");
-		if (!bonus.line)
+		line = readline("minishell-$ ");
+		if (!line)
 			return (free_env(&env), status);
-		add_history(bonus.line);
+		add_history(line);
 
 		// bonus->cmdline = line;
-		// bonus->cmdline = 
+		// bonus->cmdline =
+		bonus.line = line;
 		ft_minishell(&bonus, &env);
 		excution(&bonus, &env, 1);
 		free_cmd(bonus.command);
