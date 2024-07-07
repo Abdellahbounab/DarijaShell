@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_bonus.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/06 18:50:01 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/07 12:17:57 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,12 @@ char **remove_f_l(char **array);
 void split_and_or(t_bonus *bonus);
 
 
-
+char **sub_split(char **array, int start, int end);
+int	bonus_addback(t_bonus **lst, t_bonus *newnode);
+int skip_p(char **array, int index);
+int skip_and_or(char **array, int index);
+t_bonus *ft_bonussplit(t_bonus *bonus);
+int skip_s(char **array, int index, char *s1);
 
 #endif
 

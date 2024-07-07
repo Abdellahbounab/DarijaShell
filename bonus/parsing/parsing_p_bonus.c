@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 10:13:51 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/06 20:53:33 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/07 12:12:37 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,27 @@
 (.. || .. && ( .. &&  .. ) | .. && .. ) | .. && (.. && ..) | ..
 
 */
+
+int	bonus_addback(t_bonus **lst, t_bonus *newnode)
+{
+	t_bonus *cpy;
+
+	cpy = *lst;
+	if (lst)
+	{
+		if (!*lst)
+			*lst = newnode;
+		else
+		{
+			while (cpy && cpy->next)
+				cpy = cpy->next;
+			cpy->next = newnode;
+		}
+		return 1;
+	}
+	return 0;
+}
+
 
 char *join_array(char **array)
 {
@@ -190,7 +211,7 @@ t_bonus *ft_bonussplit(t_bonus *bonus)
 	int i;
 	int cpy;
 	t_bonus *head;
-	t_bonus *cpy;
+	t_bonus *cpy_bonus;
 
 	i = 0;
 	head = NULL;
@@ -200,13 +221,18 @@ t_bonus *ft_bonussplit(t_bonus *bonus)
 	{
 		cpy = i;
 		i = skip_and_or(bonus->cmdline, i);
-		printf("out:%s\n", bonus->cmdline[i]);
 		if (!bonus->cmdline[i] || (!ft_strcmp(bonus->cmdline[i], "||") || !ft_strcmp(bonus->cmdline[i], "&&")))
 		{
 			// bonus->command->bonus->cmdline = sub_split(bonus->cmdline, cpy, i);
 			// ihave to malloc for command too
-			cpy = create_bonus(sub_split(bonus->cmdline, cpy, i));
-			add_back_bonus(&head, cpy);
+			cpy_bonus = create_bonus(sub_split(bonus->cmdline, cpy, i));
+			if (!bonus->cmdline[i])
+				cpy_bonus->relation = NONE;
+			else if (!ft_strcmp(bonus->cmdline[i], "||"))
+				cpy_bonus->relation = OR;
+			else 
+				cpy_bonus->relation = AND;
+			bonus_addback(&head, cpy_bonus);
 			// bonus->command->bonus->cmdline
 		}
 		if (bonus->cmdline[i] ==  NULL)

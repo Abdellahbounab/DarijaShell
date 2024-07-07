@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:30:27 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/06 20:45:13 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/07 12:33:49 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ typedef struct s_cmd
 	char **args;
 	int *status;
 	t_file *files;
-	struct s_cmd *next_pipe;
+	struct s_cmd *next;
 	struct s_bonus *bonus;
 } t_cmd;
 
@@ -93,10 +93,11 @@ typedef struct s_cmd
 
 // red
 typedef struct s_bonus{
+	char *line;
 	char  **cmdline;
 	t_relation relation;
 	t_cmd *command;
-	struct s_bonus *next_bonus;
+	struct s_bonus *next;
 }t_bonus;
 
 
@@ -126,5 +127,7 @@ typedef struct s_info
 
 
 t_bonus	*create_bonus(char **tokens);
+int	ft_minishell(t_bonus *bonus, t_env **env);
+int	excution(t_bonus *bonus, t_env **env, int flag);
 
 #endif

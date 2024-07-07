@@ -1,7 +1,7 @@
 
 NAME := minishell_bonus
 CC := cc
-CFLAGS :=  -Wall -Wextra -Werror 
+# CFLAGS :=  -Wall -Wextra -Werror 
 # -g -fsanitize=address
 LDFLAGS := -lreadline -lncurses
 
@@ -17,15 +17,15 @@ RESET := \033[0m
 SRC := parsing/split_line_bonus.c \
        parsing/free_bonus.c \
        parsing/parsing_p_bonus.c \
-	#    parsing/cmd_bonus.c \
-    #    parsing/new_filter_bonus.c \
-    #    parsing/parsing_bonus.c \
-    #    parsing/parsing_tooles_bonus.c \
-    #    parsing/var_tooles_bonus.c \
-    #    parsing/wildcards_bonus.c \
-	#    env/create_env.c \
-	#    getnextline/get_next_line_bonus.c\
-	#    env/built_in.c
+	   parsing/cmd_bonus.c \
+       parsing/new_filter_bonus.c \
+       parsing/parsing_bonus.c \
+       parsing/parsing_tooles_bonus.c \
+       parsing/var_tooles_bonus.c \
+       parsing/wildcards_bonus.c \
+	   env/create_env.c \
+	   getnextline/get_next_line_bonus.c\
+	   env/built_in.c
 
 INCLUDES =	parsing/parsing_bonus.h\
 			types_bonus.h \
@@ -33,9 +33,9 @@ INCLUDES =	parsing/parsing_bonus.h\
 
 OBJ := $(SRC:.c=.o)
 
-RDLINE_SRCS = test.c \
-			# excution/main_excution.c \
-			# main_bonus.c
+RDLINE_SRCS = excution/main_excution.c \
+			main_bonus.c \
+			# test.c
 
 RDLINE =  /goinfre/$(shell users)/homebrew/opt/readline
 
@@ -70,8 +70,8 @@ print_logo:
 $(NAME): $(OBJ) $(LIBFT) $(RDLINE_OBJS)
 	@echo "$(ORG)╔══ Linking object files ══╗$(RESET)"
 	@echo "$(CYAN)➜ Creating executable: $(BOLD)$(NAME)$(RESET)"
-# @$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(LDFLAGS) -o $@
-	@cc $(CFLAGS) -L $(RDLINE)/lib $(RDLINE_OBJS) $(OBJ) $(LIBFT) -o $@ $(LDFLAGS)
+# @cc $(CFLAGS) -L $(RDLINE)/lib $(RDLINE_OBJS) $(OBJ) $(LIBFT) -o $@ $(LDFLAGS)
+	@cc $(CFLAGS) $(RDLINE_OBJS) $(OBJ) $(LIBFT) -o $@ $(LDFLAGS)
 	@echo "$(GREEN)✔ Build successful: $(BOLD)$(NAME) is ready!$(RESET)"
 	@echo "$(ORG)╚══════════════════════════╝$(RESET)"
 
@@ -102,8 +102,10 @@ fclean: clean
 	@echo "$(GREEN)✔ Full clean complete$(RESET)"
 	@echo "$(RED)╚═══════════════════╝$(RESET)"
 
-$(RDLINE_OBJS):%.o: %.c $(INCLUDES) $(RDLINE)
-	@cc $(CFLAGS) -I $(RDLINE)/include -c $< -o $@ 
+# $(RDLINE_OBJS):%.o: %.c $(INCLUDES) $(RDLINE)
+# @cc $(CFLAGS) -I $(RDLINE)/include -c $< -o $@ 
+$(RDLINE_OBJS):%.o: %.c $(INCLUDES)
+	@cc $(CFLAGS) -c $< -o $@ 
 
 $(RDLINE) :
 	@brew install readline

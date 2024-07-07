@@ -6,13 +6,14 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:19:56 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/06 20:44:50 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/07 12:53:36 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing/parsing_bonus.h"
 #include "env/env.h"
 #include "excution/excution.h"
+
 
 void print_cmd(t_cmd *command)
 {
@@ -88,50 +89,63 @@ t_bonus	*create_bonus(char **tokens)
 	return (0);
 }
 
+int	ft_bonustrim(char ***cmdline)
+{
+	char **tmp;
 
-int	ft_minishell(t_bonus *bonus, t_env *env)
+	if (check_f_l(*cmdline) == GOOD)
+	{
+		tmp = *cmdline;
+		*cmdline = remove_f_l(tmp);
+		free_array(&tmp);
+		return (1);
+	}
+	return (0);
+}
+
+int	ft_minishell(t_bonus *bonus, t_env **env)
 {
 	t_bonus *cpy;
+	t_bonus *tmp;
+	char *cmdcpy;
 
 	cpy = bonus;
 	// it will only trim this case (echo hey), if there is other things than just priority , it wont be trimmed
-	ft_bonustrim(bonus->cmdline); // trim the cmdline in bonus->cmdline depends on first '()' and fill the bonus->args
-	/*
-		if (check_f_l(line_s) == GOOD)
-			{
-				printf("YOU CAN REMOVE PARO\n");
-				bonus->cmdline = remove_f_l(line_s);
-			}
-	*/
-	ft_bonussplit(bonus); // split bonus->args depends on || && outside of  (), and fill the bonus->t_cmd->bonus
+	ft_bonustrim(&(bonus->cmdline)); // trim the cmdline in bonus->cmdline depends on first '()' and fill the bonus->args
+	bonus->command->bonus = ft_bonussplit(bonus); // split bonus->args depends on || && outside of  (), and fill the bonus->t_cmd->bonus
+	tmp = bonus->command->bonus;
 	while (cpy)
 	{
-		// parsing function have to be modified where it would ignore the priorities and anything inside the ()
-		// after it would split the cmdline by | and use all the elements inside the bonus->command
-		// after if found priorities it would cpy it from '(' to ')' in the command->bonus->cmdline
-		// exsample bonus.cmdline :((cat) && echo hello ) > out | echo hey
-						// (cat && echo hello ) > out 
-								// -> args : NULL
-								// -> bonus.cmdline : (cat && echo hello ) => ft_minishell()
-								// -> files OUTFILE out
-						// echo hey
-								// ->args : echo , hey
-		bonus->command = parsing(bonus->cmdline, env, &status);
-		// redirections would be stored in bonus->t_cmd->files
-		// bonus->t_cmd->bonus
-		if (bonus->command && status)
-			status = 0;
-		excution(bonus->command, &env);
-		cpy = cpy->next_bonus;
+		if (bonus->line)
+			cmdcpy = join_strs(bonus->cmdline);
+		else
+			cmdcpy = bonus->line;
+		if (tmp)
+		{
+			while (tmp)
+			{
+				if (!bonus->line)
+					cmdcpy = join_strs(tmp->cmdline);
+				else
+					cmdcpy = tmp->line;
+				tmp->command = parsing(cmdcpy, *env, &status);
+				tmp = tmp->next;
+			}
+		}
+		else
+			bonus->command = parsing(cmdcpy, *env, &status);
+		excution(bonus, env, 0);
+		cpy = cpy->next;
 	}
+	return (1);
 }
 
 
 
 int main(int ac, char **av, char **envp)
 {
-	char *line;
-	t_bonus *bonus;
+	// char *line;	
+	t_bonus bonus;
 	t_env *env;
 
 	(void)av;
@@ -143,14 +157,16 @@ int main(int ac, char **av, char **envp)
 	while (1)
 	{
 		ft_signals(1);
-		bonus->cmdline = readline("minishell-$ ");
-		if (!bonus->cmdline)
+		bonus.line = readline("minishell-$ ");
+		if (!bonus.line)
 			return (free_env(&env), status);
-		add_history(bonus->cmdline);
+		add_history(bonus.line);
 
 		// bonus->cmdline = line;
-		ft_minishell(bonus, env);
-		free_cmd(bonus->command);
+		// bonus->cmdline = 
+		ft_minishell(&bonus, &env);
+		excution(&bonus, &env, 1);
+		free_cmd(bonus.command);
 		// leaks();
 	}
 	free_env(&env);

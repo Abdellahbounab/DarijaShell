@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_excution.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/06 11:27:48 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/07 12:26:04 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@
 */
 
 
-int	excution(t_bonus *bonus, t_env **env);
+int	excution(t_bonus *bonus, t_env **env, int flag);
 
 
 int	ft_perror(char *header, char *msg, int err)
@@ -493,25 +493,25 @@ int	excute_cmd(t_excute *cmds, t_env **env, int child)
 
 int	child_excution(t_cmd *command, t_excute *cmds, t_env **env, int child)
 {
+	if (special_builtin(cmds->cmd, cmds->arguments[0]))
+	{
+		cmds->cmd = get_commands(command->args, &cmds->arguments, ft_split(env_getval(*env, "PATH"), ':'));
+		excute_cmd(cmds, env, child);
+		if (command->bonus)
+			ft_minishell(command->bonus, env);
+	}
 	if (infile_update(command->files, cmds) < 0)
 		return (0);
 	if (outfile_update(command->files, cmds) < 0)
 		return (0);
-	if (command->bonus)
-		ft_minishell(command->bonus, env);
-	else
+	else if (!special_builtin(cmds->cmd, cmds->arguments[0]))
 	{
 		cmds->cmd = get_commands(command->args, &cmds->arguments, ft_split(env_getval(*env, "PATH"), ':'));
 		if (excute_cmd(cmds, env, child))
 			return (1);
-		// exit(1);
 	}
-		// going back recursively into the first function where
-		// where in main where :
-		/*
-			
-		*/
-
+	return 1;
+	exit(1);
 }
 
 int	close_other(t_excute *head, int pos)
@@ -565,7 +565,7 @@ int	ft_signals(int child)
 	return 1;
 }
 
-int	redirection_update(t_cmd *command,t_excute **head, t_env **env)
+int	redirection_update(t_cmd *command,t_excute **head, t_env **env, int flag)
 {
 	int			pid;
 	t_excute	*cmds;
@@ -577,7 +577,9 @@ int	redirection_update(t_cmd *command,t_excute **head, t_env **env)
 	{
 		if (!command->next && !(*head)->next && command->args && special_builtin(command->args[0], command->args[1]))
 			child_excution(command, cmds, env, 0);
-		else
+		else if (!flag && command->bonus)
+			ft_minishell(command->bonus, env);
+		else if (flag)
 		{
 			pid = fork();
 			ft_signals(pid);
@@ -621,7 +623,7 @@ int	waitprocess(t_excute *cmds)
 
 
 
-int	excution(t_bonus *bonus, t_env **env)
+int	excution(t_bonus *bonus, t_env **env, int flag)
 {
 	t_excute	*cmds;
 	t_bonus		*cpy;
@@ -631,13 +633,14 @@ int	excution(t_bonus *bonus, t_env **env)
 	relation_cpy = NONE;
 	while (cpy)
 	{
+		cmds = heredoc_update(cpy->command, env);
 		if ((status && relation_cpy == OR)
 			|| (!status && relation_cpy == AND) 
 			|| relation_cpy == NONE)
 		{
-			cmds = heredoc_update(cpy->command, env);
-			redirection_update(cpy->command, &cmds, env);
-			waitprocess(cmds);
+			redirection_update(cpy->command, &cmds, env, flag);
+			if (flag)
+				waitprocess(cmds);
 		}
 		relation_cpy = cpy->relation;
 		cpy = cpy->next;
