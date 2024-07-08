@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_bonus.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:21:34 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/08 13:31:40 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/08 15:45:34 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,9 +131,9 @@ static int take_place(char **tokens, t_cmd *cmd, t_info *info)
 static t_cmd *create_cmd(char **tokens, t_info *info, int *status)
 {
 	t_cmd *cmd;
-	int start;
+	// int start;
 
-	info->file = 0;
+	// info->file = 0;
 	if (set_default(&cmd, status) == ERROR)
 		return (NULL);
 	info->cmd = cmd;
@@ -141,15 +141,17 @@ static t_cmd *create_cmd(char **tokens, t_info *info, int *status)
 	{
 		if (!ft_strcmp(tokens[info->cmd_i], "("))
 		{
-			start = info->cmd_i;
-			info->cmd_i = skip_and_or(tokens, info->cmd_i);
-			cmd->bonus = create_bonus(sub_split(tokens, start, info->cmd_i));
+			cmd->bonus = create_bonus(sub_split(tokens, info->cmd_i, skip_p(tokens, info->cmd_i)));
+			info->cmd_i = skip_p(tokens, info->cmd_i);
+			if (!tokens[info->cmd_i] || !tokens[++info->cmd_i])
+				break;
+			// info->cmd_i++;
+			// if (!tokens[info->cmd_i])
+			// 	break;
 		}
-		// skip () and assign it to cmd->bonus->cmdline
-		// else dkhdm normally as taking riderction and split hte cmd
-		else if (ft_strcmp(tokens[info->cmd_i], "|") == 0)
+		if (!ft_strcmp(tokens[info->cmd_i], "|"))
 		{
-			if (ft_strcmp(tokens[0], "|") == 0 || tokens[info->cmd_i + 1] == NULL || ft_strcmp(tokens[++(info->cmd_i)], "|") == 0)
+			if (!ft_strcmp(tokens[0], "|") || !tokens[info->cmd_i + 1] || !ft_strcmp(tokens[++(info->cmd_i)], "|"))
 			{
 				ft_putstr_fd("syntax error\n", STDERR_FILENO);
 				*status = 1;
@@ -174,14 +176,14 @@ t_cmd *parse_cmds(char **tokens, t_env *env, int *status)
 
 	if (tokens == NULL)
 		return (NULL);
-	info = malloc(sizeof(t_info));
+	info = ft_calloc(1, sizeof(t_info));
 	if (info == NULL)
 		return (NULL);
-	info->cmd_i = 0;
 	info->env = env;
 	cmd = create_cmd(tokens, info, status);
 	while (cmd && tokens && tokens[info->cmd_i])
 	{
+		// printf("pipe\n");
 		tmp = create_cmd(tokens, info, status);
 		if (tmp)
 			add_back_cmd(cmd, tmp);

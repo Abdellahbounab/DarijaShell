@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_excution.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/08 13:04:52 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/08 14:55:38 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -565,7 +565,7 @@ int	ft_signals(int child)
 	return 1;
 }
 
-int	redirection_update(t_cmd *command,t_excute **head, t_env **env, int flag)
+int	redirection_update(t_cmd *command, t_excute **head, t_env **env, int flag)
 {
 	int			pid;
 	t_excute	*cmds;
@@ -594,7 +594,9 @@ int	redirection_update(t_cmd *command,t_excute **head, t_env **env, int flag)
 		command = command->next;
 		i++;
 	}
-	return (close_other(*head, -1), 1);
+	if (flag)
+		close_other(*head, -1);
+	return (1);
 }
 
 int	waitprocess(t_excute *cmds)
@@ -633,13 +635,13 @@ int	excution(t_bonus *bonus, t_env **env, int flag)
 	relation_cpy = NONE;
 	while (cpy)
 	{
-		printf("here 1");
+		// printf("here 1");
 		cmds = heredoc_update(cpy->command, env);
 		if ((status && relation_cpy == OR)
 			|| (!status && relation_cpy == AND) 
 			|| relation_cpy == NONE)
 		{
-			printf("here 1");
+			// printf("here 2");
 			redirection_update(cpy->command, &cmds, env, flag);
 			if (flag)
 				waitprocess(cmds);

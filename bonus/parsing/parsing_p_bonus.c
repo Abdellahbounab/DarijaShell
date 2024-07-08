@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_p_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 10:13:51 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/08 12:50:06 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/08 16:09:29 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,12 +160,10 @@ int skip_p(char **array, int index)
 			open_count++;
 		else if (array[i][0] == ')')
 		{
+			open_count--;
 			if (open_count == 0)
 				return (i);
-			open_count--;
 		}
-		if (open_count == 0)
-			return (i);
 		i++;
 	}
 	return (i);
@@ -215,13 +213,14 @@ t_bonus *ft_bonussplit(t_bonus *bonus)
 
 	i = 0;
 	head = NULL;
-	if (bonus == NULL)
+	if (!bonus)
 		return (NULL);
 	while (bonus->cmdline && bonus->cmdline[i])
 	{
 		cpy = i;
 		i = skip_and_or(bonus->cmdline, i);
-		if (!bonus->cmdline[i] || (!ft_strcmp(bonus->cmdline[i], "||") || !ft_strcmp(bonus->cmdline[i], "&&")))
+		if ((bonus->cmdline[i] && (!ft_strcmp(bonus->cmdline[i], "||") || !ft_strcmp(bonus->cmdline[i], "&&"))) || (head && !bonus->cmdline[i]))
+		// if (!bonus->cmdline[i] || (!ft_strcmp(bonus->cmdline[i], "||") || !ft_strcmp(bonus->cmdline[i], "&&")))
 		{
 			// bonus->command->bonus->cmdline = sub_split(bonus->cmdline, cpy, i);
 			// ihave to malloc for command too

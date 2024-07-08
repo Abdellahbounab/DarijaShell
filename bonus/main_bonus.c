@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:19:56 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/08 13:32:51 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/08 16:30:09 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 #include "env/env.h"
 #include "excution/excution.h"
 
-void print_cmd(t_cmd *command)
+
+void print_bonus(t_bonus *bonus);
+void print_cmd(t_cmd *command, char *from)
 {
 	t_cmd *cmd_tmp;
 	t_file *tmp_file;
@@ -24,6 +26,7 @@ void print_cmd(t_cmd *command)
 	cmd_tmp = command;
 	if (cmd_tmp)
 		tmp_file = cmd_tmp->files;
+	printf("%s\n", from);
 	while (cmd_tmp)
 	{
 		tmp_file = cmd_tmp->files;
@@ -40,10 +43,12 @@ void print_cmd(t_cmd *command)
 		i = 0;
 		while (cmd_tmp && cmd_tmp->args && cmd_tmp->args[i])
 			printf("|%s|\t", cmd_tmp->args[i++]);
+		if (cmd_tmp->bonus)
+			print_bonus(cmd_tmp->bonus);
 		cmd_tmp = cmd_tmp->next;
 		printf("\n------------------next_command--------------\n");
 	}
-	cmd_tmp = NULL;
+	// cmd_tmp = NULL;
 }
 
 void leaks() { system("leaks minishell_bonus"); }
@@ -111,11 +116,13 @@ void print_bonus(t_bonus *bonus)
 	t_bonus *tmp;
 
 	tmp = bonus;
+	printf("BONUS : \n");
 	while (tmp)
 	{
 		print_array(tmp->cmdline);
-		print_cmd(tmp->command);
+		print_cmd(tmp->command, "bonus :");
 		printf("relation: %d\n", tmp->relation);
+		printf("\n+++++next_relation++++++\n");
 		tmp = tmp->next;
 	}
 }
@@ -133,24 +140,26 @@ int ft_minishell(t_bonus *bonus, t_env **env)
 		ft_bonustrim(&bonus->cmdline); // trim the cmdline in bonus->cmdline depends on first '()' and fill the bonus->args
 		bonus->command = ft_calloc(1, sizeof(t_cmd));
 		bonus->command->bonus = ft_bonussplit(bonus);
+		// bonus->command->bonus : returns T_bonus * in the case of split, and NULL in the case of no split
 		// print_bonus(bonus->command->bonus);
 		if (cpy->command->bonus)
 		{
-			printf("hello 1");
+			printf("hello 1...%p\n", cpy->command->bonus);
 			tmp = cpy->command->bonus;
 			while (tmp)
 			{
+				// parsing : returns command in the case of normal cmd, and command->bonus->command in the case of  | pipe
 				tmp->command = parsing(tmp->cmdline, *env, &status);
 				tmp = tmp->next;
 				// print_cmd(tmp->command);
 			}
+			print_bonus(cpy->command->bonus);
 		}
 		else
 		{
-			printf("hello 2");
+			printf("hello 2.....\n");
 			cpy->command = parsing(cpy->cmdline, *env, &status);
-			print_cmd(cpy->command);
-			
+			print_cmd(cpy->command, "command");
 		}
 		excution(cpy, env, 0);
 		cpy = cpy->next;
@@ -182,7 +191,7 @@ int main(int ac, char **av, char **envp)
 		add_history(line);
 		bonus = create_bonus(split_line(line));
 		ft_minishell(bonus, &env);
-		// excution(bonus, &env, 1);
+		excution(bonus, &env, 1);
 		// free_cmd(bonus->command);
 		// leaks();
 	}
