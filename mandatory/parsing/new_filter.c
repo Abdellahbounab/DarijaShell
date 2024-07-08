@@ -6,13 +6,13 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 17:05:59 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/10 14:57:50 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/08 14:47:22 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-char *quation_mark(char *string, t_info *info, char *var_value, int *status)
+char *quation_mark(char *string, t_info *info, char *var_value)
 {
 	char *before_dollar;
 	char *tmp;
@@ -22,7 +22,7 @@ char *quation_mark(char *string, t_info *info, char *var_value, int *status)
 	before_dollar = ft_strjoin(var_value, before_dollar);
 	free(tmp);
 	free(var_value);
-	var_value = ft_itoa(*status);
+	var_value = ft_itoa(status);
 	tmp = var_value;
 	var_value = ft_strjoin(before_dollar, var_value);
 	free(tmp);

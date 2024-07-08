@@ -6,24 +6,12 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:23:00 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/05 09:39:40 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/08 14:55:01 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "parsing.h"
-
-int set_default(t_cmd **cmd, int *status)
-{
-	*cmd = malloc(sizeof(t_cmd));
-	if (*cmd == NULL)
-		return (ERROR);
-	(*cmd)->args = NULL;
-	(*cmd)->status = status;
-	(*cmd)->files = NULL;
-	(*cmd)->next = NULL;
-	return (GOOD);
-}
 
 void add_back_file(t_cmd *cmd, t_file *file)
 {
@@ -54,7 +42,7 @@ int create_files(t_cmd *cmd, char **line, t_info *info, t_type type)
 	if (file == NULL )
 		return (ERROR);
 	if (type != HERE_DOC_SIMPLE)
-		tmp = parsing_extend_var(line[info->cmd_i], info->env, info->cmd->status, &expend);
+		tmp = parsing_extend_var(line[info->cmd_i], info->env, &expend);
 	else
 		tmp = line[info->cmd_i];
 	if (expend == 1)
@@ -80,33 +68,20 @@ int create_files(t_cmd *cmd, char **line, t_info *info, t_type type)
 	return (GOOD);
 }
 
-void add_back_cmd(t_cmd *head, t_cmd *next_command)
-{
-	t_cmd *tmp;
 
-	if (head == NULL)
-		head = next_command;
-	else
-	{
-		tmp = head;
-		while (tmp->next)
-			tmp = tmp->next;
-		tmp->next = next_command;
-	}
-}
 
-int check_next(char *str, int *status)
+int check_next(char *str)
 {
 	if (str == NULL || ft_strcmp(str, "|") == GOOD)
 	{
 		ft_putstr_fd("syntax error\n", STDERR_FILENO);
-		*status = 1;
+		status = 1;
 		return (ERROR);
 	}
 	if (ft_strcmp(str, ">") == 0 || ft_strcmp(str, ">>") == 0 || ft_strcmp(str, "<") == 0 || ft_strcmp(str, "<<") == 0)
 	{
 		ft_putstr_fd("syntax error\n", STDERR_FILENO);
-		*status = 1;
+		status = 1;
 		return (ERROR);
 	}
 	return (GOOD);

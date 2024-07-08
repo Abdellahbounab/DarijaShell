@@ -3,14 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
+/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 11:49:17 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/04 14:48:21 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/08 16:37:11 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-
 
 #include "parsing/parsing.h"
 #include "env/env.h"
@@ -48,7 +46,7 @@ void print_cmd(t_cmd *command)
 	cmd_tmp = NULL;
 }
 
-void leaks(){system("leaks minishell");}
+// void leaks(){system("leaks minishell");}
 
 int main(int ac, char **av, char **envp)
 {
@@ -59,7 +57,6 @@ int main(int ac, char **av, char **envp)
 	(void)av;
 	(void)ac;
 	// atexit(leaks);
-	
 	if (!get_env(&env, envp))
 		return (ft_perror("minishell :", "error env", 127));//we have to return the error message too
 	while (1)
@@ -69,7 +66,7 @@ int main(int ac, char **av, char **envp)
 		if (!line)
 			return (free_env(&env), status);
 		add_history(line);
-		command = parsing(line, env, &status);
+		command = parsing(line, env);
 		if (command && status)
 			status = 0;
 		excution(command, &env);

@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 11:15:13 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/06 09:47:38 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/08 16:43:36 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 	ar= hello	;	$ar			-> hello		-> [hello]			->	[hello]
 	ar= "a v"	;	 < "$ar"	-> "a v"		-> ["a v", NULL]	->	[a v, NULL]
 */
-static void double_quote(char *string, t_info *info, char **tmp, int *status)
+static void double_quote(char *string, t_info *info, char **tmp)
 {
 	info->end++;
 	while (string[info->end] && string[info->end] != '"')
@@ -27,7 +27,7 @@ static void double_quote(char *string, t_info *info, char **tmp, int *status)
 		{
 			if (string[info->end + 1] == '?')
 			{
-				*tmp = quation_mark(string, info, *tmp, status);
+				*tmp = quation_mark(string, info, *tmp);
 				info->end += 2;
 			}
 			else
@@ -38,7 +38,15 @@ static void double_quote(char *string, t_info *info, char **tmp, int *status)
 			info->end++;
 	}
 }
-static char *extend_var_logic(char *string, t_info *info, int *status)
+
+static void single_quote(char *str, int *index)
+{
+	(*index)++;
+	while (str[*index] && str[*index] != '\'')
+		(*index)++;
+}
+
+static char *extend_var_logic(char *string, t_info *info)
 {
 	char *tmp;
 
@@ -46,15 +54,14 @@ static char *extend_var_logic(char *string, t_info *info, int *status)
 	while (string[info->end])
 	{
 		if (string[info->end] == '\'')
-			quote_skip(string, &info->end, '\'');
+			single_quote(string, &info->end);
 		if (string[info->end] == '"')
-			double_quote(string, info, &tmp, status);
+			double_quote(string, info, &tmp);
 		if (string[info->end] == '$')
 		{
 			if (string[info->end + 1] == '?')
 			{
-				tmp = quation_mark(string, info, tmp, status);
-				*status = 0;
+				tmp = quation_mark(string, info, tmp);
 				info->end += 2;
 			}
 			else
@@ -67,7 +74,7 @@ static char *extend_var_logic(char *string, t_info *info, int *status)
 	return (tmp);
 }
 
-char *parsing_extend_var(char *string, t_env *env, int *status, int *expend)
+char *parsing_extend_var(char *string, t_env *env, int *is_expend)
 {
 	t_info *info;
 	char *tmp;
@@ -76,16 +83,13 @@ char *parsing_extend_var(char *string, t_env *env, int *status, int *expend)
 
 	if (string == NULL)
 		return (NULL);
-	info = malloc(sizeof(t_info));
+	info = ft_calloc(1, sizeof(t_info));
 	if (info == NULL)
 		return (NULL);
-	info->end = 0;
-	info->start = 0;
 	info->env = env;
-	new_string = NULL;
-	tmp = extend_var_logic(string, info, status);
-	if (tmp && expend)
-		*expend = 1;
+	tmp = extend_var_logic(string, info);
+	if (tmp && is_expend)
+		*is_expend = 1;
 	new_string = ft_substr(string, info->start, info->end - info->start);
 	if (tmp)
 	{
@@ -95,9 +99,7 @@ char *parsing_extend_var(char *string, t_env *env, int *status, int *expend)
 	}
 	tmp_free = new_string;
 	new_string = ft_strjoin(tmp, new_string);
-	free(tmp_free);
-	free(tmp);
-	free(info);
+	free(tmp_free), free(tmp), free(info);
 	return (new_string);
 }
 
@@ -149,7 +151,7 @@ char **parsing_split(char *string)
 	return (split_string);
 }
 
-t_cmd *parsing(char *line, t_env *env, int *status)
+t_cmd *parsing(char *line, t_env *env)
 {
 	char **tokens;
 	t_cmd *cmds_head;
@@ -157,7 +159,7 @@ t_cmd *parsing(char *line, t_env *env, int *status)
 	tokens = split_line(line);
 	free(line);
 	line = NULL;
-	cmds_head = parse_cmds(tokens, env, status);
+	cmds_head = parse_cmds(tokens, env);
 	free_array(&tokens);
 	return (cmds_head);
 }

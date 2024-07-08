@@ -14,6 +14,7 @@ SRC =	parsing/cmd.c \
 		parsing/parsing_tooles.c \
 		parsing/split_line.c 	\
 		parsing/var_tooles.c \
+		parsing/wildcards.c \
 		env/create_env.c \
 		getnextline/get_next_line_bonus.c\
 		env/built_in.c

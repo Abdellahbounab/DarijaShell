@@ -6,11 +6,9 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:30:27 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/04 13:27:56 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/08 15:28:08 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-
 
 #ifndef TYPES_H
 #define TYPES_H
@@ -24,10 +22,9 @@
 #include <errno.h>
 #include <string.h>
 #include <sys/wait.h>
-
 #include <signal.h>
-// #include <readline/chardefs.h>
-
+#include <dirent.h>
+#include <stdbool.h>
 #include "../libft/libft.h"
 
 #define ERROR -1
@@ -73,7 +70,6 @@ typedef struct s_file
 typedef struct s_cmd
 {
 	char **args;
-	int *status;
 	t_file *files;
 	struct s_cmd *next;
 } t_cmd;

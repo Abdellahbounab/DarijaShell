@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/05 09:40:10 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/08 16:21:17 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ int	open_heredoc(t_file *file, int outfile, t_env **env)
 		// check if it is allowed to expand it or not depends
 		if (file->type == HERE_DOC_SIMPLE)
 		{
-			line = parsing_extend_var(line, *env, &status, NULL);
+			line = parsing_extend_var(line, *env, NULL);
 			free(tmp);
 		}
 		if (outfile != -1)
@@ -332,7 +332,7 @@ int	get_path(char *cmd, char **paths)
 		free(tmp);
 		i++;
 	}
-	return (0);
+	return (-1);
 }
 
 char **env_to_array(t_env *env)
@@ -377,7 +377,7 @@ char *get_commands(char **argv, char ***cmd_argv, char **paths)
 		cmd = ft_strjoin("/", argv[0]);
 		if (!cmd)
 			return (free_array(&paths), NULL);//error
-		if (paths && get_path(cmd, paths))
+		if (paths && get_path(cmd, paths) >= 0 )
 		{
 			tmp = cmd;
 			cmd = ft_strjoin(paths[get_path(cmd, paths)], tmp);
