@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:19:56 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/08 12:08:39 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/08 13:32:51 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,47 +122,39 @@ void print_bonus(t_bonus *bonus)
 
 int ft_minishell(t_bonus *bonus, t_env **env)
 {
-	// t_bonus *cpy;
-	// t_bonus *tmp;
-	// char *cmdcpy;
+	t_bonus *cpy;
+	t_bonus *tmp;
 
-	(void)env;
-	// cpy = bonus;
-	// it will only trim this case (echo hey), if there is other things than just priority , it wont be trimmed
-
-	if (bonus)
+	// (void)env;
+	cpy = bonus;
+	while (cpy)
 	{
+		// print_bonus(bonus);
 		ft_bonustrim(&bonus->cmdline); // trim the cmdline in bonus->cmdline depends on first '()' and fill the bonus->args
-		print_bonus(bonus);
 		bonus->command = ft_calloc(1, sizeof(t_cmd));
-		bonus->command->bonus = ft_bonussplit(bonus); // split bonus->args depends on || && outside of  (), and fill the bonus->t_cmd->bonus
-		printf("Bonus: \n");
-		print_bonus(bonus->command->bonus);
+		bonus->command->bonus = ft_bonussplit(bonus);
+		// print_bonus(bonus->command->bonus);
+		if (cpy->command->bonus)
+		{
+			printf("hello 1");
+			tmp = cpy->command->bonus;
+			while (tmp)
+			{
+				tmp->command = parsing(tmp->cmdline, *env, &status);
+				tmp = tmp->next;
+				// print_cmd(tmp->command);
+			}
+		}
+		else
+		{
+			printf("hello 2");
+			cpy->command = parsing(cpy->cmdline, *env, &status);
+			print_cmd(cpy->command);
+			
+		}
+		excution(cpy, env, 0);
+		cpy = cpy->next;
 	}
-	// tmp = bonus->command->bonus;
-	// while (cpy)
-	// {
-	// 	if (bonus->line)
-	// 		cmdcpy = join_strs(bonus->cmdline);
-	// 	else
-	// 		cmdcpy = bonus->line;
-	// 	if (tmp)
-	// 	{
-	// 		while (tmp)
-	// 		{
-	// 			if (!bonus->line)
-	// 				cmdcpy = join_strs(tmp->cmdline);
-	// 			else
-	// 				cmdcpy = tmp->line;
-	// 			tmp->command = parsing(cmdcpy, *env, &status);
-	// 			tmp = tmp->next;
-	// 		}
-	// 	}
-	// 	else
-	// 		bonus->command = parsing(cmdcpy, *env, &status);
-	// 	excution(bonus, env, 0);
-	// 	cpy = cpy->next;
-	// }
 	return (1);
 }
 
@@ -172,10 +164,10 @@ int main(int ac, char **av, char **envp)
 	t_bonus *bonus;
 	t_env *env;
 
-	env = NULL;
 
 	(void)av;
 	(void)ac;
+	env = NULL;
 	// (void)envp;
 	// atexit(leaks);
 
@@ -188,10 +180,10 @@ int main(int ac, char **av, char **envp)
 		if (!line)
 			return (free_env(&env), status);
 		add_history(line);
-		// bonus = create_bonus(split_line(line));
-		// ft_minishell(bonus, &env);
-		excution(bonus, &env, 1);
-		free_cmd(bonus->command);
+		bonus = create_bonus(split_line(line));
+		ft_minishell(bonus, &env);
+		// excution(bonus, &env, 1);
+		// free_cmd(bonus->command);
 		// leaks();
 	}
 	free_env(&env);
@@ -295,4 +287,4 @@ int main(int ac, char **av, char **envp)
 
 
 
-*/
+// */

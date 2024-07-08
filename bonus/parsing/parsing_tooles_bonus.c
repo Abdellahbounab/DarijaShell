@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:23:00 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/06 15:08:24 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/08 13:31:52 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,14 @@
 
 int set_default(t_cmd **cmd, int *status)
 {
-	*cmd = malloc(sizeof(t_cmd));
+	*cmd = ft_calloc(1, sizeof(t_cmd));
 	if (*cmd == NULL)
 		return (ERROR);
-	(*cmd)->args = NULL;
+	// (*cmd)->args = NULL;
+	// (*cmd)->bonus
 	(*cmd)->status = status;
-	(*cmd)->files = NULL;
-	(*cmd)->next = NULL;
+	// (*cmd)->files = NULL;
+	// (*cmd)->next = NULL;
 	return (GOOD);
 }
 

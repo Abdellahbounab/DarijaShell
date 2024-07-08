@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/08 11:20:47 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/08 13:04:52 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -633,11 +633,13 @@ int	excution(t_bonus *bonus, t_env **env, int flag)
 	relation_cpy = NONE;
 	while (cpy)
 	{
+		printf("here 1");
 		cmds = heredoc_update(cpy->command, env);
 		if ((status && relation_cpy == OR)
 			|| (!status && relation_cpy == AND) 
 			|| relation_cpy == NONE)
 		{
+			printf("here 1");
 			redirection_update(cpy->command, &cmds, env, flag);
 			if (flag)
 				waitprocess(cmds);
