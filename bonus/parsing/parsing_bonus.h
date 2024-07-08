@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_bonus.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
+/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/07 12:17:57 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/08 10:09:44 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ char	*quation_mark(char *string, t_info *info, char *var_value, int *status);
 int		quote_skip(char *str, int *index, char quote);
 void	alloc_appand(char *line, int start, int end, char ***words_symboles);
 
+
+void print_array(char **array);
 
 // wildcads
 char *wildcard(char *pattern);

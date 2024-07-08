@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 10:54:21 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/04 12:40:13 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/08 10:41:25 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,6 +175,8 @@ bash-3.2$ echo "' * '"
 
 */
 
+
+/// this function work with wildcards in variables 
 char *var_wildcard(char *line)
 {
 	char **split;

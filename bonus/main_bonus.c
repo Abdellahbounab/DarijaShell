@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
+/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:19:56 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/07 19:52:20 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/08 12:08:39 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing/parsing_bonus.h"
 #include "env/env.h"
 #include "excution/excution.h"
-
 
 void print_cmd(t_cmd *command)
 {
@@ -47,34 +46,32 @@ void print_cmd(t_cmd *command)
 	cmd_tmp = NULL;
 }
 
-void leaks(){system("leaks minishell_bonus");}
+void leaks() { system("leaks minishell_bonus"); }
 
-// all have to be grouped in a single function 
-		/*
-			1.where first have to trim the first priority
-			2.second have to split it using &&, || : t_bonus*
-			3.check on syntax errors to announce on each splitted t_bonus* avoid anything in (priority)
-			4.split the result by | into t_bonus*->t_cmds*
-			5.check on redirections, heredoc and assign to cmds->files
-			6.if there is any priority inside splitted cmds , recursive to 1
+// all have to be grouped in a single function
+/*
+	1.where first have to trim the first priority
+	2.second have to split it using &&, || : t_bonus*
+	3.check on syntax errors to announce on each splitted t_bonus* avoid anything in (priority)
+	4.split the result by | into t_bonus*->t_cmds*
+	5.check on redirections, heredoc and assign to cmds->files
+	6.if there is any priority inside splitted cmds , recursive to 1
 
-			7.when t_cmds*->t_bonus* = NULL as the smallest piece of the cmds and priorities , going we send the first t_bonus * to excutions
-		
-
-			in excution:
-			1. check on heredocs and open them
-				going through all the linked list
-			2.pipe the cmds that would contain the next since it means piped ones
-			3.redirect input and output files
-			4.excute the smallest cmds while going back to its parents and so on
-			5.first parents are t_bonus* (parent)-> t_cmd* (would contain pipe and redirections)-> t_bonus* (would contain && || relations)-> t_cmd*(smallest cmds)
+	7.when t_cmds*->t_bonus* = NULL as the smallest piece of the cmds and priorities , going we send the first t_bonus * to excutions
 
 
-		*/
+	in excution:
+	1. check on heredocs and open them
+		going through all the linked list
+	2.pipe the cmds that would contain the next since it means piped ones
+	3.redirect input and output files
+	4.excute the smallest cmds while going back to its parents and so on
+	5.first parents are t_bonus* (parent)-> t_cmd* (would contain pipe and redirections)-> t_bonus* (would contain && || relations)-> t_cmd*(smallest cmds)
 
 
+*/
 
-t_bonus	*create_bonus(char **tokens)
+t_bonus *create_bonus(char **tokens)
 {
 	t_bonus *node;
 
@@ -89,72 +86,101 @@ t_bonus	*create_bonus(char **tokens)
 	return (0);
 }
 
-int	ft_bonustrim(char ***cmdline)
+int ft_bonustrim(char ***cmdline)
 {
-	char **tmp;
-
 	if (cmdline && *cmdline && check_f_l(*cmdline) == GOOD)
 	{
-		tmp = *cmdline;
-		*cmdline = remove_f_l(tmp);
-		free_array(&tmp);
+		*cmdline = remove_f_l(*cmdline);
 		return (1);
 	}
 	return (0);
 }
 
-int	ft_minishell(t_bonus *bonus, t_env **env)
+void print_array(char **array)
 {
-	t_bonus *cpy;
-	t_bonus *tmp;
-	char *cmdcpy;
+	int i;
 
-	cpy = bonus;
-	// it will only trim this case (echo hey), if there is other things than just priority , it wont be trimmed
-	ft_bonustrim(&(bonus->cmdline)); // trim the cmdline in bonus->cmdline depends on first '()' and fill the bonus->args
-	bonus->command->bonus = ft_bonussplit(bonus); // split bonus->args depends on || && outside of  (), and fill the bonus->t_cmd->bonus
-	tmp = bonus->command->bonus;
-	while (cpy)
+	i = 0;
+	while (array && array[i])
+		printf("%s\t", array[i++]);
+	printf("\n");
+}
+
+void print_bonus(t_bonus *bonus)
+{
+	t_bonus *tmp;
+
+	tmp = bonus;
+	while (tmp)
 	{
-		if (bonus->line)
-			cmdcpy = join_strs(bonus->cmdline);
-		else
-			cmdcpy = bonus->line;
-		if (tmp)
-		{
-			while (tmp)
-			{
-				if (!bonus->line)
-					cmdcpy = join_strs(tmp->cmdline);
-				else
-					cmdcpy = tmp->line;
-				tmp->command = parsing(cmdcpy, *env, &status);
-				tmp = tmp->next;
-			}
-		}
-		else
-			bonus->command = parsing(cmdcpy, *env, &status);
-		excution(bonus, env, 0);
-		cpy = cpy->next;
+		print_array(tmp->cmdline);
+		print_cmd(tmp->command);
+		printf("relation: %d\n", tmp->relation);
+		tmp = tmp->next;
 	}
+}
+
+int ft_minishell(t_bonus *bonus, t_env **env)
+{
+	// t_bonus *cpy;
+	// t_bonus *tmp;
+	// char *cmdcpy;
+
+	(void)env;
+	// cpy = bonus;
+	// it will only trim this case (echo hey), if there is other things than just priority , it wont be trimmed
+
+	if (bonus)
+	{
+		ft_bonustrim(&bonus->cmdline); // trim the cmdline in bonus->cmdline depends on first '()' and fill the bonus->args
+		print_bonus(bonus);
+		bonus->command = ft_calloc(1, sizeof(t_cmd));
+		bonus->command->bonus = ft_bonussplit(bonus); // split bonus->args depends on || && outside of  (), and fill the bonus->t_cmd->bonus
+		printf("Bonus: \n");
+		print_bonus(bonus->command->bonus);
+	}
+	// tmp = bonus->command->bonus;
+	// while (cpy)
+	// {
+	// 	if (bonus->line)
+	// 		cmdcpy = join_strs(bonus->cmdline);
+	// 	else
+	// 		cmdcpy = bonus->line;
+	// 	if (tmp)
+	// 	{
+	// 		while (tmp)
+	// 		{
+	// 			if (!bonus->line)
+	// 				cmdcpy = join_strs(tmp->cmdline);
+	// 			else
+	// 				cmdcpy = tmp->line;
+	// 			tmp->command = parsing(cmdcpy, *env, &status);
+	// 			tmp = tmp->next;
+	// 		}
+	// 	}
+	// 	else
+	// 		bonus->command = parsing(cmdcpy, *env, &status);
+	// 	excution(bonus, env, 0);
+	// 	cpy = cpy->next;
+	// }
 	return (1);
 }
 
-
-
 int main(int ac, char **av, char **envp)
 {
-	char *line;	
+	char *line;
 	t_bonus *bonus;
 	t_env *env;
 
+	env = NULL;
+
 	(void)av;
 	(void)ac;
-	(void)envp;
+	// (void)envp;
 	// atexit(leaks);
-	
+
 	if (envp && !get_env(&env, envp))
-		return (ft_perror("minishell :", "error env", 127));//we have to return the error message too
+		return (ft_perror("minishell :", "error env", 127)); // we have to return the error message too
 	while (1)
 	{
 		ft_signals(1);
@@ -162,20 +188,14 @@ int main(int ac, char **av, char **envp)
 		if (!line)
 			return (free_env(&env), status);
 		add_history(line);
-		bonus = create_bonus(NULL);
-
-		// bonus->cmdline = line;
-		// bonus->cmdline =
-		bonus->line = line;
-		ft_minishell(bonus, &env);
+		// bonus = create_bonus(split_line(line));
+		// ft_minishell(bonus, &env);
 		excution(bonus, &env, 1);
 		free_cmd(bonus->command);
 		// leaks();
 	}
 	free_env(&env);
 }
-
-
 
 /*
 
@@ -191,13 +211,13 @@ int main(int ac, char **av, char **envp)
 			ls -l && echo hi
 				ls -l
 				echo hi
-		
+
 	2- checking if simple command !(&&, ||) OUTSIDE PRIORITIES
 		2.1-if yes -> 4
 		2.2-if no (contain &&, ||) -> 3
 	3- separate ||, && OUTSIDE priorities -> 4
 	4- check if | pipe OUTSIDE PRIORITY
-	4- check on file redirections 
+	4- check on file redirections
 		4.1- if yes -> separate | -> fork for each + 2
 		4.2- if no -> 5
 	5- check if () priorities
@@ -219,11 +239,11 @@ int main(int ac, char **av, char **envp)
 																		t_cmd :arg :das
 																				files
 																				t_bonus = null
-																			
+
 																		t_cmd :arg :export av=hello
 																				files
 																				t_bonus = null
-																		
+
 														t_bonus : echo $av
 																t_cmd = arg _ echo $av
 																		t_bonus = null
@@ -272,7 +292,7 @@ int main(int ac, char **av, char **envp)
 
 
 
-	
-		
+
+
 
 */
