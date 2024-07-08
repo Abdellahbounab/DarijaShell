@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:21:34 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/05 10:07:03 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/08 12:33:10 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ static int take_place(char **tokens, t_cmd *cmd, t_info *info)
 		tmp = parsing_extend_var(tokens[info->cmd_i], info->env, info->cmd->status, &expend);
 		if (cmd->args == NULL || info->cmd_i > 1 || ft_strcmp(cmd->args[info->cmd_i - 1], "export") != 0)
 		{
-			if (tmp && ft_strchr(tmp, ' '))
+			if (tmp && expend == 1)
 				strwild = var_wildcard(tmp);
 			else if (tmp && ft_strchr(tmp, '*'))
 				strwild = wildcard(tmp);
