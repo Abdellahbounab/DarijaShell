@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 11:49:17 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/09 12:40:22 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/09 16:14:45 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,13 @@ void print_cmd(t_cmd *command)
 	cmd_tmp = command;
 	if (cmd_tmp)
 		tmp_file = cmd_tmp->files;
+	if (cmd_tmp == NULL)
+		printf("command is NULL\n");
 	while (cmd_tmp)
 	{
 		tmp_file = cmd_tmp->files;
+		if (tmp_file == NULL)
+			printf("file in command is NULL\n");
 		while (cmd_tmp && tmp_file)
 		{
 			j = 0;
@@ -43,7 +47,6 @@ void print_cmd(t_cmd *command)
 		cmd_tmp = cmd_tmp->next;
 		printf("\n------------------next_command--------------\n");
 	}
-	cmd_tmp = NULL;
 }
 
 void leaks(){system("leaks minishell");}

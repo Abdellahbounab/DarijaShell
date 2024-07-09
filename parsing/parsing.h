@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/09 12:58:00 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/09 15:39:37 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int     check_name(char *name);
 char    *get_var_value(t_env *env, char *var_name);
 char    *get_var_name(char *string, t_info *info);
 char	*var_extand(char *string, t_info *info);
-char	*dollar_sign(char *string, t_info *info, char *var_value);
+char	*dollar_sign(char *string, t_info *info, char *var_value, int *is_expend);
 char	**split_line(char *line);
 void	free_array(char ***array);
 int		array_size(char **array);

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   new_parsing.c                                      :+:      :+:    :+:   */
+/*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 11:15:13 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/09 12:57:51 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/09 16:12:14 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 	ar= hello	;	$ar			-> hello		-> [hello]			->	[hello]
 	ar= "a v"	;	 < "$ar"	-> "a v"		-> ["a v", NULL]	->	[a v, NULL]
 */
-static void double_quote(char *string, t_info *info, char **tmp)
+static void double_quote(char *string, t_info *info, char **tmp, int *is_expend)
 {
 	info->end++;
 	while (string[info->end] && string[info->end] != '"')
@@ -31,7 +31,7 @@ static void double_quote(char *string, t_info *info, char **tmp)
 				info->end += 2;
 			}
 			else
-				*tmp = dollar_sign(string, info, *tmp);
+				*tmp = dollar_sign(string, info, *tmp, is_expend);
 			info->start = info->end;
 		}
 		else
@@ -46,7 +46,7 @@ static void single_quote(char *str, int *index)
 		(*index)++;
 }
 
-static char *extend_var_logic(char *string, t_info *info)
+static char *extend_var_logic(char *string, t_info *info, int *is_expend)
 {
 	char *tmp;
 
@@ -56,7 +56,7 @@ static char *extend_var_logic(char *string, t_info *info)
 		if (string[info->end] == '\'')
 			single_quote(string, &info->end);
 		if (string[info->end] == '"')
-			double_quote(string, info, &tmp);
+			double_quote(string, info, &tmp, is_expend);
 		if (string[info->end] == '$')
 		{
 			if (string[info->end + 1] == '?')
@@ -65,7 +65,7 @@ static char *extend_var_logic(char *string, t_info *info)
 				info->end += 2;
 			}
 			else
-				tmp = dollar_sign(string, info, tmp);
+				tmp = dollar_sign(string, info, tmp, is_expend);
 			info->start = info->end;
 		}
 		else
@@ -87,16 +87,15 @@ char *parsing_extend_var(char *string, t_env *env, int *is_expend)
 	if (info == NULL)
 		return (NULL);
 	info->env = env;
-	tmp = extend_var_logic(string, info);
-	if (tmp && is_expend)
-		*is_expend = 1;
+	tmp = extend_var_logic(string, info, is_expend);
 	new_string = ft_substr(string, info->start, info->end - info->start);
-	if (tmp)
-	{
-		tmp_free = new_string;
-		new_string = ft_filter(new_string);
-		free(tmp_free);
-	}
+	// printf("new_string: %s\n", tmp);
+	// if (tmp)
+	// {
+	// 	tmp_free = new_string;
+	// 	new_string = ft_filter(new_string);
+	// 	free(tmp_free);
+	// }
 	tmp_free = new_string;
 	new_string = ft_strjoin(tmp, new_string);
 	free(tmp_free), free(tmp), free(info);

@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:30:27 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/09 09:37:54 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/09 15:35:15 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ typedef struct s_info
 	int start;
 	int end;
 	int cmd_i;
+	int is_expend;
 	int file;
 	int dollar;
 	int var_from;

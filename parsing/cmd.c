@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:21:34 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/09 12:54:12 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/09 16:14:23 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int var_parsing(t_cmd *cmd, char *var_value)
 	split = ft_split(var_value, SPACE);
 	free(var_value);
 	if (split == NULL)
-		return (ERROR);
+		return (GOOD);
 	while (split[i])
 	{
 		cmd->args = append_array(cmd->args, split[i]);
@@ -43,7 +43,7 @@ static int normal_parsing(t_cmd *cmd, char *line)
 	split = parsing_split(line);
 	free(line);
 	if (split == NULL)
-		return (ERROR);
+		return (GOOD);
 	while (split[i])
 	{
 		line = ft_filter(split[i]);

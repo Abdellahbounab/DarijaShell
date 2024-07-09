@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 12:10:49 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/09 12:14:25 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/09 15:02:17 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ bool handle_quotes(const char **pattern, bool *is_single_q, bool *is_double_q)
 		(*pattern)++;
 		return (true);
 	}
-	return false;
+	return (false);
 }
 
 bool handle_wildcard(char **filename, const char **pattern)
@@ -49,7 +49,7 @@ bool handle_wildcard(char **filename, const char **pattern)
 bool match_chars(char **filename, const char **pattern)
 {
 	if (**pattern != **filename)
-		return false;
+		return (false);
 	(*filename)++;
 	(*pattern)++;
 	return true;
@@ -63,26 +63,26 @@ void skip_star(const char **pattern)
 
 bool match(char *filename, const char *pattern)
 {
-	bool is_single_q;
-	bool is_double_q;
+	// bool is_single_q;
+	// bool is_double_q;
 
-	is_double_q = false;
-	is_single_q = false;
+	// is_double_q = false;
+	// is_single_q = false;
 	while (*filename && *pattern)
 	{
-		if (!is_single_q && !is_double_q)
-		{
-			if (handle_quotes(&pattern, &is_single_q, &is_double_q))
-				continue;
+		// if (!is_single_q && !is_double_q)
+		// {
+			// if (handle_quotes(&pattern, &is_single_q, &is_double_q))
+			// 	continue;
 			if (*pattern == '*')
 			{
 				if (handle_wildcard(&filename, &pattern))
 					return (true);
 				return (false);
 			}
-		}
-		else if (handle_quotes(&pattern, &is_single_q, &is_double_q))
-			continue;
+		// }
+		// else if (handle_quotes(&pattern, &is_single_q, &is_double_q))
+		// 	continue;
 		if (!match_chars(&filename, &pattern))
 			return (false);
 	}
