@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   built_in_part2.c                                   :+:      :+:    :+:   */
+/*   built_in_2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 09:23:59 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/09 09:27:28 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/10 14:54:31 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,13 @@
 static void print_env(t_env *env, int flag)
 {
     write(STDOUT_FILENO, env->key, ft_strlen(env->key));
-    write(STDOUT_FILENO, "=", 1);
-    if (flag)
+	if ((env->value && flag) || !flag)
+    write(STDOUT_FILENO, "=", 1);	
+    if (env->value && flag)
         write(STDOUT_FILENO, "\"", 1);
     if (env->value)
         write(STDOUT_FILENO, env->value, ft_strlen(env->value));
-    if (flag)
+    if (env->value && flag)
         write(STDOUT_FILENO, "\"", 1);
     write(STDOUT_FILENO, "\n", 1);
 }
@@ -50,27 +51,48 @@ int builtin_env(t_env *env, int flag)
     exit(0);
 }
 
+int until_char(char *str, char c)
+{
+	int i;
+
+	i = 0;
+	while (str && str[i])
+	{
+		if (str[i] == c)
+			return i;
+		i++;
+	}
+	return (-1);
+}
+
 int builtin_export(t_env **env, t_excute *cmds)
 {
     int i;
-    char **arr;
+    // char **arr;
+	char *key;
     char *str;
     char type;
 
     i = 0;
     type = 0;
+	str = NULL;
     if (cmds->arguments && !cmds->arguments[0])
         return (builtin_env(*env, 1));
     while (cmds->arguments && cmds->arguments[i])
     {
-        arr = ft_split(cmds->arguments[i], '=');
-        if (!arr[0] || check_name(arr[0]) < 0)
+		if (until_char(cmds->arguments[i], '=') < 0)
+		{
+			key = ft_strdup(cmds->arguments[i]);
+			type = 1;
+		}
+		else
+			key = ft_substr(cmds->arguments[i], 0, until_char(cmds->arguments[i], '=') - 1);
+        if (!key || check_name(key) < 0)
             return (write(STDERR_FILENO, "export : not a valid identifier\n", 32), status = 1, 0);
-        if (!arr[1] && cmds->arguments[i][ft_strlen(cmds->arguments[i]) - 1] != '=')
-            type = 1;
-        str = join_strs(arr + 1);
-        env_export(env, arr[0], str, type);
-        free_array(&arr);
+		if (!type)
+			str = ft_strdup(cmds->arguments[i] + until_char(cmds->arguments[i], '='));
+        env_export(env, key, str, type);
+		free(key);
         free(str);
         i++;
     }

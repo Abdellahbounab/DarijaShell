@@ -3,38 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main_excution.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/09 10:42:54 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/10 16:42:14 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "excution.h"
-
-
-/*
-
-	*testers : https://docs.google.com/spreadsheets/u/0/d/1uJHQu0VPsjjBkR4hxOeCMEt3AOM1Hp_SmUzPFhAH-nA/htmlview?lsrp=1#gid=0
-
-	command : 	**agrs = {cmd , args...}
-				*path = path of cmd
-				*status = integer of exit status
-				**files = {**name + type of file, ....}
-
-	env		:	*key = key name
-				*value = value of the key
-
-	excute	:	*cmd = path+cmd;
-				**arguments = wrgs of cmd;
-				infile = fd input;
-				outfile = fd output;
-*/
-
-
-/*
-	heredoc signal && any command after
-*/
 
 
 int	excute_cmd(t_excute *cmds, t_env **env, int child)
@@ -92,6 +68,7 @@ int	excute_builtin(t_excute *cmds, t_env **env, int child)
 			builtin_cd(env, cmds);
 		if (child)
 			exit(errno);
+		free(cmds->cmd);
 	}
 	return (1);
 }
