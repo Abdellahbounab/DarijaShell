@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 11:49:17 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/10 16:46:56 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/10 20:52:17 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int main(int ac, char **av, char **envp)
 
 	(void)av;
 	(void)ac;
-	atexit(leaks);
+	// atexit(leaks);
 	if (!get_env(&env, envp))
 		return (ft_perror("minishell :", "error env", 127));//we have to return the error message too
 	while (1)
@@ -77,5 +77,3 @@ int main(int ac, char **av, char **envp)
 	}
 	free_env(&env);
 }
-
-asdasdasdasdasd dsfdfdsf dsfdsfdffsasdasdasdasdasd dsfdfdsf dsfdsfdffsasdasdasdasdasd dsfdfdsf dsfdsfdffsasdasdasdasdasd dsfdfdsf dsfdsfdffsasdasdasdasdasd dsfdfdsf dsfdsfdffsasdasdasdasdasd dsfdfdsf dsfdsfdffsasdasdasdasdasd dsfdfdsf dsfdsfdffsasdasdasdasdasd dsfdfdsf dsfdsfdffsasdasdasdasdasd dsfdfdsf dsfdsfdffsasdasdasdasdasd dsfdfdsf dsfdsfdffsasdasdasdasdasd dsfdfdsf dsfdsfdffsasdasdasdasdasd dsfdfdsf dsfdsfdffsasdasdasdasdasd dsfdfdsf dsfdsfdffs

@@ -3,15 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   excution_cmd_2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 10:38:49 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/09 10:39:18 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/10 20:53:23 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "excution.h"
 
+
+// have to be updated.
 char *get_commands(char **argv, char ***cmd_argv, char **paths)
 {
 	char	*cmd;
