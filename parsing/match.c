@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 12:10:49 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/09 15:02:17 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/11 09:44:56 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,34 @@ bool match(char *filename, const char *pattern)
 		// }
 		// else if (handle_quotes(&pattern, &is_single_q, &is_double_q))
 		// 	continue;
+		if (!match_chars(&filename, &pattern))
+			return (false);
+	}
+	skip_star(&pattern);
+	return (*pattern == '\0' && *filename == '\0');
+}
+bool match_(char *filename, const char *pattern)
+{
+	bool is_single_q;
+	bool is_double_q;
+
+	is_double_q = false;
+	is_single_q = false;
+	while (*filename && *pattern)
+	{
+		if (!is_single_q && !is_double_q)
+		{
+			if (handle_quotes(&pattern, &is_single_q, &is_double_q))
+				continue;
+			if (*pattern == '*')
+			{
+				if (handle_wildcard(&filename, &pattern))
+					return (true);
+				return (false);
+			}
+		}
+		else if (handle_quotes(&pattern, &is_single_q, &is_double_q))
+			continue;
 		if (!match_chars(&filename, &pattern))
 			return (false);
 	}

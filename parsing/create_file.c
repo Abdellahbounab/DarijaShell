@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 12:50:04 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/09 12:50:39 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/11 09:24:19 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,20 +40,20 @@ static void set_type(t_file *file, int type)
 		file->type = type;
 }
 
-static void filter_filenames(t_file *file)
-{
-	int i;
-	char *tmp;
+// static void filter_filenames(t_file *file)
+// {
+// 	int i;
+// 	char *tmp;
 
-	i = 0;
-	while (file->name && file->name[i])
-	{
-		tmp = file->name[i];
-		file->name[i] = ft_filter(file->name[i]);
-		free(tmp);
-		i++;
-	}
-}
+// 	i = 0;
+// 	while (file->name && file->name[i])
+// 	{
+// 		tmp = file->name[i];
+// 		file->name[i] = ft_filter(file->name[i]);
+// 		free(tmp);
+// 		i++;
+// 	}
+// }
 
 int create_files(t_cmd *cmd, char **tokens, t_info *info, t_type type)
 {
@@ -74,7 +74,7 @@ int create_files(t_cmd *cmd, char **tokens, t_info *info, t_type type)
 	if (type != HERE_DOC_SIMPLE)
 		free(strwild);
 	set_type(file, type);
-	filter_filenames(file);
+	// filter_filenames(file);
 	add_back_file(cmd, file);
 	return (GOOD);
 }

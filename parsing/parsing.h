@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/09 15:39:37 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/11 09:45:24 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,5 +52,6 @@ int pipe_checker(t_cmd *cmd, char **tokens, t_info *info);
 char *star_magic(char *token, int is_expend, t_env *env);
 void add_back_cmd(t_cmd *head, t_cmd *next_command);
 char **parsing_split(char *string);
+bool match_(char *filename, const char *pattern);
 
 #endif

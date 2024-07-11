@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 10:54:21 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/09 12:21:50 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/11 09:44:32 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,29 @@ void join_str_space(char **result, char *new_str)
 }
 
 char *wildcard(char *pattern, t_env *env)
+{
+	int i;
+	char *result;
+	// char *tmp;
+	char **filenames;
+
+	i = 0;
+	result = NULL;
+	filenames = get_files(env);
+	sort_by_name(filenames);
+	while (filenames && filenames[i])
+	{
+		if (match_(filenames[i], pattern))
+			join_str_space(&result, filenames[i]);
+		i++;
+	}
+	if (result == NULL)
+		result = ft_strdup(pattern);
+	free_array(&filenames);
+	return (result);
+}
+
+char *wildcard_(char *pattern, t_env *env)
 {
 	int i;
 	char *result;
@@ -65,7 +88,7 @@ char *var_wildcard(char *line, t_env *env)
 	while (split && split[i])
 	{
 		if (ft_strchr(split[i], '*'))
-			tmp = wildcard(split[i], env);
+			tmp = wildcard_(split[i], env);
 		else
 			tmp = ft_strdup(split[i]);
 		join_str_space(&result, tmp);

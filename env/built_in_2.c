@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in_2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
+/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 09:23:59 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/10 14:54:31 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/11 10:28:51 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,11 +86,11 @@ int builtin_export(t_env **env, t_excute *cmds)
 			type = 1;
 		}
 		else
-			key = ft_substr(cmds->arguments[i], 0, until_char(cmds->arguments[i], '=') - 1);
+			key = ft_substr(cmds->arguments[i], 0, until_char(cmds->arguments[i], '='));
         if (!key || check_name(key) < 0)
             return (write(STDERR_FILENO, "export : not a valid identifier\n", 32), status = 1, 0);
 		if (!type)
-			str = ft_strdup(cmds->arguments[i] + until_char(cmds->arguments[i], '='));
+			str = ft_strdup(cmds->arguments[i] + until_char(cmds->arguments[i], '=') + 1);
         env_export(env, key, str, type);
 		free(key);
         free(str);
