@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in_3.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 09:56:25 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/09 09:56:58 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/11 20:46:25 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,10 @@ static void cd_home(t_env **env, t_excute *cmds)
 	else
 	{
 		if (env_getval(*env, "HOME"))
-			chdir(env_getval(*env, "HOME"));
+		{
+			if (chdir(env_getval(*env, "HOME")))
+				perror(env_getval(*env, "HOME"));
+		}
 		else
 		{
 			status = 1;
