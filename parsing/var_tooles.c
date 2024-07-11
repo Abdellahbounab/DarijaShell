@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 17:50:44 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/09 15:41:18 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/11 16:45:28 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int check_name(char *name)
 
 char *get_var_value(t_env *env, char *var_name)
 {
-	while (env)
+	while (env && var_name)
 	{
 		if (ft_strcmp(env->key, var_name) == GOOD)
 			return (env->value);
@@ -60,8 +60,10 @@ char *var_extand(char *part, t_info *info)
 		info->end++;
 		info->start = info->end;
 		var_name = get_var_name(part, info);
-		if (var_name[0] == '\0' || ft_isdigit(var_name[0]) == GOOD)
+		if (ft_isdigit(var_name[0]) == GOOD)
 			var_value = ft_substr(part, info->start - 1, info->end);
+		else if (var_name[0] == '\0')
+			var_value = ft_strdup("$");
 		else
 			var_value = get_var_value(info->env, var_name);
 		free(var_name);

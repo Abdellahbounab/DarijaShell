@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 11:15:13 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/09 16:12:14 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/11 16:13:14 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ static char *extend_var_logic(char *string, t_info *info, int *is_expend)
 		}
 		else
 			info->end++;
+		// printf("tmp:%s end: %d start:%d\n", tmp, info->end, info->start);
 	}
 	return (tmp);
 }
@@ -89,7 +90,7 @@ char *parsing_extend_var(char *string, t_env *env, int *is_expend)
 	info->env = env;
 	tmp = extend_var_logic(string, info, is_expend);
 	new_string = ft_substr(string, info->start, info->end - info->start);
-	// printf("new_string: %s\n", tmp);
+	// printf("new_string: %s tmp: %s end:%d start:%d\n", new_string, tmp, info->end, info->start);
 	// if (tmp)
 	// {
 	// 	tmp_free = new_string;
