@@ -5,3 +5,4 @@
 libft/*.a
 minishell
 test.c
+*.tldr

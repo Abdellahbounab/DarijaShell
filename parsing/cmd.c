@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:21:34 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/11 09:47:43 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/12 17:07:46 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,23 +55,29 @@ static int normal_parsing(t_cmd *cmd, char *line)
 	free(split);
 	return (GOOD);
 }
-
+// minishell-$ export var="'*'"
+// minishell-$ echo $var
+// *
+// minishell-$ export var="' *' "
+// export : not a valid identifier
+// minishell-$ export var="' *' "
+// export : not a valid identifier
 int meaning(char **tokens, t_cmd *cmd, t_info *info)
 {
 	char *tmp;
 	int is_expend;
 	char *strwild;
-
+	
 	is_expend = 0;
 	if (info->file == 0)
 	{
 		tmp = parsing_extend_var(tokens[info->cmd_i], info->env, &is_expend);
+		// printf("tmp:%s is_expend:%d\n", tmp, is_expend);
 		if (cmd->args == NULL || info->cmd_i > 1 || ft_strcmp(cmd->args[info->cmd_i - 1], "export") != 0)
 			strwild = star_magic(tmp, is_expend, info->env);
 		else
 			strwild = ft_strdup(tmp);
 		free(tmp);
-		// printf("%s\n",strwild);
 		if (is_expend == 1)
 			return (var_parsing(cmd, strwild));
 		else

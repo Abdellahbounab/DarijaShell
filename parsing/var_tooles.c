@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 17:50:44 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/11 16:45:28 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/12 11:25:17 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ char *get_var_value(t_env *env, char *var_name)
 
 char *get_var_name(char *string, t_info *info)
 {
-	while (string[info->end] && (ft_isalpha(string[info->end]) == GOOD || ft_isdigit(string[info->end]) == GOOD || string[info->end] == '_'))
+	while (string[info->end] && (ft_isalpha(string[info->end]) == GOOD ||\
+		ft_isdigit(string[info->end]) == GOOD || string[info->end] == '_'))
 		info->end++;
 	return (ft_substr(string, info->start, info->end - info->start));
 }
@@ -87,7 +88,7 @@ char *dollar_sign(char *string, t_info *info, char *var_value, int *is_expend)
 	free(tmp);
 	free(var_value);
 	var_value = var_extand(string, info);
-	if(var_value)
+	if (var_value)
 		*is_expend = 1;
 	tmp = var_value;
 	var_value = ft_strjoin(before_dollar, var_value);
