@@ -42,10 +42,9 @@ int	is_absolutecmd(char *cmd);
 
 int	close_other(t_excute *head, int pos);
 
-
 int	open_heredoc(t_file *file, int outfile, t_env **env);
 
-int	heredoc_management(t_file	*files, t_excute *node, t_env **env);
+int	heredoc_management(t_file	*files, t_env **env);
 
 t_excute	*heredoc_update(t_cmd *command, t_env **env);
 

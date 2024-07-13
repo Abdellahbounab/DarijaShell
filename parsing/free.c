@@ -22,6 +22,8 @@ void free_cmd(t_cmd *cmd)
 		free_array(&cmd->args);
 		while (cmd->files)
 		{
+			if (cmd->files->type == HERE_DOC_USED)
+				unlink(cmd->files->name[0]);
 			free_array(&cmd->files->name);
 			tmp_file = cmd->files->next;
 			free(cmd->files);

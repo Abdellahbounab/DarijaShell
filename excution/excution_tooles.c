@@ -33,18 +33,6 @@ int	ft_perror(char *header, char *msg, int err)
 	return (0);
 }
 
-int	read_excutelist(t_excute *cmds)
-{
-	if (!cmds)
-		printf("null excut cmds\n");
-	while (cmds)
-	{
-		printf("(%d, %d)\n", cmds->infile, cmds->outfile);
-		cmds = cmds->next;
-	}
-	return 1;
-}
-
 char **env_to_array(t_env *env)
 {
 	char	**arr;
