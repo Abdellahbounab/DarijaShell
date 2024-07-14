@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   excution_herdoc.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 10:30:37 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/09 10:44:44 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/14 15:28:01 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ int	open_heredoc(t_file *file, int hfile, t_env **env)
 	char	*line;
 	char	*tmp;
 
-	line = readline("> ");
+	write(STDOUT_FILENO, "> ", 2);
+	line = get_next_line(STDIN_FILENO);
 	while (line && !status && ft_strcmp(line, file->name[0]))
 	{
 		tmp = line; 
@@ -32,7 +33,8 @@ int	open_heredoc(t_file *file, int hfile, t_env **env)
 			write(hfile, "\n", 1);
 		}
 		free(line);
-		line = readline("> ");
+		write(STDOUT_FILENO, "> ", 2);
+		line = get_next_line(STDIN_FILENO);
 	}
 	free(line);
 	return (1);
@@ -80,7 +82,6 @@ int	heredoc_management(t_file	*files, t_env **env)
 	{
 		if (files->type == HERE_DOC_SIMPLE || files->type == HERE_DOC_SPECIAL)
 		{
-	//		if (pipe(fd) < 0)
 			if (i == heredoc_postion)
 			{
 				name = create_name();

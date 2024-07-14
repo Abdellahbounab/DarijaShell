@@ -7,3 +7,14 @@ minishell-$ echo "$ $ $ $ $ $ "
 
 echo "$ $ $ $" # problem in double quote doesn't filter
 
+
+
+minishell -$ <<"eof" cat
+> salam
+> eof
+> "eof" 
+> eof
+> "eof" 
+> "eof"
+
+# this have to be handled in the lexer or parser

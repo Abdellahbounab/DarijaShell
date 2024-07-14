@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 11:49:17 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/11 10:20:23 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/14 16:57:00 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,11 @@ void print_cmd(t_cmd *command)
 	}
 }
 
-void leaks(){system("leaks minishell");}
+void leaks(){system("leaks -q minishell");}
 
+
+// exit handle of trimming exit "     42"
+// heredoc have to handle the "delimiter"
 int main(int ac, char **av, char **envp)
 {
 	char *line;
