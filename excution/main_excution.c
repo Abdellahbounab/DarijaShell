@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/10 16:42:14 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/14 22:37:10 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ int	excute_cmd(t_excute *cmds, t_env **env, int child)
 		if (!arr)
 			return (ft_perror(NULL, "Memory", 0));
 		if (execve(cmds->cmd, cmds->arguments, arr) == -1)
-			return (ft_perror(cmds->cmd, ": command not found", 127)); //error
+			// return (free_array(&arr), ft_perror(NULL, cmds->cmd, 0)); //error
+			return (free_array(&arr), ft_perror(cmds->cmd, ": command not found", 127)); //error
 	}
 	return (0);
 }

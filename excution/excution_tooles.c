@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   excution_tooles.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 10:26:56 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/09 10:33:22 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/14 21:49:55 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,17 +64,19 @@ int	is_absolutecmd(char *cmd)
 	char **paths;
 
 	i = 0;
+	
 	paths = ft_split(getenv("PATH"), ':');
 	while (paths && paths[i])
 	{
 		if (!ft_strncmp(cmd, paths[i], ft_strlen(paths[i])))
 		{
-			if (access(cmd, X_OK) != -1)
+			if (access(cmd, F_OK) != -1)
 				return (free_array(&paths), 1);
 			return (free_array(&paths), 0);
 		}
 		i++;
 	}
+	free_array(&paths);
 	return (0);
 }
 
