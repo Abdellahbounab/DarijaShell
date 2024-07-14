@@ -1,11 +1,3 @@
-minishell-$ export HOME=NO_SUCH_FILE 
-minishell-$ cd
-minishell-$ pwd
-/Users/achakkaf/Desktop
-
-bash-3.2$ export HOME=NO_SUCH_FILE
-bash-3.2$ cd
-bash: cd: NO_SUCH_FILE: No such file or directory
 
 
 minishell-$ echo "$PATH"
