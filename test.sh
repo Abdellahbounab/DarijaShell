@@ -167,3 +167,13 @@ minishell -$ <<"eof" cat
 > "eof"
 
 # this have to be handled in the lexer or parser
+
+
+minishell-$ export 10
+export : not a valid identifier
+leaks Report Version: 4.0
+Process 10854: 473 nodes malloced for 338 KB
+Process 10854: 1 leak for 16 total leaked bytes.
+
+    1 (16 bytes) ROOT LEAK: 0x7ff467304140 [16]  length: 2  "10"
+

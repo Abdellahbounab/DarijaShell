@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   excution_herdoc.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
+/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 10:30:37 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/15 10:31:03 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/15 11:19:02 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,13 @@ int	open_heredoc(t_file *file, int hfile, t_env **env)
 		tmp = line; 
 		if (file->type == HERE_DOC_SIMPLE)
 		{
-			// segV happen
 			line = parsing_extend_var(line, *env, NULL);
 			free(tmp);
 		}
 		if (hfile != -1)
 		{
 			write(hfile, line, ft_strlen(line));
-			// write(hfile, "\n", 1);
+			write(hfile, "\n", 1);
 		}
 		free(line);
 		write(STDOUT_FILENO, "> ", 2);
