@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
+/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 11:49:17 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/14 22:45:03 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/15 11:12:34 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,9 @@ int main(int ac, char **av, char **envp)
 
 	(void)av;
 	(void)ac;
-	// atexit(leaks);
+	atexit(leaks);
 	if (!get_env(&env, envp))
-		return (ft_perror("minishell :", "error env", 127));//we have to return the error message too
+		return (ft_perror("minishell :", "error env", 127)); //we have to return the error message too
 	while (1)
 	{
 		ft_signals(1);
@@ -78,6 +78,7 @@ int main(int ac, char **av, char **envp)
 			status = 0;
 		excution(command, &env);
 		free_cmd(command);
+		leaks();
 	}
 	free_env(&env);
 }
