@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 09:23:59 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/15 19:17:03 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/15 20:01:31 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,13 +87,20 @@ int builtin_export(t_env **env, t_excute *cmds)
 		}
 		else
 			key = ft_substr(cmds->arguments[i], 0, until_char(cmds->arguments[i], '='));
-        if (key || !*key || check_name(key) < 0)
-            return (free(key), write(STDERR_FILENO, "export : not a valid identifier\n", 32), status = 1, 0);
-		if (!type)
-			str = ft_strdup(cmds->arguments[i] + until_char(cmds->arguments[i], '=') + 1);
-        env_export(env, key, str, type);
+        if (!key || !*key || check_name(key) < 0)
+		{
+			write(STDERR_FILENO, "export : not a valid identifier\n", 32);
+			status = 1;
+		}
+		else
+		{
+			if (!type)
+				str = ft_strdup(cmds->arguments[i] + until_char(cmds->arguments[i], '=') + 1);
+			env_export(env, key, str, type);
+		}
 		free(key);
         free(str);
+		type = 0;
 		str = NULL;
         i++;
     }
@@ -108,7 +115,7 @@ int is_numerique(char *str)
     i = 0;
     if (str)
         len = ft_strlen(str);
-    if (str[i] == '-' || str[i] == '+')
+    if ((str[i] == '-' || str[i] == '+') && str[i + 1])
         i++;
     while (str && str[i] && !ft_isdigit(str[i]))
         i++;

@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 09:56:25 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/15 16:34:29 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/15 20:22:12 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,16 +91,18 @@ static void cd_home(t_env **env, t_excute *cmds)
 int builtin_cd(t_env **env, t_excute *cmds)
 {
 	char str[100];
-	char current[100];
+	char *current;
 
 	if (env) // funciton that would check the existance of the path
 	{
-		getcwd(current, 100);
+		current = getcwd(str, 100);
 		cd_home(env, cmds);
 		if (env_getkey(*env, "HOME"))
 		{
-			env_export(env, "PWD", getcwd(str, 100), 0);
-			env_export(env, "OLDPWD", current, 0);
+			if (env_getkey(*env, "PWD"))
+				env_export(env, "PWD", getcwd(str, 100), 0);
+			if (env_getkey(*env, "OLDPWD"))
+				env_export(env, "OLDPWD", current, 0);
 		}
 		return 1;
 	}

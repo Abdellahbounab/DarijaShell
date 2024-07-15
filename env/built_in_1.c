@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 19:16:19 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/14 15:00:16 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/15 20:21:24 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,15 @@ int is_builtin(char *cmd)
 
 int builtin_pwd(t_env **env)
 {
-	// can be modified to have always the path even if it is not found on env
 	char str[100];
+	char *pwd;
 
 	if (env)
 	{
-		env_export(env, "PWD", getcwd(str, 100), 1);
-		write(STDOUT_FILENO, env_getval(*env, "PWD"), ft_strlen(env_getval(*env, "PWD")));
+		pwd = getcwd(str, 100);
+		if (env_getkey(*env, "PWD"))
+			env_export(env, "PWD", pwd, 1);
+		write(STDOUT_FILENO, pwd, ft_strlen(pwd));
 		write(STDOUT_FILENO, "\n", 1);
 		exit(0);
 	}
