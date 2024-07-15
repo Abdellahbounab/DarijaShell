@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 11:49:17 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/15 11:12:34 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/15 12:02:36 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,6 @@ void print_cmd(t_cmd *command)
 
 void leaks(){system("leaks -q minishell");}
 
-
-// exit handle of trimming exit "     42" //DONE
-// heredoc have to handle the "delimiter" between "" or ''
 // have to handle the relative path since i changed in code
 int main(int ac, char **av, char **envp)
 {
@@ -63,7 +60,7 @@ int main(int ac, char **av, char **envp)
 
 	(void)av;
 	(void)ac;
-	atexit(leaks);
+	// atexit(leaks);
 	if (!get_env(&env, envp))
 		return (ft_perror("minishell :", "error env", 127)); //we have to return the error message too
 	while (1)
@@ -78,7 +75,7 @@ int main(int ac, char **av, char **envp)
 			status = 0;
 		excution(command, &env);
 		free_cmd(command);
-		leaks();
+		// leaks();
 	}
 	free_env(&env);
 }

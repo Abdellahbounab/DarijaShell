@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   excution_files.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 10:35:10 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/09 10:36:11 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/15 12:00:36 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,23 +55,30 @@ int	infile_update(t_file *files, t_excute *cmds)
 	return (1);
 }
 
-int	outfile_update(t_file *files, t_excute *cmds)
+int	files_update(t_file *files, t_excute *cmds)
 {
 	int	fd;
 
 	fd = cmds->outfile;
 	while (files)
 	{
-		// have to be handleded in the case of special builtins
 		if (!files->name || files->name[1])
-			return (ft_perror("minishell:", " ambiguous redirect", 1));//error  of ambigious by exit(1);
+			return (ft_perror("minishell:", " ambiguous redirect", 1));
 		if (files->type == OUFILE || files->type == APPEND)
 		{
 			fd = open(files->name[0], files->type, 0720);
 			if (fd < 0)
-				return (ft_perror(NULL, files->name[0], 0)) ;//error of no permission will be saved in the errno
+				return (ft_perror(NULL, files->name[0], 0), fd) ;
 			dup2(fd, cmds->outfile);
-			close(fd);	
+			close(fd);
+		}
+		else if (files->type == INFILE || files->type == HERE_DOC_USED)
+		{
+			fd = open(files->name[0], INFILE);
+			if (fd < 0)
+				return (ft_perror(NULL, files->name[0], 0), fd);
+			dup2(fd, cmds->infile);
+			close(fd);
 		}
 		files = files->next;
 	}

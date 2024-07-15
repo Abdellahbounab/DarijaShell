@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 10:30:37 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/15 11:23:10 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/15 11:59:31 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,11 @@ int	open_heredoc(t_file *file, int heredocfile, t_env **env)
 	char	*line;
 	char	*tmp;
 
+	line = NULL;
 	write(STDOUT_FILENO, "> ", 2);
-	line = get_next_line(STDIN_FILENO);
-	tmp = line;
-	line = ft_strtrim(line, "\n");
+	tmp = get_next_line(STDIN_FILENO);
+	if (!tmp)
+		line = ft_strtrim(line, "\n");
 	free(tmp);
 	while (line && !status && ft_strcmp(line, file->name[0]))
 	{
@@ -32,11 +33,16 @@ int	open_heredoc(t_file *file, int heredocfile, t_env **env)
 			free(tmp);
 		}
 		if (heredocfile != -1)
+		{
 			write(heredocfile, line, ft_strlen(line));
+			write(heredocfile, "\n", 1);
+		}
 		free(line);
+		line = NULL;
 		write(STDOUT_FILENO, "> ", 2);
 		tmp = get_next_line(STDIN_FILENO);
-		line = ft_strtrim(tmp, "\n");
+		if (!tmp)
+			line = ft_strtrim(tmp, "\n");
 		free(tmp);
 	}
 	return (free(line), 1);

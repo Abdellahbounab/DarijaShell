@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   excution.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:22:03 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/09 10:46:59 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/15 11:42:33 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,9 @@ t_excute	*heredoc_update(t_cmd *command, t_env **env);
 
 int	last_file_position(t_file *files, t_type t);
 
-int	infile_update(t_file *files, t_excute *cmds);
+int	files_update(t_file *files, t_excute *cmds);
 
-int	outfile_update(t_file *files, t_excute *cmds);
+// int	outfile_update(t_file *files, t_excute *cmds);
 
 int	get_path(char *cmd, char **paths);
 
