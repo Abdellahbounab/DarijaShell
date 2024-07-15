@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 10:54:21 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/11 09:44:32 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/15 16:45:49 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,14 @@ char *wildcard(char *pattern, t_env *env)
 {
 	int i;
 	char *result;
-	// char *tmp;
 	char **filenames;
 
 	i = 0;
 	result = NULL;
-	filenames = get_files(env);
+	if (pattern[0] == '.')
+		filenames = get_files(env, 1);
+	else
+		filenames = get_files(env, 0);
 	sort_by_name(filenames);
 	while (filenames && filenames[i])
 	{
@@ -51,28 +53,30 @@ char *wildcard(char *pattern, t_env *env)
 	return (result);
 }
 
-char *wildcard_(char *pattern, t_env *env)
-{
-	int i;
-	char *result;
-	// char *tmp;
-	char **filenames;
+// char *wildcard_(char *pattern, t_env *env)
+// {
+// 	int i;
+// 	char *result;
+// 	char **filenames;
 
-	i = 0;
-	result = NULL;
-	filenames = get_files(env);
-	sort_by_name(filenames);
-	while (filenames && filenames[i])
-	{
-		if (match(filenames[i], pattern))
-			join_str_space(&result, filenames[i]);
-		i++;
-	}
-	if (result == NULL)
-		result = ft_strdup(pattern);
-	free_array(&filenames);
-	return (result);
-}
+// 	i = 0;
+// 	result = NULL;
+// 	if (pattern && pattern[0] == '.')
+// 		filenames = get_files(env, 1);
+// 	else if (pattern && pattern[0] != '.')
+// 		filenames = get_files(env, 0);
+// 	sort_by_name(filenames);
+// 	while (filenames && filenames[i])
+// 	{
+// 		if (match(filenames[i], pattern))
+// 			join_str_space(&result, filenames[i]);
+// 		i++;
+// 	}
+// 	if (result == NULL)
+// 		result = ft_strdup(pattern);
+// 	free_array(&filenames);
+// 	return (result);
+// }
 
 char *var_wildcard(char *line, t_env *env)
 {
@@ -88,7 +92,7 @@ char *var_wildcard(char *line, t_env *env)
 	while (split && split[i])
 	{
 		if (ft_strchr(split[i], '*'))
-			tmp = wildcard_(split[i], env);
+			tmp = wildcard(split[i], env);
 		else
 			tmp = ft_strdup(split[i]);
 		join_str_space(&result, tmp);

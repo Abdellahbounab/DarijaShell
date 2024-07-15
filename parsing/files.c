@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 11:41:58 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/09 11:43:59 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/15 16:45:02 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int take_files(char **tokens, t_cmd *cmd, t_info *info)
 	return (GOOD);
 }
 
-char **get_files(t_env *env)
+char **get_files(t_env *env, int dot)
 {
 	DIR *dir;
 	struct dirent *file;
@@ -87,10 +87,15 @@ char **get_files(t_env *env)
 	if (dir == NULL)
 		return (NULL);
 	file = readdir(dir);
-	while (file)
+	while (file && dot == 0)
 	{
 		if (file->d_name[0] != '.')
 			filenames = append_array(filenames, file->d_name);
+		file = readdir(dir);
+	}
+	while (file && dot == 1)
+	{
+		filenames = append_array(filenames, file->d_name);
 		file = readdir(dir);
 	}
 	closedir(dir);
