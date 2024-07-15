@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/13 10:13:41 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/15 16:32:52 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int		quote_skip(char *str, int *index, char quote);
 void	alloc_appand(char *line, int start, int end, char ***words_symboles);
 char    *wildcard(char *pattern, t_env *env);
 char    *var_wildcard(char *line , t_env *env);
-char    **get_files(t_env *env);
+char **get_files(t_env *env, int not_dot);
 void swap_str(char **stra, char **strb);
 void sort_by_name(char **array);
 int take_files(char **tokens, t_cmd *cmd, t_info *info);
