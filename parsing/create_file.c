@@ -6,12 +6,11 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 12:50:04 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/11 09:24:19 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/15 10:58:53 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
-
 
 static char *extand_file_name(char **tokens, t_info *info, int *is_expend, t_type type)
 {
@@ -27,13 +26,21 @@ static char *extand_file_name(char **tokens, t_info *info, int *is_expend, t_typ
 	}
 	else
 		strwild = tokens[info->cmd_i];
-	return(strwild);
+	return (strwild);
 }
 
 static void set_type(t_file *file, int type)
 {
+	char *tmp;
+
+	tmp = NULL;
 	if (file->name && type == HERE_DOC_SIMPLE && (ft_strchr(file->name[0], '\'') || ft_strchr(file->name[0], '"')))
+	{
 		file->type = HERE_DOC_SPECIAL;
+		tmp = file->name[0];
+		file->name[0] = ft_filter(file->name[0]);
+		free(tmp);
+	}
 	else if (type == HERE_DOC_SIMPLE)
 		file->type = HERE_DOC_SIMPLE;
 	else
@@ -78,4 +85,3 @@ int create_files(t_cmd *cmd, char **tokens, t_info *info, t_type type)
 	add_back_file(cmd, file);
 	return (GOOD);
 }
-
