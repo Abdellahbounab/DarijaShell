@@ -20,17 +20,6 @@ achakkaf@c1r7p6 minishell % echo $?
 255
 
 -------------------------------------------------
-
-minishell-$ exit "        42           "
-exit : numeric argument required
-achakkaf@c1r7p6 minishell % echo $?
-255
-
-bash-3.2$ exit "        42           "
-exit
-achakkaf@c1r7p6 minishell % echo $?
-42
-
 -------------------------------------------------
 
 minishell-$ exit +

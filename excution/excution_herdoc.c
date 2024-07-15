@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 10:30:37 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/15 11:59:31 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/15 17:01:09 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,11 @@ int	open_heredoc(t_file *file, int heredocfile, t_env **env)
 	line = NULL;
 	write(STDOUT_FILENO, "> ", 2);
 	tmp = get_next_line(STDIN_FILENO);
-	if (!tmp)
-		line = ft_strtrim(line, "\n");
+	if (tmp)
+		line = ft_strtrim(tmp, "\n");
 	free(tmp);
-	while (line && !status && ft_strcmp(line, file->name[0]))
+	while (line && ft_strcmp(line, file->name[0]))
+	// while (line && !status && ft_strcmp(line, file->name[0]))
 	{
 		tmp = line;
 		if (file->type == HERE_DOC_SIMPLE)
@@ -41,7 +42,7 @@ int	open_heredoc(t_file *file, int heredocfile, t_env **env)
 		line = NULL;
 		write(STDOUT_FILENO, "> ", 2);
 		tmp = get_next_line(STDIN_FILENO);
-		if (!tmp)
+		if (tmp)
 			line = ft_strtrim(tmp, "\n");
 		free(tmp);
 	}
@@ -90,7 +91,8 @@ int	heredoc_management(t_file	*files, t_env **env)
 	i = 0;
 	fd = -1;
 	heredoc_postion = last_file_position(files, HERE_DOC_SIMPLE) - 1;
-	while (heredoc_postion >= 0 && files && !status)
+	while (heredoc_postion >= 0 && files)
+	// while (heredoc_postion >= 0 && files && !status)
 	{
 		if (files->type == HERE_DOC_SIMPLE || files->type == HERE_DOC_SPECIAL)
 		{
@@ -104,8 +106,8 @@ int	heredoc_management(t_file	*files, t_env **env)
 			open_heredoc(files, fd, env);
 			if (fd != -1)
 				update_files(files, name, fd);
-			if (status)
-				return (0);
+			// if (status)
+			// 	return (0);
 			i++;
 		}
 		files = files->next;

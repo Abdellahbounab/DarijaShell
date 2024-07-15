@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 09:23:59 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/15 11:18:55 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/15 14:45:54 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ int builtin_export(t_env **env, t_excute *cmds)
         env_export(env, key, str, type);
 		free(key);
         free(str);
+		str = NULL;
         i++;
     }
     return (1);

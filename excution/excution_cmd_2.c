@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 10:38:49 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/14 22:41:29 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/15 15:38:13 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,27 @@ int is_file(const char *path) {
    return (S_ISREG(stats.st_mode));
 }
 
-// have to be updated.
+
+char **get_cmdarg(char **argv)
+{
+	char **arr;
+	int i;
+
+	i = 0;
+	arr = ft_calloc(array_size(argv) + 2, sizeof(char *));
+	if (!arr)
+		return (NULL);
+	arr[i++] = ft_strdup("/bin/bash");
+	while (argv[i - 1])
+	{
+		arr[i] = ft_strdup(argv[i - 1]);
+		if (!arr[i])
+			return (free_array(&arr), NULL);
+		i++;
+	}
+	return (arr);
+}
+
 char *get_commands(char **argv, char ***cmd_argv, char **paths)
 {
 	char	*cmd;
@@ -41,27 +61,44 @@ char *get_commands(char **argv, char ***cmd_argv, char **paths)
 	{
 		if (argv[0] && is_builtin(argv[0]))
 			return (free_array(&paths), *cmd_argv = argv + 1, ft_strdup(argv[0]));
-		if (is_file(argv[0]))
+		if (argv[0] && is_file(argv[0]))
+		{
+			if (argv[0][0] == '.' && argv[0][ft_strlen(argv[0]) - 1] == 'h' && argv[0][ft_strlen(argv[0]) - 2] == 's')
+			{
+				*cmd_argv = get_cmdarg(argv);
+				return (free_array(&paths), ft_strdup("/bin/bash"));
+			}
 			return (*cmd_argv = argv, free_array(&paths), ft_strdup(argv[0]));
-		else if (is_directory(argv[0]))
-			return (free_array(&paths), ft_perror(argv[0], ": is a directory", 126), NULL);
-		else
+		}
+		else if (argv[0] && ft_strchr(argv[0], '/'))
+		{
+			if (is_directory(argv[0]))
+				return (free_array(&paths), ft_perror(argv[0], ": is a directory", 126), NULL);
+			return (free_array(&paths), ft_perror(argv[0], ": No such file or directory", 127), NULL);
+		}
+		else if (argv[0] && argv[0][0] != '/' && argv[0][0] != '.')
 		{
 			cmd = ft_strjoin("/", argv[0]);
 			if (!cmd)
 				return (free_array(&paths), NULL);//error
-			if (paths && get_path(cmd, paths) >= 0 )
+			if (paths)
 			{
-				tmp = cmd;
-				cmd = ft_strjoin(paths[get_path(cmd, paths)], tmp);
-				free(tmp);
-				if (cmd)
-					return (*cmd_argv = argv, free_array(&paths), cmd);
-				return (free_array(&paths), NULL); //error 
+				if (get_path(cmd, paths) >= 0)
+				{
+					tmp = cmd;
+					cmd = ft_strjoin(paths[get_path(cmd, paths)], tmp);
+					free(tmp);
+					if (cmd)
+						return (*cmd_argv = argv, free_array(&paths), cmd);
+					return (free_array(&paths), NULL); //error 
+				}
+				free(cmd);
+				return (*cmd_argv = argv, free_array(&paths), ft_strdup(argv[0]));
 			}
 			free(cmd);
-			return (free_array(&paths), ft_perror(argv[0], ": no such file or directory", 127), NULL);
+			return (ft_perror(argv[0], ": No such file or directory", 127), NULL);
 		}
+		return (*cmd_argv = argv, free_array(&paths), ft_strdup(argv[0]));
 	}
 	return (free_array(&paths), ft_perror(argv[0], ": command not found", 1), NULL);
 }

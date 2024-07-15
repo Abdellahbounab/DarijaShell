@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 11:49:17 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/15 12:02:36 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/15 17:09:37 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ int main(int ac, char **av, char **envp)
 			return (free_env(&env), status);
 		add_history(line);
 		command = parsing(line, env);
-		if (command && status)
-			status = 0;
+		// if (command && status)
+		// 	status = 0;
 		excution(command, &env);
 		free_cmd(command);
 		// leaks();

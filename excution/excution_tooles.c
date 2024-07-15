@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 10:26:56 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/14 21:49:55 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/15 16:35:00 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int	ft_perror(char *header, char *msg, int err)
 		if (err)
 		{
 			if (header)
+				// write(STDERR_FILENO, "minishell: ", 11);
 				write(STDERR_FILENO, header, ft_strlen(header));
 			write(STDERR_FILENO, msg, ft_strlen(msg));
 			write(STDERR_FILENO, "\n", 1);
@@ -26,6 +27,7 @@ int	ft_perror(char *header, char *msg, int err)
 		}
 		else
 		{
+			// perror("minishell: ");
 			perror(msg);
 			exit(errno);
 		}

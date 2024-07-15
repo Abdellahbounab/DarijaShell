@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 09:56:25 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/14 14:57:37 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/15 16:34:29 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ static void cd_home(t_env **env, t_excute *cmds)
 		{
 			perror(cmds->arguments[0]);
 			status = 1;
+			// ft_perror(NULL, "minishell: ", 0);
 		}
 	}
 	else
