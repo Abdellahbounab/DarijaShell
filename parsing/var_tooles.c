@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_tooles.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 17:50:44 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/12 11:25:17 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/15 10:37:56 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,12 @@ char *dollar_sign(char *string, t_info *info, char *var_value, int *is_expend)
 	free(tmp);
 	free(var_value);
 	var_value = var_extand(string, info);
-	if (var_value)
+	if (var_value && is_expend)
+	{
+		printf("before\n");
 		*is_expend = 1;
+		printf("aafter\n");
+	}
 	tmp = var_value;
 	var_value = ft_strjoin(before_dollar, var_value);
 	free(tmp);

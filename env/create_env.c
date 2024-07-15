@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   create_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 17:04:39 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/09 10:22:11 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/15 10:28:56 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ t_env *env_getkey(t_env *lst, char *key)
 	cpy = lst;
 	while (cpy)
 	{
-		if (!ft_strcmp(cpy->key, key))
+		if (cpy->key && key && !ft_strcmp(cpy->key, key))
 			return cpy;
 		cpy = cpy->next;
 	}

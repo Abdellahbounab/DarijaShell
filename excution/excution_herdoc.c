@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 10:30:37 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/14 15:28:01 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/15 10:31:03 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,19 @@ int	open_heredoc(t_file *file, int hfile, t_env **env)
 
 	write(STDOUT_FILENO, "> ", 2);
 	line = get_next_line(STDIN_FILENO);
-	while (line && !status && ft_strcmp(line, file->name[0]))
+	while (line && !status && ft_strncmp(line, file->name[0], ft_strlen(line) - 1))
 	{
 		tmp = line; 
 		if (file->type == HERE_DOC_SIMPLE)
 		{
+			// segV happen
 			line = parsing_extend_var(line, *env, NULL);
 			free(tmp);
 		}
 		if (hfile != -1)
 		{
 			write(hfile, line, ft_strlen(line));
-			write(hfile, "\n", 1);
+			// write(hfile, "\n", 1);
 		}
 		free(line);
 		write(STDOUT_FILENO, "> ", 2);
