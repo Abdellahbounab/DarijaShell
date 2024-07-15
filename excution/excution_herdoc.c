@@ -6,39 +6,39 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 10:30:37 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/15 10:31:03 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/15 11:17:13 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "excution.h"
 
-int	open_heredoc(t_file *file, int hfile, t_env **env)
+int	open_heredoc(t_file *file, int heredocfile, t_env **env)
 {
 	char	*line;
 	char	*tmp;
 
 	write(STDOUT_FILENO, "> ", 2);
 	line = get_next_line(STDIN_FILENO);
-	while (line && !status && ft_strncmp(line, file->name[0], ft_strlen(line) - 1))
+	tmp = line;
+	line = ft_strtrim(line, "\n");
+	free(tmp);
+	while (line && !status && ft_strcmp(line, file->name[0]))
 	{
-		tmp = line; 
+		tmp = line;
 		if (file->type == HERE_DOC_SIMPLE)
 		{
-			// segV happen
 			line = parsing_extend_var(line, *env, NULL);
 			free(tmp);
 		}
-		if (hfile != -1)
-		{
-			write(hfile, line, ft_strlen(line));
-			// write(hfile, "\n", 1);
-		}
+		if (heredocfile != -1)
+			write(heredocfile, line, ft_strlen(line));
 		free(line);
 		write(STDOUT_FILENO, "> ", 2);
-		line = get_next_line(STDIN_FILENO);
+		tmp = get_next_line(STDIN_FILENO);
+		line = ft_strtrim(tmp, "\n");
+		free(tmp);
 	}
-	free(line);
-	return (1);
+	return (free(line), 1);
 }
 
 static int update_files(t_file *file, char *name, int fd)
@@ -49,6 +49,7 @@ static int update_files(t_file *file, char *name, int fd)
 		free_array(&file->name);
 		file->type = HERE_DOC_USED;
 		file->name = ft_split(name, '\0');
+		free(name);
 	}
 	return (1);
 }
@@ -56,12 +57,15 @@ static int update_files(t_file *file, char *name, int fd)
 static char *create_name(void)
 {
 	char *start;
+	char *num;
 	long long i;
 
 	i = 0;
 	while (1)
 	{
-		start = ft_strjoin("/tmp/.", ft_itoa(i++));
+		num = ft_itoa(i++);
+		start = ft_strjoin("/tmp/.", num);
+		free(num);
 		if (start && access(start, F_OK))
 			return (start);
 		free(start);
@@ -88,7 +92,7 @@ int	heredoc_management(t_file	*files, t_env **env)
 				name = create_name();
 				fd = open (name, OUFILE, 0770);
 				if (fd < 0)
-					return (printf("%s\n", strerror(errno)), -1); //error handling
+					return (printf("Heredoc :%s\n", strerror(errno)), -1); //error handling
 			}
 			open_heredoc(files, fd, env);
 			if (fd != -1)
