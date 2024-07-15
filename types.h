@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 11:30:27 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/09 15:35:15 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/13 10:16:31 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@
 #endif
 
 int status;
+
 typedef enum s_type
 {
 	INFILE = O_RDONLY,
