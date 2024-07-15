@@ -132,37 +132,5 @@ bash-3.2$ echo $?
 1
 
 -------------------------------------------------
-
-minishell-$ echo $OLDPWD
-/Users/achakkaf/Desktop
-minishell-$ 
-
-bash-3.2$ echo $OLDPWD
-
-bash-3.2$ 
-
 -------------------------------------------------
-
-
-
-
-
-minishell -$ <<"eof" cat
-> salam
-> eof
-> "eof" 
-> eof
-> "eof" 
-> "eof"
-
-# this have to be handled in the lexer or parser
-
-
-minishell-$ export 10
-export : not a valid identifier
-leaks Report Version: 4.0
-Process 10854: 473 nodes malloced for 338 KB
-Process 10854: 1 leak for 16 total leaked bytes.
-
-    1 (16 bytes) ROOT LEAK: 0x7ff467304140 [16]  length: 2  "10"
 

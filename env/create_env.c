@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 17:04:39 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/15 10:28:56 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/15 18:01:14 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,5 +116,6 @@ int get_env(t_env **env, char **envp)
 	env_export(env, "SHLVL", value, 0);
 	free(value);
 	env_unset(env, "_");
+	env_unset(env, "OLDPWD");
 	return 1;
 }
