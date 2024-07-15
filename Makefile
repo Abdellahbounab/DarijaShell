@@ -113,6 +113,9 @@ fclean: clean
 $(RDLINE_OBJS):%.o: %.c $(INCLUDES) $(RDLINE)
 	@cc $(CFLAGS) -I $(RDLINE)/include -c $< -o $@ 
 
+# $(RDLINE_OBJS):%.o: %.c $(INCLUDES)
+# @cc $(CFLAGS) -c $< -o $@ 
+
 $(RDLINE) :
 	@brew install readline
 

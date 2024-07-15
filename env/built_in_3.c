@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 09:56:25 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/11 20:46:25 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/14 14:57:37 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,10 @@ static void cd_home(t_env **env, t_excute *cmds)
 		if (env_getval(*env, "HOME"))
 		{
 			if (chdir(env_getval(*env, "HOME")))
+			{
 				perror(env_getval(*env, "HOME"));
+				status = 1;
+			}
 		}
 		else
 		{

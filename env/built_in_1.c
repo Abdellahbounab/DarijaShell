@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in_1.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 19:16:19 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/11 10:26:59 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/14 15:00:16 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int env_export(t_env **lst, char *key, char *val, char type)
 		return 0;
 	if (env_getkey(*lst, key))
 	{
-		if (env_update(lst, key, val))
+		if (val && env_update(lst, key, val))
 			return 1;
 		return 0;
 	}

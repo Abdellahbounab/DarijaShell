@@ -21,13 +21,13 @@ int	last_file_position(t_file *files, t_type t)
 	j = 0;
 	while (files)
 	{
-		if (files->type == HERE_DOC_SIMPLE || files->type == HERE_DOC_SPECIAL)
+		if (files->type == HERE_DOC_SIMPLE || files->type == HERE_DOC_SPECIAL || files->type == HERE_DOC_USED)
 			i++;
 		else if (files->type == t)
 			j++;
 		files = files->next;
 	}
-	if (t == HERE_DOC_SIMPLE || t == HERE_DOC_SPECIAL)
+	if (t == HERE_DOC_SIMPLE || t == HERE_DOC_SPECIAL || files->type == HERE_DOC_USED)
 		return (i);
 	return (j);
 }
@@ -42,13 +42,12 @@ int	infile_update(t_file *files, t_excute *cmds)
 		// have to be handleded in the case of special builtins
 		if (!files->name || files->name[1])
 			return (ft_perror("minishell:", " ambiguous redirect", 1), -1);
-		if (files->type == INFILE)
+		if (files->type == INFILE || files->type == HERE_DOC_USED)
 		{
 			fd = open(files->name[0], INFILE);
 			if (fd < 0)
-				return (ft_perror(NULL, files->name[0], 0), fd) ;//error of file does not exist or no permission will be saved in the errno
-			if (last_file_position(files, INFILE) > last_file_position(files, HERE_DOC_SIMPLE))
-				dup2(fd, cmds->infile);
+				return (ft_perror(NULL, files->name[0], 0), fd);
+			dup2(fd, cmds->infile);
 			close(fd);
 		}
 		files = files->next;

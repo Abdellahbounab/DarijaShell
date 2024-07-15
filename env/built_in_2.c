@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in_2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 09:23:59 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/12 16:18:42 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/14 21:16:09 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,13 +119,19 @@ int is_numerique(char *str)
 int builtin_exit(t_env **env, t_excute *cmds)
 {
     int num;
+	char	*arg;
 
-    num = 0;
+    num = status;
+	arg = NULL;
     if (cmds->arguments)
     {
         if (cmds->arguments[0])
-            num = ft_atoi(cmds->arguments[0]);
-        if (cmds->arguments[0] && !is_numerique(cmds->arguments[0]))
+		{
+			arg = ft_strtrim(cmds->arguments[0], " \t");
+			if (arg)
+           		num = ft_atoi(arg);
+		}
+        if (arg && !is_numerique(arg))
             ft_perror("exit : ", "numeric argument required", 255);
         if (cmds->arguments[0] && cmds->arguments[1])
         {
