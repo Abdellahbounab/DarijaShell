@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 17:50:44 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/16 12:41:39 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/16 16:56:09 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ char	*dollar_sign(char *string, t_info *info, \
 	var_value = var_extand(string, info);
 	if (var_value && is_expend && ft_strcmp(var_value, "$") != 0)
 		*is_expend = 1;
+	if (var_value && is_expend && ft_strchr(var_value, '*'))
+		*is_expend = 2;
 	tmp = var_value;
 	var_value = ft_strjoin(before_dollar, var_value);
 	free(tmp);
