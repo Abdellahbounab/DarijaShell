@@ -6,23 +6,23 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 17:05:59 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/08 14:47:22 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/16 10:33:44 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-char *quation_mark(char *string, t_info *info, char *var_value)
+char	*quation_mark(char *string, t_info *info, char *var_value)
 {
-	char *before_dollar;
-	char *tmp;
+	char	*before_dollar;
+	char	*tmp;
 
 	before_dollar = ft_substr(string, info->start, info->end - info->start);
 	tmp = before_dollar;
 	before_dollar = ft_strjoin(var_value, before_dollar);
 	free(tmp);
 	free(var_value);
-	var_value = ft_itoa(status);
+	var_value = ft_itoa(g_status);
 	tmp = var_value;
 	var_value = ft_strjoin(before_dollar, var_value);
 	free(tmp);
@@ -30,9 +30,9 @@ char *quation_mark(char *string, t_info *info, char *var_value)
 	return (var_value);
 }
 
-char *single_quote(char *part, int *end)
+char	*single_quote(char *part, int *end)
 {
-	int start;
+	int	start;
 
 	(*end)++;
 	start = *end;
@@ -41,12 +41,12 @@ char *single_quote(char *part, int *end)
 	return (ft_substr(part, start, (*end)++ - start));
 }
 
-char *double_without(char *part, int *end, int flage)
+char	*double_without(char *part, int *end, int flage)
 {
-	char *var_value;
-	char *string;
-	char *tmp;
-	int start;
+	char	*var_value;
+	char	*string;
+	char	*tmp;
+	int		start;
 
 	string = NULL;
 	var_value = NULL;
@@ -54,9 +54,9 @@ char *double_without(char *part, int *end, int flage)
 	while (part[*end])
 	{
 		if (flage == DOUBLE_Q && part[*end] == '"')
-			break;
+			break ;
 		else if (flage != DOUBLE_Q && (part[*end] == '"' || part[*end] == '\''))
-			break;
+			break ;
 		else
 			(*end)++;
 	}
@@ -67,12 +67,24 @@ char *double_without(char *part, int *end, int flage)
 	return (string);
 }
 
-char *ft_filter(char *part)
+char	*join_free(char **old_str, char **add_str)
 {
-	char *tmp;
-	char *tmp_free;
-	char *token;
-	int end;
+	char	*tmp;
+	char	*token;
+
+	tmp = *old_str;
+	token = ft_strjoin(*old_str, *add_str);
+	free(tmp);
+	free(*add_str);
+	*add_str = NULL;
+	return (token);
+}
+
+char	*ft_filter(char *part)
+{
+	char	*tmp;
+	char	*token;
+	int		end;
 
 	end = 0;
 	token = NULL;
@@ -88,10 +100,7 @@ char *ft_filter(char *part)
 		}
 		else
 			tmp = double_without(part, &end, -22);
-		tmp_free = token;
-		token = ft_strjoin(token, tmp);
-		free(tmp_free), free(tmp);
-		tmp = NULL;
+		token = join_free(&token, &tmp);
 	}
 	return (token);
 }

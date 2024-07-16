@@ -3,33 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   var_tooles.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
+/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 17:50:44 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/15 19:57:05 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/16 10:22:39 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "parsing.h"
 
-int check_name(char *name)
+int	check_name(char *name)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (name && ft_isdigit(name[i]) == GOOD)
 		return (ERROR);
 	while (name && name[i])
 	{
-		if (ft_isalpha(name[i]) == ERROR && ft_isdigit(name[i]) == ERROR && name[i] != '_')
+		if (ft_isalpha(name[i]) == ERROR && \
+			ft_isdigit(name[i]) == ERROR && name[i] != '_')
 			return (ERROR);
 		i++;
 	}
 	return (GOOD);
 }
 
-char *get_var_value(t_env *env, char *var_name)
+char	*get_var_value(t_env *env, char *var_name)
 {
 	while (env && var_name)
 	{
@@ -40,20 +40,20 @@ char *get_var_value(t_env *env, char *var_name)
 	return (NULL);
 }
 
-char *get_var_name(char *string, t_info *info)
+char	*get_var_name(char *string, t_info *info)
 {
-	while (string[info->end] && (ft_isalpha(string[info->end]) == GOOD ||\
+	while (string[info->end] && (ft_isalpha(string[info->end]) == GOOD || \
 		ft_isdigit(string[info->end]) == GOOD || string[info->end] == '_'))
 		info->end++;
 	return (ft_substr(string, info->start, info->end - info->start));
 }
 
-char *var_extand(char *part, t_info *info)
+char	*var_extand(char *part, t_info *info)
 {
-	char *string;
-	char *var_name;
-	char *tmp;
-	char *var_value;
+	char	*string;
+	char	*var_name;
+	char	*tmp;
+	char	*var_value;
 
 	string = NULL;
 	while (part[info->end] == '$')
@@ -77,10 +77,11 @@ char *var_extand(char *part, t_info *info)
 	return (string);
 }
 
-char *dollar_sign(char *string, t_info *info, char *var_value, int *is_expend)
+char	*dollar_sign(char *string, t_info *info, \
+					char *var_value, int *is_expend)
 {
-	char *before_dollar;
-	char *tmp;
+	char	*before_dollar;
+	char	*tmp;
 
 	before_dollar = ft_substr(string, info->start, info->end - info->start);
 	tmp = before_dollar;

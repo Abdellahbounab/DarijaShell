@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in_2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
+/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 09:23:59 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/15 20:01:31 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/16 10:34:28 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int builtin_export(t_env **env, t_excute *cmds)
         if (!key || !*key || check_name(key) < 0)
 		{
 			write(STDERR_FILENO, "export : not a valid identifier\n", 32);
-			status = 1;
+			g_status = 1;
 		}
 		else
 		{
@@ -129,7 +129,7 @@ int builtin_exit(t_env **env, t_excute *cmds)
     int num;
 	char	*arg;
 
-    num = status;
+    num = g_status;
 	arg = NULL;
     if (cmds->arguments)
     {
@@ -143,7 +143,7 @@ int builtin_exit(t_env **env, t_excute *cmds)
             ft_perror("exit : ", "numeric argument required", 255);
         if (cmds->arguments[0] && cmds->arguments[1])
         {
-            status = 1;
+            g_status = 1;
             return (write(STDERR_FILENO, "exit: too many arguments\n", 25));
         }
     }

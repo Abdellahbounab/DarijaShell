@@ -6,19 +6,15 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 10:54:21 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/15 16:45:49 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/16 10:24:35 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-/*
-• find all the maches files name
-• sort them by name
-*/
-void join_str_space(char **result, char *new_str)
+void	join_str_space(char **result, char *new_str)
 {
-	char *tmp;
+	char	*tmp;
 
 	tmp = *result;
 	*result = ft_strjoin(*result, new_str);
@@ -28,11 +24,11 @@ void join_str_space(char **result, char *new_str)
 	free(tmp);
 }
 
-char *wildcard(char *pattern, t_env *env)
+char	*wildcard(char *pattern, t_env *env)
 {
-	int i;
-	char *result;
-	char **filenames;
+	int		i;
+	char	*result;
+	char	**filenames;
 
 	i = 0;
 	result = NULL;
@@ -53,37 +49,12 @@ char *wildcard(char *pattern, t_env *env)
 	return (result);
 }
 
-// char *wildcard_(char *pattern, t_env *env)
-// {
-// 	int i;
-// 	char *result;
-// 	char **filenames;
-
-// 	i = 0;
-// 	result = NULL;
-// 	if (pattern && pattern[0] == '.')
-// 		filenames = get_files(env, 1);
-// 	else if (pattern && pattern[0] != '.')
-// 		filenames = get_files(env, 0);
-// 	sort_by_name(filenames);
-// 	while (filenames && filenames[i])
-// 	{
-// 		if (match(filenames[i], pattern))
-// 			join_str_space(&result, filenames[i]);
-// 		i++;
-// 	}
-// 	if (result == NULL)
-// 		result = ft_strdup(pattern);
-// 	free_array(&filenames);
-// 	return (result);
-// }
-
-char *var_wildcard(char *line, t_env *env)
+char	*var_wildcard(char *line, t_env *env)
 {
-	char **split;
-	int i;
-	char *result;
-	char *tmp;
+	char	**split;
+	int		i;
+	char	*result;
+	char	*tmp;
 
 	split = ft_split(line, ' ');
 	i = 0;

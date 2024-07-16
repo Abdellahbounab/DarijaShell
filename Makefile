@@ -12,7 +12,7 @@ SRC =	parsing/cmd.c \
 		parsing/var_tooles.c \
 		parsing/files.c \
 		parsing/wildcards.c \
-		parsing/wildcards_2.c \
+		parsing/sort.c \
 		parsing/match.c \
 		parsing/parsing_split.c \
 		parsing/create_file.c \

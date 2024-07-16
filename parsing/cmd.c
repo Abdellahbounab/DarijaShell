@@ -6,17 +6,16 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:21:34 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/12 17:07:46 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/16 10:33:34 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-// maybe there is leaks in line
-static int var_parsing(t_cmd *cmd, char *var_value)
+static int	var_parsing(t_cmd *cmd, char *var_value)
 {
-	int i;
-	char **split;
+	int		i;
+	char	**split;
 
 	i = 0;
 	split = ft_split(var_value, SPACE);
@@ -33,11 +32,10 @@ static int var_parsing(t_cmd *cmd, char *var_value)
 	return (GOOD);
 }
 
-// maybe there is leaks in line
-static int normal_parsing(t_cmd *cmd, char *line)
+static int	normal_parsing(t_cmd *cmd, char *line)
 {
-	char **split;
-	int i;
+	char	**split;
+	int		i;
 
 	i = 0;
 	split = parsing_split(line);
@@ -55,25 +53,19 @@ static int normal_parsing(t_cmd *cmd, char *line)
 	free(split);
 	return (GOOD);
 }
-// minishell-$ export var="'*'"
-// minishell-$ echo $var
-// *
-// minishell-$ export var="' *' "
-// export : not a valid identifier
-// minishell-$ export var="' *' "
-// export : not a valid identifier
-int meaning(char **tokens, t_cmd *cmd, t_info *info)
+
+int	meaning(char **tokens, t_cmd *cmd, t_info *info)
 {
-	char *tmp;
-	int is_expend;
-	char *strwild;
-	
+	char	*tmp;
+	int		is_expend;
+	char	*strwild;
+
 	is_expend = 0;
 	if (info->file == 0)
 	{
-		tmp = parsing_extend_var(tokens[info->cmd_i], info->env, &is_expend);
-		// printf("tmp:%s is_expend:%d\n", tmp, is_expend);
-		if (cmd->args == NULL || info->cmd_i > 1 || ft_strcmp(cmd->args[info->cmd_i - 1], "export") != 0)
+		tmp = parsing_extend_var(tokens[info->cmd_i], info->env, &is_expend, 1);
+		if (cmd->args == NULL || info->cmd_i > 1 \
+		|| ft_strcmp(cmd->args[info->cmd_i - 1], "export") != 0)
 			strwild = star_magic(tmp, is_expend, info->env);
 		else
 			strwild = ft_strdup(tmp);
@@ -86,9 +78,9 @@ int meaning(char **tokens, t_cmd *cmd, t_info *info)
 	return (GOOD);
 }
 
-static t_cmd *create_cmd(char **tokens, t_info *info)
+static t_cmd	*create_cmd(char **tokens, t_info *info)
 {
-	t_cmd *cmd;
+	t_cmd	*cmd;
 
 	info->file = 0;
 	cmd = ft_calloc(1, sizeof(t_cmd));
@@ -101,10 +93,11 @@ static t_cmd *create_cmd(char **tokens, t_info *info)
 		{
 			if (pipe_checker(cmd, tokens, info) == ERROR)
 				return (NULL);
-			status = 0;
-			break;
+			g_status = 0;
+			break ;
 		}
-		if (take_files(tokens, cmd, info) == ERROR || meaning(tokens, cmd, info) == ERROR)
+		if (take_files(tokens, cmd, info) == ERROR \
+			|| meaning(tokens, cmd, info) == ERROR)
 			return (NULL);
 		info->file = 0;
 		(info->cmd_i)++;
@@ -112,11 +105,11 @@ static t_cmd *create_cmd(char **tokens, t_info *info)
 	return (cmd);
 }
 
-t_cmd *parse_cmds(char **tokens, t_env *env)
+t_cmd	*parse_cmds(char **tokens, t_env *env)
 {
-	t_info *info;
-	t_cmd *cmd;
-	t_cmd *tmp;
+	t_info	*info;
+	t_cmd	*cmd;
+	t_cmd	*tmp;
 
 	if (tokens == NULL)
 		return (NULL);
