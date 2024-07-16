@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   excution_cmd_2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
+/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 10:38:49 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/15 15:38:13 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/16 10:35:04 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,11 +113,11 @@ int	waitprocess(t_excute *cmds)
 		if (cmds->pid)
 		{
 			if (cmds->pid)
-				waitpid(cmds->pid, &status, 0);
-			if (WIFSIGNALED(status))
-				status = WTERMSIG(status) + 128;
+				waitpid(cmds->pid, &g_status, 0);
+			if (WIFSIGNALED(g_status))
+				g_status = WTERMSIG(g_status) + 128;
 			else
-				status = WEXITSTATUS(status);
+				g_status = WEXITSTATUS(g_status);
 			cmd_free_node(cmds);
 		}
 		tmp = cmds->next;

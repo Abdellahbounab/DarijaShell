@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   excution_files.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
+/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 10:35:10 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/15 16:50:06 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/16 10:35:09 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ int	redirection_update(t_cmd *command, t_excute **head, t_env **env)
 			if (pid && pid != -1)
 				cmds->pid = pid;
 			else
-				return (status = 1, printf("%s\n", strerror(errno)));
+				return (g_status = 1, printf("%s\n", strerror(errno)));
 		}
 		cmds = cmds->next;
 		command = command->next;

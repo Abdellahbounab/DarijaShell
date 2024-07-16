@@ -6,15 +6,13 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 12:57:09 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/09 12:57:46 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/16 10:17:32 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-
-
-int blank_quote(char *line, int start, int *end, char ***split_string)
+int	blank_quote(char *line, int start, int *end, char ***split_string)
 {
 	while (line[*end] && line[*end] != SPACE && line[*end] != TAB)
 	{
@@ -40,11 +38,11 @@ int blank_quote(char *line, int start, int *end, char ***split_string)
 	return (GOOD);
 }
 
-char **parsing_split(char *string)
+char	**parsing_split(char *string)
 {
-	char **split_string;
-	int start;
-	int end;
+	char	**split_string;
+	int		start;
+	int		end;
 
 	end = 0;
 	split_string = NULL;
@@ -60,4 +58,33 @@ char **parsing_split(char *string)
 		}
 	}
 	return (split_string);
+}
+
+char	**append_array(char **old_array, char *arg)
+{
+	int		size;
+	char	**new_array;
+
+	if (arg == NULL)
+		return (old_array);
+	size = array_size(old_array);
+	new_array = malloc(sizeof(char *) * (size + 2));
+	if (new_array == NULL)
+		return (NULL);
+	if (old_array == NULL)
+	{
+		new_array[0] = ft_strdup(arg);
+		new_array[1] = NULL;
+		return (new_array);
+	}
+	size = 0;
+	while (old_array[size])
+	{
+		new_array[size] = ft_strdup(old_array[size]);
+		size++;
+	}
+	free_array(&old_array);
+	new_array[size++] = ft_strdup(arg);
+	new_array[size] = NULL;
+	return (new_array);
 }

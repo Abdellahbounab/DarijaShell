@@ -6,21 +6,22 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 12:50:04 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/15 10:58:53 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/16 09:44:33 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-static char *extand_file_name(char **tokens, t_info *info, int *is_expend, t_type type)
+static char	*extand_file_name(char **tokens, t_info *info, \
+			int *is_expend, t_type type)
 {
-	char *strwild;
-	char *tmp;
+	char	*strwild;
+	char	*tmp;
 
 	strwild = NULL;
 	if (type != HERE_DOC_SIMPLE)
 	{
-		tmp = parsing_extend_var(tokens[info->cmd_i], info->env, is_expend);
+		tmp = parsing_extend_var(tokens[info->cmd_i], info->env, is_expend, 1);
 		strwild = star_magic(tmp, *is_expend, info->env);
 		free(tmp);
 	}
@@ -29,12 +30,13 @@ static char *extand_file_name(char **tokens, t_info *info, int *is_expend, t_typ
 	return (strwild);
 }
 
-static void set_type(t_file *file, int type)
+static void	set_type(t_file *file, int type)
 {
-	char *tmp;
+	char	*tmp;
 
 	tmp = NULL;
-	if (file->name && type == HERE_DOC_SIMPLE && (ft_strchr(file->name[0], '\'') || ft_strchr(file->name[0], '"')))
+	if (file->name && type == HERE_DOC_SIMPLE && \
+	(ft_strchr(file->name[0], '\'') || ft_strchr(file->name[0], '"')))
 	{
 		file->type = HERE_DOC_SPECIAL;
 		tmp = file->name[0];
@@ -47,26 +49,11 @@ static void set_type(t_file *file, int type)
 		file->type = type;
 }
 
-// static void filter_filenames(t_file *file)
-// {
-// 	int i;
-// 	char *tmp;
-
-// 	i = 0;
-// 	while (file->name && file->name[i])
-// 	{
-// 		tmp = file->name[i];
-// 		file->name[i] = ft_filter(file->name[i]);
-// 		free(tmp);
-// 		i++;
-// 	}
-// }
-
-int create_files(t_cmd *cmd, char **tokens, t_info *info, t_type type)
+int	create_files(t_cmd *cmd, char **tokens, t_info *info, t_type type)
 {
-	t_file *file;
-	int is_expend;
-	char *strwild;
+	t_file	*file;
+	int		is_expend;
+	char	*strwild;
 
 	strwild = NULL;
 	is_expend = 0;
@@ -81,7 +68,6 @@ int create_files(t_cmd *cmd, char **tokens, t_info *info, t_type type)
 	if (type != HERE_DOC_SIMPLE)
 		free(strwild);
 	set_type(file, type);
-	// filter_filenames(file);
 	add_back_file(cmd, file);
 	return (GOOD);
 }

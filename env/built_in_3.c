@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in_3.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
+/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 09:56:25 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/15 20:22:12 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/16 10:34:41 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static void cd_home(t_env **env, t_excute *cmds)
 		if (chdir(cmds->arguments[0]) < 0)
 		{
 			perror(cmds->arguments[0]);
-			status = 1;
+			g_status = 1;
 			// ft_perror(NULL, "minishell: ", 0);
 		}
 	}
@@ -77,12 +77,12 @@ static void cd_home(t_env **env, t_excute *cmds)
 			if (chdir(env_getval(*env, "HOME")))
 			{
 				perror(env_getval(*env, "HOME"));
-				status = 1;
+				g_status = 1;
 			}
 		}
 		else
 		{
-			status = 1;
+			g_status = 1;
 			write(STDERR_FILENO, "minishell: cd: HOME not set\n", 28);
 		}
 	}

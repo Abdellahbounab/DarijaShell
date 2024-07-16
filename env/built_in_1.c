@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in_1.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
+/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 19:16:19 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/15 20:21:24 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/16 10:34:11 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int builtin_unset(t_env **env, t_excute *cmds)
 	while (cmds->arguments && cmds->arguments[i])
 	{
 		if (!cmds->arguments[i] || check_name(cmds->arguments[i]) < 0)
-			return (write(STDERR_FILENO, "unset : not a valid identifier\n", 31), status = 1, 0);
+			return (write(STDERR_FILENO, "unset : not a valid identifier\n", 31), g_status = 1, 0);
 		env_unset(env, cmds->arguments[i++]);
 	}
 	return (1);

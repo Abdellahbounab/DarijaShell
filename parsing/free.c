@@ -6,16 +6,16 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:22:05 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/06/24 18:52:03 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/16 09:46:29 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-void free_cmd(t_cmd *cmd)
+void	free_cmd(t_cmd *cmd)
 {
-	t_cmd *cmd_tmp;
-	t_file *tmp_file;
+	t_cmd	*cmd_tmp;
+	t_file	*tmp_file;
 
 	while (cmd)
 	{
@@ -35,9 +35,9 @@ void free_cmd(t_cmd *cmd)
 	}
 }
 
-void free_array(char ***array)
+void	free_array(char ***array)
 {
-	int size;
+	int	size;
 
 	size = 0;
 	if (array && *array)
@@ -49,9 +49,9 @@ void free_array(char ***array)
 	}
 }
 
-int array_size(char **array)
+int	array_size(char **array)
 {
-	int size;
+	int	size;
 
 	size = 0;
 	while (array && array[size])
