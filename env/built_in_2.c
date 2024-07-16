@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in_2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 09:23:59 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/16 10:34:28 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/16 10:49:23 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,20 +107,33 @@ int builtin_export(t_env **env, t_excute *cmds)
     return (1);
 }
 
-int is_numerique(char *str)
+int is_numerique(char *str, int res)
 {
     int i;
     int len;
+	int sign;
 
     i = 0;
+	sign = 0;
     if (str)
         len = ft_strlen(str);
-    if ((str[i] == '-' || str[i] == '+') && str[i + 1])
+    if (str[i] && (str[i] == '-' || str[i] == '+') && str[i + 1])
+	{
         i++;
+		sign++;
+	}
     while (str && str[i] && !ft_isdigit(str[i]))
         i++;
     if (str && len == i)
+	{
+		if (len > 20)
+			return 0;
+		if (len == 20 && !res && ft_strcmp(str, "-9223372036854775808"))
+			return 0;
+		else if (len == 19 + sign && res == -1 && ft_strcmp(str + sign, "9223372036854775807"))
+			return 0;
         return 1;
+	}
     return 0;
 }
 
@@ -139,7 +152,7 @@ int builtin_exit(t_env **env, t_excute *cmds)
 			if (arg)
            		num = ft_atoi(arg);
 		}
-        if (arg && !is_numerique(arg))
+        if (arg && !is_numerique(arg, num))
             ft_perror("exit : ", "numeric argument required", 255);
         if (cmds->arguments[0] && cmds->arguments[1])
         {
