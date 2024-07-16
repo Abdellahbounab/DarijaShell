@@ -3,29 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   built_in_1.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 19:16:19 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/16 10:34:11 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/16 11:15:07 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "env.h"
-#include "../parsing/parsing.h"
 #include "../excution/excution.h"
-#include "../types.h"
+#include "../parsing/parsing.h"
+#include "env.h"
 
-/*
-◦ echo with option -n *
-◦ cd with only a relative or absolute path
-◦ pwd with no options *
-◦ export with no options (when no arg can display the envs) *
-◦ unset with no options *
-◦ env with no options or arguments *
-◦ exit with no options *
-*/
-
-int is_builtin(char *cmd)
+int	is_builtin(char *cmd)
 {
 	if (cmd)
 	{
@@ -47,10 +36,10 @@ int is_builtin(char *cmd)
 	return (0);
 }
 
-int builtin_pwd(t_env **env)
+int	builtin_pwd(t_env **env)
 {
-	char str[100];
-	char *pwd;
+	char	str[100];
+	char	*pwd;
 
 	if (env)
 	{
@@ -64,41 +53,42 @@ int builtin_pwd(t_env **env)
 	exit(1);
 }
 
-int builtin_unset(t_env **env, t_excute *cmds)
+int	builtin_unset(t_env **env, t_excute *cmds)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (cmds->arguments && cmds->arguments[i])
 	{
 		if (!cmds->arguments[i] || check_name(cmds->arguments[i]) < 0)
-			return (write(STDERR_FILENO, "unset : not a valid identifier\n", 31), g_status = 1, 0);
+			return (write(STDERR_FILENO, "unset : not a valid identifier\n",
+					31), g_status = 1, 0);
 		env_unset(env, cmds->arguments[i++]);
 	}
 	return (1);
 }
 
-int env_export(t_env **lst, char *key, char *val, char type)
+int	env_export(t_env **lst, char *key, char *val, char type)
 {
-	t_env *newnode;
+	t_env	*newnode;
 
 	if (!lst)
-		return 0;
+		return (0);
 	if (env_getkey(*lst, key))
 	{
-		if (val && env_update(lst, key, val))
-			return 1;
-		return 0;
+		if (val && env_update(lst, key, val, type))
+			return (1);
+		return (0);
 	}
 	newnode = ft_calloc(1, sizeof(t_env));
 	if (!newnode)
-		return 0;
+		return (0);
 	newnode->key = ft_strdup(key);
 	newnode->value = ft_strdup(val);
 	newnode->type = type;
 	if (!*lst)
 		return (*lst = newnode, 1);
 	else if (env_addback(lst, newnode))
-		return 1;
-	return 0;
+		return (1);
+	return (0);
 }

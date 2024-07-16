@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   excution_herdoc.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 10:30:37 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/16 10:54:00 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/16 11:26:58 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "excution.h"
 
@@ -48,7 +47,7 @@ int	open_heredoc(t_file *file, int heredocfile, t_env **env)
 	return (free(line), 1);
 }
 
-static int update_files(t_file *file, char *name, int fd)
+static int	update_files(t_file *file, char *name, int fd)
 {
 	if (file)
 	{
@@ -61,11 +60,11 @@ static int update_files(t_file *file, char *name, int fd)
 	return (1);
 }
 
-static char *create_name(void)
+static char	*create_name(void)
 {
-	char *start;
-	char *num;
-	long long i;
+	char		*start;
+	char		*num;
+	long long	i;
 
 	i = 0;
 	while (1)
@@ -80,33 +79,30 @@ static char *create_name(void)
 	return (NULL);
 }
 
-int	heredoc_management(t_file	*files, t_env **env)
+int	heredoc_management(t_file *files, t_env **env)
 {
-	int	heredoc_postion;
-	int	i;
-	int fd;
-	char *name;
-	
+	int		heredoc_postion;
+	int		i;
+	int		fd;
+	char	*name;
+
 	i = 0;
 	fd = -1;
 	heredoc_postion = last_file_position(files, HERE_DOC_SIMPLE) - 1;
 	while (heredoc_postion >= 0 && files)
-	// while (heredoc_postion >= 0 && files && !status)
 	{
 		if (files->type == HERE_DOC_SIMPLE || files->type == HERE_DOC_SPECIAL)
 		{
 			if (i == heredoc_postion)
 			{
 				name = create_name();
-				fd = open (name, OUFILE, 0770);
+				fd = open(name, OUFILE, 0770);
 				if (fd < 0)
-					return (printf("Heredoc :%s\n", strerror(errno)), -1); //error handling
+					return (printf("Heredoc :%s\n", strerror(errno)), -1);
 			}
 			open_heredoc(files, fd, env);
 			if (fd != -1)
 				update_files(files, name, fd);
-			// if (status)
-			// 	return (0);
 			i++;
 		}
 		files = files->next;
@@ -128,7 +124,7 @@ t_excute	*heredoc_update(t_cmd *command, t_env **env)
 		node = cmd_create(fds[0]);
 		if (!node)
 			return (cmd_free(&cmds), NULL);
-		if (command->next && pipe(fds) != -1) 
+		if (command->next && pipe(fds) != -1)
 		{
 			dup2(fds[1], node->outfile);
 			close(fds[1]);

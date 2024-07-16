@@ -6,161 +6,106 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 09:23:59 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/16 10:49:23 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/16 11:16:09 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "env.h"
-#include "../parsing/parsing.h"
 #include "../excution/excution.h"
-#include "../types.h"
+#include "../parsing/parsing.h"
+#include "env.h"
 
-static void print_env(t_env *env, int flag)
+static void	print_env(t_env *env, int flag)
 {
-    write(STDOUT_FILENO, env->key, ft_strlen(env->key));
+	write(STDOUT_FILENO, env->key, ft_strlen(env->key));
 	if ((env->value && flag) || !flag)
-    write(STDOUT_FILENO, "=", 1);	
-    if (env->value && flag)
-        write(STDOUT_FILENO, "\"", 1);
-    if (env->value)
-        write(STDOUT_FILENO, env->value, ft_strlen(env->value));
-    if (env->value && flag)
-        write(STDOUT_FILENO, "\"", 1);
-    write(STDOUT_FILENO, "\n", 1);
+		write(STDOUT_FILENO, "=", 1);
+	if (env->value && flag)
+		write(STDOUT_FILENO, "\"", 1);
+	if (env->value)
+		write(STDOUT_FILENO, env->value, ft_strlen(env->value));
+	if (env->value && flag)
+		write(STDOUT_FILENO, "\"", 1);
+	write(STDOUT_FILENO, "\n", 1);
 }
 
-int builtin_env(t_env *env, int flag)
+int	builtin_env(t_env *env, int flag)
 {
-    int counter;
+	int	counter;
 
-    counter = 0;
-    if (!env_getkey(env, "PATH"))
-        ft_perror("env :", "No such file or directory", 127);
-    while (env)
-    {
-        if (flag)
-            write(STDOUT_FILENO, "	declare -x ", 12);
-        else
-            env_export(&env, "_", "usr/bin/env", 0);
-        if ((!flag && !env->type) || flag)
-            print_env(env, flag);
-        env = env->next;
-        counter++;
-    }
-    env_unset(&env, "_");
-    exit(0);
+	counter = 0;
+	if (!env_getkey(env, "PATH"))
+		ft_perror("env :", "No such file or directory", 127);
+	while (env)
+	{
+		if (flag)
+			write(STDOUT_FILENO, "	declare -x ", 12);
+		else
+			env_export(&env, "_", "usr/bin/env", 0);
+		if ((!flag && !env->type) || flag)
+			print_env(env, flag);
+		env = env->next;
+		counter++;
+	}
+	env_unset(&env, "_");
+	exit(0);
 }
 
-int until_char(char *str, char c)
+static int	until_char(char *str, char c)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str && str[i])
 	{
 		if (str[i] == c)
-			return i;
+			return (i);
 		i++;
 	}
 	return (-1);
 }
 
-int builtin_export(t_env **env, t_excute *cmds)
+static void	handle_exp_case(char *arg, t_env **env, int type)
 {
-    int i;
-    // char **arr;
-	char *key;
-    char *str;
-    char type;
+	char	*key;
+	char	*str;
 
-    i = 0;
-    type = 0;
 	str = NULL;
-    if (cmds->arguments && !cmds->arguments[0])
-        return (builtin_env(*env, 1));
-    while (cmds->arguments && cmds->arguments[i])
-    {
-		if (until_char(cmds->arguments[i], '=') < 0)
-		{
-			key = ft_strdup(cmds->arguments[i]);
-			type = 1;
-		}
-		else
-			key = ft_substr(cmds->arguments[i], 0, until_char(cmds->arguments[i], '='));
-        if (!key || !*key || check_name(key) < 0)
-		{
-			write(STDERR_FILENO, "export : not a valid identifier\n", 32);
-			g_status = 1;
-		}
-		else
-		{
-			if (!type)
-				str = ft_strdup(cmds->arguments[i] + until_char(cmds->arguments[i], '=') + 1);
-			env_export(env, key, str, type);
-		}
-		free(key);
-        free(str);
+	if (until_char(arg, '=') < 0)
+	{
+		key = ft_strdup(arg);
+		type = 1;
+	}
+	else
+		key = ft_substr(arg, 0, until_char(arg, '='));
+	if (!key || !*key || check_name(key) < 0)
+	{
+		write(STDERR_FILENO, "export : not a valid identifier\n", 32);
+		g_status = 1;
+	}
+	else
+	{
+		if (!type)
+			str = ft_strdup(arg + until_char(arg, '=') + 1);
+		env_export(env, key, str, type);
+	}
+	free(key);
+	free(str);
+	str = NULL;
+}
+
+int	builtin_export(t_env **env, t_excute *cmds)
+{
+	int		i;
+	char	type;
+
+	i = 0;
+	if (cmds->arguments && !cmds->arguments[0])
+		return (builtin_env(*env, 1));
+	while (cmds->arguments && cmds->arguments[i])
+	{
 		type = 0;
-		str = NULL;
-        i++;
-    }
-    return (1);
-}
-
-int is_numerique(char *str, int res)
-{
-    int i;
-    int len;
-	int sign;
-
-    i = 0;
-	sign = 0;
-    if (str)
-        len = ft_strlen(str);
-    if (str[i] && (str[i] == '-' || str[i] == '+') && str[i + 1])
-	{
-        i++;
-		sign++;
+		handle_exp_case(cmds->arguments[i], env, type);
+		i++;
 	}
-    while (str && str[i] && !ft_isdigit(str[i]))
-        i++;
-    if (str && len == i)
-	{
-		if (len > 20)
-			return 0;
-		if (len == 20 && !res && ft_strcmp(str, "-9223372036854775808"))
-			return 0;
-		else if (len == 19 + sign && res == -1 && ft_strcmp(str + sign, "9223372036854775807"))
-			return 0;
-        return 1;
-	}
-    return 0;
-}
-
-int builtin_exit(t_env **env, t_excute *cmds)
-{
-    int num;
-	char	*arg;
-
-    num = g_status;
-	arg = NULL;
-    if (cmds->arguments)
-    {
-        if (cmds->arguments[0])
-		{
-			arg = ft_strtrim(cmds->arguments[0], " \t");
-			if (arg)
-           		num = ft_atoi(arg);
-		}
-        if (arg && !is_numerique(arg, num))
-            ft_perror("exit : ", "numeric argument required", 255);
-        if (cmds->arguments[0] && cmds->arguments[1])
-        {
-            g_status = 1;
-            return (write(STDERR_FILENO, "exit: too many arguments\n", 25));
-        }
-    }
-    free_env(env);
-    write(STDIN_FILENO, "exit\n", 5);
-    exit(num);
+	return (1);
 }

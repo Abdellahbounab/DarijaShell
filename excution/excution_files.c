@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   excution_files.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 10:35:10 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/16 10:35:09 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/16 11:44:45 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,38 +21,17 @@ int	last_file_position(t_file *files, t_type t)
 	j = 0;
 	while (files)
 	{
-		if (files->type == HERE_DOC_SIMPLE || files->type == HERE_DOC_SPECIAL || files->type == HERE_DOC_USED)
+		if (files->type == HERE_DOC_SIMPLE || files->type == HERE_DOC_SPECIAL
+			|| files->type == HERE_DOC_USED)
 			i++;
 		else if (files->type == t)
 			j++;
 		files = files->next;
 	}
-	if (t == HERE_DOC_SIMPLE || t == HERE_DOC_SPECIAL || files->type == HERE_DOC_USED)
+	if (t == HERE_DOC_SIMPLE || t == HERE_DOC_SPECIAL
+		|| files->type == HERE_DOC_USED)
 		return (i);
 	return (j);
-}
-
-int	infile_update(t_file *files, t_excute *cmds)
-{
-	int	fd;
-
-	fd = cmds->infile;
-	while (files)
-	{
-		// have to be handleded in the case of special builtins
-		if (!files->name || files->name[1])
-			return (ft_perror("minishell:", " ambiguous redirect", 1), -1);
-		if (files->type == INFILE || files->type == HERE_DOC_USED)
-		{
-			fd = open(files->name[0], INFILE);
-			if (fd < 0)
-				return (ft_perror(NULL, files->name[0], 0), fd);
-			dup2(fd, cmds->infile);
-			close(fd);
-		}
-		files = files->next;
-	}
-	return (1);
 }
 
 int	files_update(t_file *files, t_excute *cmds)
@@ -68,7 +47,7 @@ int	files_update(t_file *files, t_excute *cmds)
 		{
 			fd = open(files->name[0], files->type, 0720);
 			if (fd < 0)
-				return (ft_perror(NULL, files->name[0], 0), fd) ;
+				return (ft_perror(NULL, files->name[0], 0), fd);
 			dup2(fd, cmds->outfile);
 			close(fd);
 		}
@@ -87,8 +66,8 @@ int	files_update(t_file *files, t_excute *cmds)
 
 int	get_path(char *cmd, char **paths)
 {
-	int	i;
-	char *tmp;
+	int		i;
+	char	*tmp;
 
 	i = 0;
 	while (cmd && paths && paths[i])
@@ -114,14 +93,16 @@ int	redirection_update(t_cmd *command, t_excute **head, t_env **env)
 	i = 0;
 	while (command && cmds)
 	{
-		if (!command->next && !(*head)->next && command->args && special_builtin(command->args[0], command->args[1]))
+		if (!command->next && !(*head)->next && command->args
+			&& special_builtin(command->args[0], command->args[1]))
 			child_excution(command, cmds, env, 0);
 		else
 		{
 			pid = fork();
 			ft_signals(pid);
 			if (!pid)
-				return (close_other(*head, i), child_excution(command, cmds, env, 1));
+				return (close_other(*head, i), 
+					child_excution(command, cmds, env, 1));
 			if (pid && pid != -1)
 				cmds->pid = pid;
 			else
