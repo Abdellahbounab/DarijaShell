@@ -31,20 +31,6 @@ achakkaf@c1r7p6 minishell % echo $?
 -------------------------------------------------
 -------------------------------------------------
 
-minishell-$ unset PWD
-minishell-$ cd ..
-minishell-$ export PWD=new_value
-minishell-$ export | grep PWD
-        declare -x OLDPWD="/Users/achakkaf/Desktop/minishell"
-        declare -x PWD="new_value"
-
-bash-3.2$ unset PWD;
- cd ..;
-  export PWD=new_value; 
-  export | grep PWD
-declare -x OLDPWD=""
-declare -x PWD="new_value"
-
 -------------------------------------------------
 
 -------------------------------------------------
