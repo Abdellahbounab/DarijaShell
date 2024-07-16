@@ -6,50 +6,15 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 10:30:37 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/16 11:26:58 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/16 15:35:18 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "excution.h"
 
-int	open_heredoc(t_file *file, int heredocfile, t_env **env)
-{
-	char	*line;
-	char	*tmp;
-
-	line = NULL;
-	write(STDOUT_FILENO, "> ", 2);
-	tmp = get_next_line(STDIN_FILENO);
-	if (tmp)
-		line = ft_strtrim(tmp, "\n");
-	free(tmp);
-	while (line && ft_strcmp(line, file->name[0]))
-	{
-		tmp = line;
-		if (file->type == HERE_DOC_SIMPLE)
-		{
-			line = heredoc_var(line, *env, NULL);
-			free(tmp);
-		}
-		if (heredocfile != -1)
-		{
-			write(heredocfile, line, ft_strlen(line));
-			write(heredocfile, "\n", 1);
-		}
-		free(line);
-		line = NULL;
-		write(STDOUT_FILENO, "> ", 2);
-		tmp = get_next_line(STDIN_FILENO);
-		if (tmp)
-			line = ft_strtrim(tmp, "\n");
-		free(tmp);
-	}
-	return (free(line), 1);
-}
-
 static int	update_files(t_file *file, char *name, int fd)
 {
-	if (file)
+	if (file && fd != -1)
 	{
 		close(fd);
 		free_array(&file->name);
@@ -57,7 +22,7 @@ static int	update_files(t_file *file, char *name, int fd)
 		file->name = ft_split(name, '\0');
 		free(name);
 	}
-	return (1);
+	return (255);
 }
 
 static char	*create_name(void)
@@ -79,33 +44,57 @@ static char	*create_name(void)
 	return (NULL);
 }
 
+int	heredoc_traitement(t_file *files, t_env **env, int heredoc_position, int i)
+{
+	int		pid;
+	int		status;
+	char	*name;
+	int		fd;
+
+	fd = -1;
+	if (i == heredoc_position)
+	{
+		name = create_name();
+		fd = open(name, OUFILE, 0770);
+		if (fd < 0)
+			return (ft_perror(NULL, "Heredoc: ", 0), -1);
+	}
+	pid = fork();
+	if (pid)
+	{
+		waitpid(pid, &status, 0);
+		if (WIFSIGNALED(status))
+			return (close(fd), 0);
+	}
+	else if (!pid)
+		open_heredoc(files, fd, env);
+	else
+		return (close(fd), 0);
+	return (update_files(files, name, fd));
+}
+
 int	heredoc_management(t_file *files, t_env **env)
 {
 	int		heredoc_postion;
 	int		i;
-	int		fd;
-	char	*name;
+	int		j;
 
 	i = 0;
-	fd = -1;
 	heredoc_postion = last_file_position(files, HERE_DOC_SIMPLE) - 1;
-	while (heredoc_postion >= 0 && files)
+	if (heredoc_postion >= 0)
 	{
-		if (files->type == HERE_DOC_SIMPLE || files->type == HERE_DOC_SPECIAL)
+		while (heredoc_postion >= 0 && files)
 		{
-			if (i == heredoc_postion)
+			if (files->type == HERE_DOC_SIMPLE
+				|| files->type == HERE_DOC_SPECIAL)
 			{
-				name = create_name();
-				fd = open(name, OUFILE, 0770);
-				if (fd < 0)
-					return (printf("Heredoc :%s\n", strerror(errno)), -1);
+				j = heredoc_traitement(files, env, heredoc_postion, i);
+				if (j != 255)
+					return (j);
+				i++;
 			}
-			open_heredoc(files, fd, env);
-			if (fd != -1)
-				update_files(files, name, fd);
-			i++;
+			files = files->next;
 		}
-		files = files->next;
 	}
 	return (1);
 }
@@ -129,9 +118,9 @@ t_excute	*heredoc_update(t_cmd *command, t_env **env)
 			dup2(fds[1], node->outfile);
 			close(fds[1]);
 		}
-		if (!heredoc_management(command->files, env))
-			return (cmd_free(&cmds), NULL);
 		cmd_addback(&cmds, node);
+		if (!heredoc_management(command->files, env))
+			return (close(fds[0]), cmd_free(&cmds), NULL);
 		command = command->next;
 	}
 	return (cmds);

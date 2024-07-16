@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 10:36:37 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/16 11:26:27 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/16 15:54:01 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,19 @@
 void	signal_handler(int sig)
 {
 	(void)sig;
-	g_status = 1;
 	rl_replace_line("", 0);
 	write(STDIN_FILENO, "\n", 1);
 	rl_on_new_line();
 	rl_redisplay();
+	g_status = 1;
 }
 
 int	ft_signals(int child)
 {
-	struct sigaction	sa;
-
-	sa.sa_handler = signal_handler;
-	sa.sa_flags = 0;
-	sigemptyset(&sa.sa_mask);
 	if (child)
 	{
 		if (child == 1)
-			sigaction(SIGINT, &sa, NULL);
+			signal(SIGINT, signal_handler);
 		else
 			signal(SIGINT, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);

@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/16 11:40:59 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/16 15:11:23 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,16 @@ int	excute_cmd(t_excute *cmds, t_env **env, int child)
 int	child_excution(t_cmd *command, t_excute *cmds, t_env **env, int child)
 {
 	if (files_update(command->files, cmds) < 0)
+	{
+		if (child)
+			exit (g_status);
 		return (0);
+	}
 	cmds->cmd = get_commands(command->args, &cmds->arguments,
 			ft_split(env_getval(*env, "PATH"), ':'));
 	if (excute_cmd(cmds, env, child))
 		return (1);
-	exit(1);
+	exit(0);
 }
 
 int	excute_builtin(t_excute *cmds, t_env **env, int child)
@@ -93,7 +97,10 @@ int	excution(t_cmd *command, t_env **env)
 	t_excute	*cmds;
 
 	cmds = heredoc_update(command, env);
-	redirection_update(command, &cmds, env);
-	waitprocess(cmds);
+	if (cmds)
+	{
+		redirection_update(command, &cmds, env);
+		waitprocess(cmds);
+	}
 	return (1);
 }
