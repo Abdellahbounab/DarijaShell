@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 10:30:37 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/16 09:42:46 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/16 10:54:00 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	open_heredoc(t_file *file, int heredocfile, t_env **env)
 		tmp = line;
 		if (file->type == HERE_DOC_SIMPLE)
 		{
-			line = parsing_extend_var(line, *env, NULL, 0);
+			line = heredoc_var(line, *env, NULL);
 			free(tmp);
 		}
 		if (heredocfile != -1)

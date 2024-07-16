@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:21:34 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/16 10:33:34 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/16 10:53:02 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	meaning(char **tokens, t_cmd *cmd, t_info *info)
 	is_expend = 0;
 	if (info->file == 0)
 	{
-		tmp = parsing_extend_var(tokens[info->cmd_i], info->env, &is_expend, 1);
+		tmp = parsing_extend_var(tokens[info->cmd_i], info->env, &is_expend);
 		if (cmd->args == NULL || info->cmd_i > 1 \
 		|| ft_strcmp(cmd->args[info->cmd_i - 1], "export") != 0)
 			strwild = star_magic(tmp, is_expend, info->env);

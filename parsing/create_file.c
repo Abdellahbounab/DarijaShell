@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 12:50:04 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/16 09:44:33 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/16 10:53:11 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static char	*extand_file_name(char **tokens, t_info *info, \
 	strwild = NULL;
 	if (type != HERE_DOC_SIMPLE)
 	{
-		tmp = parsing_extend_var(tokens[info->cmd_i], info->env, is_expend, 1);
+		tmp = parsing_extend_var(tokens[info->cmd_i], info->env, is_expend);
 		strwild = star_magic(tmp, *is_expend, info->env);
 		free(tmp);
 	}

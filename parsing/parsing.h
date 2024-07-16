@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:12:12 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/16 10:15:22 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/16 10:53:42 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_cmd	*parsing(char *line, t_env *env);
 int		check_next(char *str);
 int		create_files(t_cmd *cmd, char **line, t_info *info, t_type type);
 void	free_cmd(t_cmd *cmd);
-char	*parsing_extend_var(char *string, t_env *env, int *expend, int quote);
+char	*parsing_extend_var(char *string, t_env *env, int *expend);
 char	**parsing_split(char *string);
 char	*ft_filter(char *part);
 char	*quation_mark(char *string, t_info *info, char *var_value);
@@ -57,5 +57,6 @@ bool	handle_wildcard(char **filename, const char **pattern);
 bool	match_chars(char **filename, const char **pattern);
 void	skip_star(const char **pattern);
 bool	match_(char *filename, const char *pattern);
+char	*heredoc_var(char *string, t_env *env, int *is_expend);
 
 #endif

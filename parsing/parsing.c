@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 11:15:13 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/16 10:13:21 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/16 10:50:48 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,16 @@ static void	single_quote(char *str, int *index)
 }
 
 static char	*extend_var_logic(char *string, t_info *info, \
-	int *is_expend, int quote)
+	int *is_expend)
 {
 	char	*tmp;
 
 	tmp = NULL;
 	while (string[info->end])
 	{
-		if (quote && string[info->end] == '\'')
+		if (string[info->end] == '\'')
 			single_quote(string, &info->end);
-		if (quote && string[info->end] == '"')
+		if (string[info->end] == '"')
 			double_quote(string, info, &tmp, is_expend);
 		if (string[info->end] == '$')
 		{
@@ -75,7 +75,7 @@ static char	*extend_var_logic(char *string, t_info *info, \
 	return (tmp);
 }
 
-char	*parsing_extend_var(char *string, t_env *env, int *is_expend, int quote)
+char	*parsing_extend_var(char *string, t_env *env, int *is_expend)
 {
 	t_info	*info;
 	char	*tmp;
@@ -88,7 +88,7 @@ char	*parsing_extend_var(char *string, t_env *env, int *is_expend, int quote)
 	if (info == NULL)
 		return (NULL);
 	info->env = env;
-	tmp = extend_var_logic(string, info, is_expend, quote);
+	tmp = extend_var_logic(string, info, is_expend);
 	new_string = ft_substr(string, info->start, info->end - info->start);
 	tmp_free = new_string;
 	new_string = ft_strjoin(tmp, new_string);
