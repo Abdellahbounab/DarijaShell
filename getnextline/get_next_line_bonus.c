@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/09 13:44:03 by abounab           #+#    #+#             */
-/*   Updated: 2024/06/30 09:22:40 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/16 11:50:53 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ size_t	until_line(char *str)
 
 char	*ft_read_buff(int fd, char *str)
 {
-	char	buff[BUFFER_SIZE + 1];
+	char	buff[1];
 	int		count;
 	char	*tmp;
 
@@ -32,7 +32,7 @@ char	*ft_read_buff(int fd, char *str)
 	while (count)
 	{
 		tmp = str;
-		count = read(fd, buff, BUFFER_SIZE);
+		count = read(fd, buff, 1);
 		if (count < 0)
 			return (free(str), NULL);
 		buff[count] = 0;
@@ -57,7 +57,7 @@ char	*ft_get_line(char *str)
 	len = until_line(str) + 1;
 	if (str[until_line(str)])
 		len++;
-	cpy = (char *) malloc (sizeof(char) * len);
+	cpy = (char *)malloc(sizeof(char) * len);
 	if (!cpy)
 		return (0);
 	return (ft_strlcpy(cpy, str, len), cpy);
@@ -75,14 +75,13 @@ char	*ft_update(char *str)
 	return (cpy);
 }
 
-#include <fcntl.h>
 char	*get_next_line(int fd)
 {
 	char		*line;
 	static char	*str[10240];
 	char		*tmp;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	if (fd < 0 || read(fd, 0, 0) < 0)
 		return (free(str[fd]), str[fd] = NULL, NULL);
 	tmp = ft_read_buff(fd, str[fd]);
 	if (!tmp)

@@ -6,12 +6,11 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:21:23 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/15 17:06:52 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/16 11:40:59 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "excution.h"
-
 
 int	excute_cmd(t_excute *cmds, t_env **env, int child)
 {
@@ -31,7 +30,8 @@ int	excute_cmd(t_excute *cmds, t_env **env, int child)
 		if (!arr)
 			return (ft_perror(NULL, "Memory", 0));
 		if (execve(cmds->cmd, cmds->arguments, arr) == -1)
-			return (free_array(&arr), ft_perror(cmds->cmd, ": command not found", 127)); //error
+			return (free_array(&arr),
+				ft_perror(cmds->cmd, ": command not found", 127));
 	}
 	return (0);
 }
@@ -40,7 +40,8 @@ int	child_excution(t_cmd *command, t_excute *cmds, t_env **env, int child)
 {
 	if (files_update(command->files, cmds) < 0)
 		return (0);
-	cmds->cmd = get_commands(command->args, &cmds->arguments, ft_split(env_getval(*env, "PATH"), ':'));
+	cmds->cmd = get_commands(command->args, &cmds->arguments,
+			ft_split(env_getval(*env, "PATH"), ':'));
 	if (excute_cmd(cmds, env, child))
 		return (1);
 	exit(1);
@@ -75,16 +76,16 @@ int	special_builtin(char *cmds, char *arr)
 {
 	if (cmds)
 	{
-		if (cmds &&!ft_strcmp(cmds, "unset"))
-			return 1;
+		if (cmds && !ft_strcmp(cmds, "unset"))
+			return (1);
 		else if (cmds && arr && !ft_strcmp(cmds, "export"))
-			return 1;
+			return (1);
 		else if (cmds && !ft_strcmp(cmds, "exit"))
-			return 1;
+			return (1);
 		else if (cmds && !ft_strcmp(cmds, "cd"))
-			return 1;
+			return (1);
 	}
-	return 0;
+	return (0);
 }
 
 int	excution(t_cmd *command, t_env **env)

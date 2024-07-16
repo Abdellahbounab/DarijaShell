@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_excution.c                                     :+:      :+:    :+:   */
+/*   excution_cmd_1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 10:24:39 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/09 10:26:34 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/16 11:30:40 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	cmd_free_node(t_excute *cpy)
 
 int	cmd_free(t_excute **cmds)
 {
-	t_excute *cpy;
+	t_excute	*cpy;
 
 	cpy = *cmds;
 	while (cpy)
@@ -49,7 +49,7 @@ int	ft_commandslen(t_cmd *command)
 		counter++;
 		command = command->next;
 	}
-	return	counter;
+	return (counter);
 }
 
 t_excute	*cmd_create(int inpipe)
