@@ -16,6 +16,7 @@ SRC =	parsing/cmd.c \
 		parsing/match.c \
 		parsing/parsing_split.c \
 		parsing/create_file.c \
+		parsing/heredoc_var.c \
 		getnextline/get_next_line_bonus.c\
 		env/built_in_1.c \
 		env/built_in_2.c \
