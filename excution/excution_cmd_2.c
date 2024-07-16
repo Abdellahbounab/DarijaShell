@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 10:38:49 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/16 12:44:52 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/16 20:01:38 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	is_directory(const char *path)
 {
 	struct stat	stats;
 
-	if (stat(path, &stats))
+	if (!path || stat(path, &stats))
 		return (0);
 	return (S_ISDIR(stats.st_mode));
 }
@@ -33,8 +33,8 @@ int	is_file(const char *path)
 
 static char	*check_file(char **argv, char ***cmd_argv, char **paths)
 {
-	if (argv[0][0] == '.' && argv[0][ft_strlen(argv[0]) - 1] == 'h'
-		&& argv[0][ft_strlen(argv[0]) - 2] == 's')
+	if ((argv[0][0] == '.' && argv[0][ft_strlen(argv[0]) - 1] == 'h'
+		&& argv[0][ft_strlen(argv[0]) - 2] == 's'))
 	{
 		if (access(argv[0], X_OK) == -1)
 			return (free_array(&paths), 
@@ -86,7 +86,8 @@ char	*get_commands(char **argv, char ***cmd_argv, char **paths)
 				ft_strdup(argv[0]));
 		if (argv[0] && is_file(argv[0]))
 			return (check_file(argv, cmd_argv, paths));
-		else if (argv[0] && ft_strchr(argv[0], '/'))
+		else if ((argv[0] && ft_strchr(argv[0], '/')) 
+			|| (is_directory(argv[0]) && !paths))
 		{
 			if (is_directory(argv[0]))
 				return (free_array(&paths), ft_perror(argv[0],
