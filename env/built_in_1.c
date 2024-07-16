@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 19:16:19 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/16 10:58:32 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/16 11:15:07 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	env_export(t_env **lst, char *key, char *val, char type)
 		return (0);
 	if (env_getkey(*lst, key))
 	{
-		if (val && env_update(lst, key, val))
+		if (val && env_update(lst, key, val, type))
 			return (1);
 		return (0);
 	}

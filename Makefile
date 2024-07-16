@@ -21,6 +21,7 @@ SRC =	parsing/cmd.c \
 		env/built_in_1.c \
 		env/built_in_2.c \
 		env/built_in_3.c \
+		env/built_in_4.c \
 		env/create_env.c \
 		env/env_built_in.c 
 

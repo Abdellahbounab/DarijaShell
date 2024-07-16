@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 14:16:27 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/16 11:00:51 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/16 11:15:15 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_env	*env_getkey(t_env *lst, char *key);
 int		env_unset(t_env **lst, char *key);
 int		env_export(t_env **lst, char *key, char *val, char type);
 int		env_addback(t_env **lst, t_env *newnode);
-int		env_update(t_env **lst, char *key, char *newval);
+int		env_update(t_env **lst, char *key, char *newval, char newtype);
 char	*env_getval(t_env *lst, char *key);
 int		env_size(t_env *env);
 
