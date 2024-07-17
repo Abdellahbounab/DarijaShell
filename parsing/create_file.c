@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 12:50:04 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/16 13:03:45 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/17 18:23:37 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	create_files(t_cmd *cmd, char **tokens, t_info *info, t_type type)
 	if (file == NULL)
 		return (ERROR);
 	strwild = extand_file_name(tokens, info, &is_expend, type);
-	if (is_expend == 1)
+	if (is_expend == 1 || is_expend == 2)
 		file->name = ft_split(strwild, SPACE);
 	else
 		file->name = parsing_split(strwild);

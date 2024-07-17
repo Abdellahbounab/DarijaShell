@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:21:34 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/16 10:53:02 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/17 18:23:24 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	meaning(char **tokens, t_cmd *cmd, t_info *info)
 		else
 			strwild = ft_strdup(tmp);
 		free(tmp);
-		if (is_expend == 1)
+		if (is_expend == 1 || is_expend == 2)
 			return (var_parsing(cmd, strwild));
 		else
 			return (normal_parsing(cmd, strwild));

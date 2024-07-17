@@ -6,7 +6,7 @@
 /*   By: achakkaf <achakkaf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:23:00 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/16 10:33:59 by achakkaf         ###   ########.fr       */
+/*   Updated: 2024/07/17 18:19:22 by achakkaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ char	*star_magic(char *token, int is_expend, t_env *env)
 	char	*strwild;
 
 	strwild = NULL;
-	if (token && is_expend == 1)
+	if (token && is_expend == 2)
 		strwild = var_wildcard(token, env);
 	else if (token && ft_strchr(token, '*'))
 		strwild = wildcard(token, env);
