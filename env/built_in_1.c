@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 19:16:19 by abounab           #+#    #+#             */
-/*   Updated: 2024/07/17 21:25:57 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/17 21:35:28 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,10 @@ int	builtin_unset(t_env **env, t_excute *cmds)
 	{
 		if (!cmds->arguments[i] || check_name(cmds->arguments[i]) < 0)
 		{
-			write(STDERR_FILENO, "unset : not a valid identifier\n",
-					31), g_status = 1, 0;
+			write (STDERR_FILENO, "unset : not a valid identifier\n", 31);
 			err = 1;
 			i++;
-			continue;
+			continue ;
 		}
 		env_unset(env, cmds->arguments[i++]);
 	}
