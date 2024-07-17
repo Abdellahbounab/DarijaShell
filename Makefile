@@ -23,7 +23,15 @@ SRC =	parsing/cmd.c \
 		env/built_in_3.c \
 		env/built_in_4.c \
 		env/create_env.c \
-		env/env_built_in.c 
+		env/env_built_in.c\
+		excution/excution_tooles.c \
+		excution/main_excution.c \
+		excution/excution_herdoc.c \
+		excution/excution_cmd_1.c \
+		excution/excution_cmd_2.c \
+		excution/excution_cmd_3.c \
+		excution/excution_files.c
+
 
 
 INCLUDES =	env/env.h parsing/parsing.h excution/excution.h types.h \
@@ -34,13 +42,7 @@ LIBFT := $(LIBFT_DIR)/libft.a
 
 OBJ=$(SRC:.c=.o)
 
-RDLINE_SRCS =	excution/main_excution.c \
-				excution/excution_herdoc.c \
-				excution/excution_cmd_1.c \
-				excution/excution_cmd_2.c \
-				excution/excution_files.c \
-				excution/excution_signal.c \
-				excution/excution_tooles.c \
+RDLINE_SRCS =	excution/excution_signal.c \
 				main.c
 
 RDLINE =  /goinfre/$(shell users)/homebrew/opt/readline

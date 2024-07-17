@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 09:56:25 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/16 10:58:13 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/17 21:29:58 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ int	builtin_echo(t_excute *cmd)
 
 static void	cd_home(t_env **env, t_excute *cmds)
 {
+	g_status = 0;
 	if (cmds->arguments[0] && ft_strcmp(cmds->arguments[0], "~"))
 	{
 		if (chdir(cmds->arguments[0]) < 0)

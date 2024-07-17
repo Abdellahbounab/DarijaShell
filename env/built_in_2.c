@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 09:23:59 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/16 11:16:09 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/17 21:27:04 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static int	until_char(char *str, char c)
 	return (-1);
 }
 
-static void	handle_exp_case(char *arg, t_env **env, int type)
+static void	handle_exp_case(char *arg, t_env **env, int type, int *err)
 {
 	char	*key;
 	char	*str;
@@ -80,7 +80,7 @@ static void	handle_exp_case(char *arg, t_env **env, int type)
 	if (!key || !*key || check_name(key) < 0)
 	{
 		write(STDERR_FILENO, "export : not a valid identifier\n", 32);
-		g_status = 1;
+		*err = 1;
 	}
 	else
 	{
@@ -96,16 +96,18 @@ static void	handle_exp_case(char *arg, t_env **env, int type)
 int	builtin_export(t_env **env, t_excute *cmds)
 {
 	int		i;
+	int		err;
 	char	type;
 
 	i = 0;
+	err = 0;
 	if (cmds->arguments && !cmds->arguments[0])
 		return (builtin_env(*env, 1));
 	while (cmds->arguments && cmds->arguments[i])
 	{
 		type = 0;
-		handle_exp_case(cmds->arguments[i], env, type);
-		i++;
+		handle_exp_case(cmds->arguments[i++], env, type, &err);
 	}
+	g_status = err;
 	return (1);
 }

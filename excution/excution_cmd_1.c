@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 10:24:39 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/16 11:30:40 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/16 15:19:47 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int	cmd_free(t_excute **cmds)
 	t_excute	*cpy;
 
 	cpy = *cmds;
+	close_other(*cmds, -1);
 	while (cpy)
 	{
 		cmd_free_node(cpy);

@@ -6,7 +6,7 @@
 /*   By: abounab <abounab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 10:35:10 by achakkaf          #+#    #+#             */
-/*   Updated: 2024/07/16 11:44:45 by abounab          ###   ########.fr       */
+/*   Updated: 2024/07/16 15:58:39 by abounab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	files_update(t_file *files, t_excute *cmds)
 {
 	int	fd;
 
-	fd = cmds->outfile;
+	fd = -1;
 	while (files)
 	{
 		if (!files->name || files->name[1])
@@ -47,18 +47,17 @@ int	files_update(t_file *files, t_excute *cmds)
 		{
 			fd = open(files->name[0], files->type, 0720);
 			if (fd < 0)
-				return (ft_perror(NULL, files->name[0], 0), fd);
+				return (perror(files->name[0]), g_status = 1, fd);
 			dup2(fd, cmds->outfile);
-			close(fd);
 		}
 		else if (files->type == INFILE || files->type == HERE_DOC_USED)
 		{
 			fd = open(files->name[0], INFILE);
 			if (fd < 0)
-				return (ft_perror(NULL, files->name[0], 0), fd);
+				return (perror(files->name[0]), g_status = 1, fd);
 			dup2(fd, cmds->infile);
-			close(fd);
 		}
+		close(fd);
 		files = files->next;
 	}
 	return (1);
@@ -83,6 +82,18 @@ int	get_path(char *cmd, char **paths)
 	return (-1);
 }
 
+static int	redirection_tool(t_cmd *command, t_excute **head, 
+	t_env **env, t_excute *cmds)
+{
+	if (!command->next && !(*head)->next && command->args
+		&& special_builtin(command->args[0], command->args[1]))
+	{
+		child_excution(command, cmds, env, 0);
+		return (1);
+	}
+	return (0);
+}
+
 int	redirection_update(t_cmd *command, t_excute **head, t_env **env)
 {
 	int			pid;
@@ -93,10 +104,7 @@ int	redirection_update(t_cmd *command, t_excute **head, t_env **env)
 	i = 0;
 	while (command && cmds)
 	{
-		if (!command->next && !(*head)->next && command->args
-			&& special_builtin(command->args[0], command->args[1]))
-			child_excution(command, cmds, env, 0);
-		else
+		if (!redirection_tool(command, head, env, cmds))
 		{
 			pid = fork();
 			ft_signals(pid);
