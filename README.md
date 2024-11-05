@@ -1,10 +1,8 @@
 # DarijaShell: A Darija-Friendly Shell
 
-Introduction
-
 DarijaShell is a compact shell implemented in C from scratch, designed to mimic the functionality of Bash while incorporating a unique twist: the addition of Darija slang terms to simplify command usage. This project aims to provide a more intuitive and user-friendly shell experience for those familiar with the Moroccan Darija dialect.
 
-Features
+## Features
 
 Core Shell Functionality:
 Execute system commands
@@ -22,42 +20,28 @@ Analyze the tokenizer for parsing user input
 Examine the execution of built-in commands
 Explore advanced shell features and customization options
 
-Standard Commands:
-Bash
-whoami
-cd
-pwd
-echo
-exit
-wc
-cat
-sudo
-export
-grep ...
+Standard Commands & Darija slang commands:
 
-Utilisez ce code avec précaution.
+* ```chkonana``` = ```whoami```
+* ```sir``` = ```cd```
+* ```fin``` = ```pwd```
+* ```ktb``` = ```echo```
+* ```khrj``` = ```exit```
+* ```hsb``` = ```wc```
+* ```byn``` = ```cat```
+* ```lhaj``` = ```sudo```
+* ```9yd``` = ```export```
+* ```jib```  = ```grep```
+* and all other Standard commands...
 
-Darija Slang Commands:
-Bash
-chkonana
-sir
-fin
-ktb
-khrj
-hsb
-byn
-lhaj
-9yd
-jib ...
+## Technical Details
 
-Technical Details
-
-System Calls:
+### System Calls:
 fork, exec, wait, pipe, signal, etc.
-Tokenizer:
+### Tokenizer:
 Lexical analysis to break input into tokens
 Parsing tokens to understand command structure
-Built-in Commands:
+### Built-in Commands:
 Implementation of common shell commands like cd, pwd, exit, etc.
 Customization and extension of built-in commands
 Contributing
