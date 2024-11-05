@@ -4,23 +4,23 @@ DarijaShell is a compact shell implemented in C from scratch, designed to mimic 
 
 ## Features
 
-Core Shell Functionality:
-Execute system commands
-Handle input/output redirection
-Support background processes
-Implement job control
-Provide command history and editing
-Darija Slang Integration:
-Recognize and interpret Darija-based commands
-Map slang terms to equivalent Bash commands
-Provide a more natural and accessible user interface
-In-Depth Exploration:
-Dive into system calls for process management and file I/O
-Analyze the tokenizer for parsing user input
-Examine the execution of built-in commands
-Explore advanced shell features and customization options
+### Core Shell Functionality:
+* Execute system commands
+* Handle input/output redirection 
+* Support background processes
+* Implement job control
+* Provide command history and editing
+### Darija Slang Integration:
+* Recognize and interpret Darija-based commands
+* Map slang terms to equivalent Bash commands
+* Provide a more natural and accessible user interface
+### In-Depth Exploration:
+* Dive into system calls for process management and file I/O
+* Analyze the tokenizer for parsing user input
+* Examine the execution of built-in commands
+* Explore advanced shell features and customization options
 
-Standard Commands & Darija slang commands:
+### Standard Commands & Darija slang commands:
 
 * ```chkonana``` = ```whoami```
 * ```sir``` = ```cd```
