@@ -39,11 +39,11 @@ DarijaShell is a compact shell implemented in C from scratch, designed to mimic 
 ### System Calls:
 fork, exec, wait, pipe, signal, etc.
 ### Tokenizer:
-Lexical analysis to break input into tokens
-Parsing tokens to understand command structure
+- Lexical analysis to break input into tokens
+- Parsing tokens to understand command structure
 ### Built-in Commands:
-Implementation of common shell commands like cd, pwd, exit, etc.
-Customization and extension of built-in commands
-Contributing
+- Implementation of common shell commands like cd, pwd, exit, etc.
+- Customization and extension of built-in commands
 
+## Contributing
 We welcome contributions to DarijaShell! If you're interested in improving the shell, feel free to fork the repository and submit pull requests.
