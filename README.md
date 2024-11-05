@@ -32,6 +32,7 @@ DarijaShell is a compact shell implemented in C from scratch, designed to mimic 
 * ```lhaj``` = ```sudo```
 * ```9yd``` = ```export```
 * ```jib```  = ```grep```
+* ```mseh```  = ```clear```
 * and all other Standard commands...
 
 ## Technical Details
